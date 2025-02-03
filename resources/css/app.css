@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@media (max-width: 768px) {
+    .sidebar-menu {
+        width: 240px;
+        transform: translateX(-100%);
+    }
+
+    .sidebar-menu.active {
+        transform: translateX(0);
+    }
+
+    .main {
+        margin-left: 0;
+        width: 100%;
+    }
+}
