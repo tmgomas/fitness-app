@@ -9,7 +9,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('nutrition_types', function (Blueprint $table) {
-            $table->uuid('id')->primary();
+            $table->uuid('nutrition_id')->primary();  // Changed from 'id' to 'nutrition_id'
             $table->string('name');
             $table->text('description');
             $table->string('unit');

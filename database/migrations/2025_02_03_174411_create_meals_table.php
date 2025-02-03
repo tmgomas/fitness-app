@@ -8,21 +8,21 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('food_items', function (Blueprint $table) {
-            $table->uuid('food_id')->primary();  // Changed from 'id' to 'food_id'
+        Schema::create('meals', function (Blueprint $table) {
+            $table->uuid('meal_id')->primary();  // Changed to match pattern
             $table->string('name');
             $table->text('description')->nullable();
-            $table->decimal('serving_size', 8, 2);
-            $table->string('serving_unit');
             $table->string('image_url')->nullable();
+            $table->decimal('default_serving_size', 8, 2);  // Changed to decimal
+            $table->string('serving_unit');
             $table->boolean('is_active')->default(true);
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes();  // Added soft deletes
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('food_items');
+        Schema::dropIfExists('meals');
     }
 };

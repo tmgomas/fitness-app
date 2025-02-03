@@ -55,7 +55,7 @@
                 </li>
             </ul>
         </li>
-
+    
         <!-- NUTRITION SECTION -->
         <span class="text-gray-400 font-bold mt-6">NUTRITION</span>
         
@@ -81,7 +81,7 @@
                 </li>
             </ul>
         </li>
-
+    
         <!-- Food Items -->
         <li class="mb-1 group {{ request()->routeIs('food-items.*') ? 'selected' : '' }}">
             <a href="{{ route('food-items.index') }}" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white sidebar-dropdown-toggle">
@@ -104,7 +104,53 @@
                 </li>
             </ul>
         </li>
-
+    
+        <!-- Meals -->
+        <li class="mb-1 group {{ request()->routeIs('meals.*') ? 'selected' : '' }}">
+            <a href="{{ route('meals.index') }}" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white sidebar-dropdown-toggle">
+                <i class='bx bx-dish mr-3 text-lg'></i>                
+                <span class="text-sm">Meals</span>
+                <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
+            </a>
+            <ul class="pl-7 mt-2 hidden group-[.selected]:block">
+                <li class="mb-4">
+                    <a href="{{ route('meals.index') }}" 
+                       class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
+                       All Meals
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="{{ route('meals.create') }}" 
+                       class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
+                       Add Meal
+                    </a>
+                </li>
+            </ul>
+        </li>
+    
+        <!-- Food Nutrition -->
+        <li class="mb-1 group {{ request()->routeIs('food-nutrition.*') ? 'selected' : '' }}">
+            <a href="{{ route('food-nutrition.index') }}" class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white sidebar-dropdown-toggle">
+                <i class='bx bx-calculator mr-3 text-lg'></i>                
+                <span class="text-sm">Food Nutrition</span>
+                <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
+            </a>
+            <ul class="pl-7 mt-2 hidden group-[.selected]:block">
+                <li class="mb-4">
+                    <a href="{{ route('food-nutrition.index') }}" 
+                    class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
+                    All Nutrition
+                    </a>
+                </li>
+                <li class="mb-4">
+                    <a href="{{ route('food-nutrition.create') }}" 
+                    class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
+                    Add Nutrition
+                    </a>
+                </li>
+            </ul>
+        </li>
+    
         <!-- PROFILE SECTION -->
         <span class="text-gray-400 font-bold mt-6">PROFILE</span>
         <li class="mb-1 group">
@@ -175,7 +221,7 @@
             {{ $slot }}
         </div>
     </main>
-
+    @stack('scripts')
     <script>
         // Sidebar Toggle Functionality
         function setupSidebar() {

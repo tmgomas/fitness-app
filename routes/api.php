@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\FoodItemController;
+use App\Http\Controllers\Api\FoodNutritionController;
 use App\Http\Controllers\Api\NutritionTypeController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +34,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/food-items/search', [FoodItemController::class, 'search']);
     Route::apiResource('food-items', FoodItemController::class);
+
+    Route::get('food-nutrition/search', [FoodNutritionController::class, 'search']);
+    Route::apiResource('food-nutrition', FoodNutritionController::class);
 });
 
 // Public routes (if needed)

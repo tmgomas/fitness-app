@@ -2,41 +2,40 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class FoodItem extends Model
+class Meal extends Model
 {
     use HasUuids, SoftDeletes;
 
-    protected $primaryKey = 'food_id';
+    protected $primaryKey = 'meal_id';
     protected $keyType = 'string';
     public $incrementing = false;
 
     protected $fillable = [
         'name',
         'description',
-        'serving_size',
-        'serving_unit',
         'image_url',
+        'default_serving_size',
+        'serving_unit',
         'is_active'
     ];
 
     protected $casts = [
-        'serving_size' => 'decimal:2',
+        'default_serving_size' => 'decimal:2',
         'is_active' => 'boolean'
     ];
 
-    public function foodNutrition(): HasMany
+    public function nutritionFacts(): HasMany
     {
-        return $this->hasMany(FoodNutrition::class, 'food_id', 'food_id');
+        return $this->hasMany(MealNutrition::class, 'meal_id', 'meal_id');
     }
 
-    public function mealFoods(): HasMany
+    public function foods(): HasMany
     {
-        return $this->hasMany(MealFood::class, 'food_id', 'food_id');
+        return $this->hasMany(MealFood::class, 'meal_id', 'meal_id');
     }
 }

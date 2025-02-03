@@ -17,7 +17,8 @@ class DatabaseSeeder extends Seeder
 
         // Call NutritionTypeSeeder
         $this->call([
-            NutritionTypeSeeder::class
+            NutritionTypeSeeder::class,
+            UserSeeder::class
         ]);
     }
 }
