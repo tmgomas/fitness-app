@@ -1,6 +1,8 @@
 <?php
 
-
+use App\Http\Controllers\ExerciseCategoryController;
+use App\Http\Controllers\ExerciseController;
+use App\Http\Controllers\ExerciseIntensityController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\NutritionTypeController;
@@ -43,6 +45,21 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('food-nutrition', FoodNutritionController::class);
 
     Route::resource('meals', MealController::class);
+
+    Route::get('exercise-categories', [ExerciseCategoryController::class, 'index'])->name('exercise-categories.index');
+    Route::get('exercise-categories/create', [ExerciseCategoryController::class, 'create'])->name('exercise-categories.create');
+    Route::post('exercise-categories', [ExerciseCategoryController::class, 'store'])->name('exercise-categories.store');
+    Route::get('exercise-categories/{exerciseCategory}/edit', [ExerciseCategoryController::class, 'edit'])->name('exercise-categories.edit');
+    Route::put('exercise-categories/{exerciseCategory}', [ExerciseCategoryController::class, 'update'])->name('exercise-categories.update');
+    Route::delete('exercise-categories/{exerciseCategory}', [ExerciseCategoryController::class, 'destroy'])->name('exercise-categories.destroy');
+    
+    // Exercises
+    Route::post('exercises/{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus'])
+        ->name('exercises.toggle-status');
+    Route::resource('exercises', ExerciseController::class);
+    
+    // Exercise Intensities
+    Route::resource('exercise-intensities', ExerciseIntensityController::class);
     
 });
 

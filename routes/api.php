@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\ExerciseCategoryController;
+use App\Http\Controllers\Api\ExerciseController;
+use App\Http\Controllers\Api\ExerciseIntensityController;
 use App\Http\Controllers\Api\FoodItemController;
 use App\Http\Controllers\Api\FoodNutritionController;
 use App\Http\Controllers\Api\NutritionTypeController;
@@ -37,6 +40,17 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('food-nutrition/search', [FoodNutritionController::class, 'search']);
     Route::apiResource('food-nutrition', FoodNutritionController::class);
+
+    // Exercise Categories
+    Route::apiResource('exercise-categories', ExerciseCategoryController::class);
+    
+    // Exercises
+    Route::post('exercises/{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus'])
+        ->name('exercises.toggle-status');
+    Route::apiResource('exercises', ExerciseController::class);
+    
+    // Exercise Intensities
+    Route::apiResource('exercise-intensities', ExerciseIntensityController::class);
 });
 
 // Public routes (if needed)
