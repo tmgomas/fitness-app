@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Validation\ValidationException;
 
 class UserService
 {
@@ -14,16 +15,16 @@ class UserService
         if ($search) {
             $query->where(function ($q) use ($search) {
                 $q->where('name', 'like', "%{$search}%")
-                  ->orWhere('email', 'like', "%{$search}%");
+                    ->orWhere('email', 'like', "%{$search}%");
             });
         }
 
         if ($role) {
-            $query->where('is_admin', $role === 'admin');
+            $query->where('is_admin', $role === true);
         }
 
         if ($status) {
-            $query->where('is_active', $status === 'active');
+            $query->where('is_active', $status === true);
         }
 
         return $query->latest()->paginate($perPage);
@@ -54,5 +55,32 @@ class UserService
     {
         // Add any logic to check if user can be deleted
         return true;
+    }
+
+    // App/Services/UserService.php ekata add karanna
+    public function login(string $email, string $password)
+    {
+        $user = User::where('email', $email)->first();
+
+        if (!$user || !Hash::check($password, $user->password)) {
+            throw ValidationException::withMessages([
+                'email' => ['The provided credentials are incorrect.'],
+            ]);
+        }
+
+        // Check if user is active
+        if (!$user->is_active) {
+            throw ValidationException::withMessages([
+                'email' => ['Your account is inactive. Please contact administrator.'],
+            ]);
+        }
+
+        $token = $user->createToken('auth-token')->plainTextToken;
+
+        return [
+            'status' => 'success',
+            'token' => $token,
+            'user' => $user
+        ];
     }
 }
