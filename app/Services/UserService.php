@@ -114,19 +114,19 @@ class UserService
         return true;
     }
 
-    public function login(string $email, string $password)
+    public function login(string $username, string $password)
     {
-        $user = User::where('email', $email)->first();
+        $user = User::where('username', $username)->first();
 
         if (!$user || !Hash::check($password, $user->password)) {
             throw ValidationException::withMessages([
-                'email' => ['The provided credentials are incorrect.'],
+                'username' => ['The provided credentials are incorrect.'],
             ]);
         }
 
         if (!$user->is_active) {
             throw ValidationException::withMessages([
-                'email' => ['Your account is inactive. Please contact administrator.'],
+                'username' => ['Your account is inactive. Please contact administrator.'],
             ]);
         }
 
