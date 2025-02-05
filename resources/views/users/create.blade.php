@@ -9,10 +9,10 @@
 
                     <div class="mb-4">
                         <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                        <input type="text" name="name" id="name" value="{{ old('name') }}" 
+                        <input type="text" name="name" id="name" value="{{ old('name') }}"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50">
                         @error('name')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
@@ -21,23 +21,32 @@
                         <input type="email" name="email" id="email" value="{{ old('email') }}"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50">
                         @error('email')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @enderror
+                    </div>
+
+
+                    <div class="mb-4">
+                        <label for="gender" class="block text-sm font-medium text-gray-700">Gender</label>
+                        <select name="gender" id="gender"
+                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50">
+                            <option value="">Select Gender</option>
+                            <option value="male" {{ old('gender')=='male' ? 'selected' : '' }}>Male</option>
+                            <option value="female" {{ old('gender')=='female' ? 'selected' : '' }}>Female</option>
+                            <option value="other" {{ old('gender')=='other' ? 'selected' : '' }}>Other</option>
+                        </select>
+                        @error('gender')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
                     </div>
 
                     <div class="mb-4">
-                        <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
-                        <input type="password" name="password" id="password"
+                        <label for="birthday" class="block text-sm font-medium text-gray-700">Birthday</label>
+                        <input type="date" name="birthday" id="birthday" value="{{ old('birthday') }}"
                             class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50">
-                        @error('password')
-                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                        @error('birthday')
+                        <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                         @enderror
-                    </div>
-
-                    <div class="mb-4">
-                        <label for="password_confirmation" class="block text-sm font-medium text-gray-700">Confirm Password</label>
-                        <input type="password" name="password_confirmation" id="password_confirmation"
-                            class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50">
                     </div>
 
                     <div class="mb-4">
@@ -50,14 +59,16 @@
 
                     <div class="mb-4">
                         <label class="flex items-center">
-                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : '' }}
+                            <input type="checkbox" name="is_active" value="1" {{ old('is_active', true) ? 'checked' : ''
+                                }}
                                 class="rounded border-gray-300 text-[#f84525] shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50">
                             <span class="ml-2 text-sm text-gray-600">Is Active</span>
                         </label>
                     </div>
 
                     <div class="flex justify-end gap-4">
-                        <a href="{{ route('users.index') }}" class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
+                        <a href="{{ route('users.index') }}"
+                            class="bg-gray-500 text-white py-2 px-4 rounded-md hover:bg-gray-600">
                             Cancel
                         </a>
                         <button type="submit" class="bg-[#f84525] text-white py-2 px-4 rounded-md hover:bg-red-700">

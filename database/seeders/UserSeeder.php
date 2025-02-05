@@ -8,31 +8,33 @@ use Illuminate\Support\Facades\Hash;
 
 class UserSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        // Create Admin User
         User::create([
             'name' => 'Admin User',
+            'username' => 'admin',
             'email' => 'dgtmgomas@hotmail.com',
             'password' => Hash::make('10334548'),
             'is_active' => true,
             'is_admin' => true,
+            'gender' => 'male',
+            'birthday' => '1990-01-01',
             'email_verified_at' => now(),
         ]);
 
-        // Create Regular User
         User::create([
             'name' => 'Regular User',
+            'username' => 'user',
             'email' => 'user@example.com',
             'password' => Hash::make('password'),
             'is_active' => true,
             'is_admin' => false,
+            'gender' => 'female',
+            'birthday' => '1995-05-05',
             'email_verified_at' => now(),
         ]);
 
-       #
+        // Generate 10 random users
+        User::factory(10)->create();
     }
 }
