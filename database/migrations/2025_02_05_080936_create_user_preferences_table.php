@@ -16,6 +16,7 @@ class CreateUserPreferencesTable extends Migration
             $table->text('dietary_restrictions')->nullable();
             $table->text('disliked_foods')->nullable();
             $table->text('fitness_goals')->nullable();
+            $table->string('activity_level')->nullable();
             $table->timestamps();
         });
     }

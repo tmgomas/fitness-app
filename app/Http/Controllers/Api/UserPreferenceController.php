@@ -26,7 +26,8 @@ class UserPreferenceController extends Controller
             'allergies' => 'nullable|string',
             'dietary_restrictions' => 'nullable|string',
             'disliked_foods' => 'nullable|string',
-            'fitness_goals' => 'required|string'
+            'fitness_goals' => 'required|string',
+            'activity_level' => 'required|string'
         ]);
 
         if ($validator->fails()) {
@@ -39,7 +40,8 @@ class UserPreferenceController extends Controller
                 'allergies' => $request->allergies,
                 'dietary_restrictions' => $request->dietary_restrictions,
                 'disliked_foods' => $request->disliked_foods,
-                'fitness_goals' => $request->fitness_goals
+                'fitness_goals' => $request->fitness_goals,
+                'activity_level' => $request->activity_level
             ]);
 
             return response()->json([

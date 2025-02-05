@@ -19,6 +19,7 @@ class UserPreference extends Model
         'dietary_restrictions',
         'disliked_foods',
         'fitness_goals',
+        'activity_level',
         'updated_at'
     ];
 
