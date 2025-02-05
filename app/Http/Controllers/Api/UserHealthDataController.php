@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserHealthData;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class UserHealthDataController extends Controller
@@ -22,10 +23,10 @@ class UserHealthDataController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'height' => 'nullable|numeric',
-            'weight' => 'nullable|numeric',
-            'bmi' => 'nullable|numeric',
-            'blood_type' => 'nullable|string',
+            'height' => 'required|numeric',
+            'weight' => 'required|numeric',
+            'bmi' => 'required|numeric',
+            'blood_type' => 'required|string',
             'medical_conditions' => 'nullable|string',
             'recorded_at' => 'required|date'
         ]);
@@ -34,17 +35,28 @@ class UserHealthDataController extends Controller
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $healthData = UserHealthData::create([
-            'user_id' => Auth::id(),
-            'height' => $request->height,
-            'weight' => $request->weight,
-            'bmi' => $request->bmi,
-            'blood_type' => $request->blood_type,
-            'medical_conditions' => $request->medical_conditions,
-            'recorded_at' => $request->recorded_at
-        ]);
+        try {
+            $healthData = UserHealthData::create([
+                'user_id' => Auth::id(),
+                'height' => $request->height,
+                'weight' => $request->weight,
+                'bmi' => $request->bmi,
+                'blood_type' => $request->blood_type,
+                'medical_conditions' => $request->medical_conditions,
+                'recorded_at' => $request->recorded_at
+            ]);
 
-        return response()->json(['data' => $healthData], 201);
+            return response()->json([
+                'message' => 'Health data saved successfully',
+                'data' => $healthData
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error('Health Data Save Error: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Error saving health data',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show($id)

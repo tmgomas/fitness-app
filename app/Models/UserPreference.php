@@ -4,10 +4,11 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Laravel\Sanctum\HasApiTokens;
 
 class UserPreference extends Model
 {
-    use HasUuids;
+    use HasUuids, HasApiTokens;
 
     protected $primaryKey = 'pref_id';
     protected $keyType = 'string';

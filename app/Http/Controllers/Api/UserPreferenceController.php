@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\UserPreference;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class UserPreferenceController extends Controller
@@ -25,22 +26,33 @@ class UserPreferenceController extends Controller
             'allergies' => 'nullable|string',
             'dietary_restrictions' => 'nullable|string',
             'disliked_foods' => 'nullable|string',
-            'fitness_goals' => 'nullable|string'
+            'fitness_goals' => 'required|string'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()], 422);
         }
 
-        $preferences = UserPreference::create([
-            'user_id' => Auth::id(),
-            'allergies' => $request->allergies,
-            'dietary_restrictions' => $request->dietary_restrictions,
-            'disliked_foods' => $request->disliked_foods,
-            'fitness_goals' => $request->fitness_goals
-        ]);
+        try {
+            $preferences = UserPreference::create([
+                'user_id' => Auth::id(),
+                'allergies' => $request->allergies,
+                'dietary_restrictions' => $request->dietary_restrictions,
+                'disliked_foods' => $request->disliked_foods,
+                'fitness_goals' => $request->fitness_goals
+            ]);
 
-        return response()->json(['data' => $preferences], 201);
+            return response()->json([
+                'message' => 'Preferences saved successfully',
+                'data' => $preferences
+            ], 201);
+        } catch (\Exception $e) {
+            Log::error('Preferences Save Error: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Error saving preferences',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function show($id)
