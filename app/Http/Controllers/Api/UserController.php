@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\ValidationException;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -18,6 +19,21 @@ class UserController extends Controller
     public function __construct(UserService $userService)
     {
         $this->userService = $userService;
+    }
+    public function getCurrentUser(Request $request)
+    {
+        try {
+            $userData = $this->userService->getCurrentUser();
+            return response()->json([
+                'status' => 'success',
+                'data' => $userData
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error fetching user data'
+            ], 500);
+        }
     }
 
     public function index(Request $request)

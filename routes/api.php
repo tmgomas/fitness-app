@@ -20,6 +20,7 @@ Route::post('/login', [UserController::class, 'login']);
 Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
 
+    Route::get('/current-user', [UserController::class, 'getCurrentUser']);
     // Health Data Routes
     Route::get('/health-data', [UserHealthDataController::class, 'index']);
     Route::post('/health-data', [UserHealthDataController::class, 'store']);

@@ -11,6 +11,18 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class UserService
 {
+    public function getCurrentUser()
+    {
+        $user = Auth::user();
+        return [
+            'id' => $user->id,
+            'name' => $user->name,
+            'username' => $user->username,
+            'gender' => $user->gender,
+            'birthday' => $user->birthday,
+
+        ];
+    }
     public function createUser(array $data)
     {
         $data['username'] = $this->generateUniqueUsername($data['name']);
