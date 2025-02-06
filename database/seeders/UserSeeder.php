@@ -34,7 +34,6 @@ class UserSeeder extends Seeder
             'email_verified_at' => now(),
         ]);
 
-        // Generate 10 random users
-        User::factory(10)->create();
+        
     }
 }
