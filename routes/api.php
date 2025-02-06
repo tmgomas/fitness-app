@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\UserFoodLogController;
 use App\Http\Controllers\API\UserHealthDataController;
+use App\Http\Controllers\Api\UserMealLogController;
 use App\Http\Controllers\API\UserMeasurementController;
 use App\Http\Controllers\API\UserPreferenceController;
 use Illuminate\Http\Request;
@@ -41,4 +43,25 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/measurements/{id}', [UserMeasurementController::class, 'show']);
     Route::put('/measurements/{id}', [UserMeasurementController::class, 'update']);
     Route::delete('/measurements/{id}', [UserMeasurementController::class, 'destroy']);
+
+
+    Route::get('meal-logs', [UserMealLogController::class, 'index']);
+
+    // Create new meal log
+    Route::post('meal-logs', [UserMealLogController::class, 'store']);
+
+    // Get single meal log by ID
+    Route::get('meal-logs/{log_id}', [UserMealLogController::class, 'show']);
+
+    // Update meal log
+    Route::put('meal-logs/{log_id}', [UserMealLogController::class, 'update']);
+
+    // Delete meal log
+    Route::delete('meal-logs/{log_id}', [UserMealLogController::class, 'destroy']);
+
+    Route::get('food-logs', [UserFoodLogController::class, 'index']);
+    Route::post('food-logs', [UserFoodLogController::class, 'store']);
+    Route::get('food-logs/{log_id}', [UserFoodLogController::class, 'show']);
+    Route::put('food-logs/{log_id}', [UserFoodLogController::class, 'update']);
+    Route::delete('food-logs/{log_id}', [UserFoodLogController::class, 'destroy']);
 });
