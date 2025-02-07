@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Meal\StoreMealRequest;
 use App\Http\Requests\Meal\UpdateMealRequest;
 use App\Models\Meal;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -58,7 +59,6 @@ class MealController extends Controller
                 'message' => 'Meal created successfully',
                 'meal' => $meal->load(['nutritionFacts', 'foods'])
             ], 201);
-
         } catch (\Exception $e) {
             DB::rollBack();
             if (isset($imagePath)) {
@@ -112,7 +112,6 @@ class MealController extends Controller
                 'message' => 'Meal updated successfully',
                 'meal' => $meal->load(['nutritionFacts', 'foods'])
             ]);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -137,7 +136,6 @@ class MealController extends Controller
             DB::commit();
 
             return response()->json(['message' => 'Meal deleted successfully']);
-
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json([
@@ -145,5 +143,26 @@ class MealController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+    public function search(Request $request): JsonResponse
+    {
+        $query = $request->get('q', '');
+
+        $meals = Meal::where('is_active', true)
+            ->where(function ($q) use ($query) {
+                $q->where('name', 'like', "%{$query}%")
+                    ->orWhere('description', 'like', "%{$query}%");
+            })
+            ->with(['nutritionFacts', 'foods'])
+            ->latest()
+            ->paginate(10);
+
+        return response()->json([
+            'data' => $meals->items(),
+            'current_page' => $meals->currentPage(),
+            'last_page' => $meals->lastPage(),
+            'per_page' => $meals->perPage(),
+            'total' => $meals->total()
+        ]);
     }
 }

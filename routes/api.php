@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\FoodItemController;
+use App\Http\Controllers\Api\MealController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserFoodLogController;
 use App\Http\Controllers\API\UserHealthDataController;
@@ -64,4 +66,18 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('food-logs/{log_id}', [UserFoodLogController::class, 'show']);
     Route::put('food-logs/{log_id}', [UserFoodLogController::class, 'update']);
     Route::delete('food-logs/{log_id}', [UserFoodLogController::class, 'destroy']);
+
+    Route::get('meals/search', [MealController::class, 'search']); // Search route MUST come before {meal} routes
+    Route::get('meals', [MealController::class, 'index']);
+    Route::post('meals', [MealController::class, 'store']);
+    Route::get('meals/{meal}', [MealController::class, 'show']);
+    Route::post('meals/{meal}', [MealController::class, 'update']);
+    Route::delete('meals/{meal}', [MealController::class, 'destroy']);
+
+    Route::get('food-items/search', [FoodItemController::class, 'search']); // Move this BEFORE the {foodItem} route
+    Route::get('food-items', [FoodItemController::class, 'index']);
+    Route::post('food-items', [FoodItemController::class, 'store']);
+    Route::get('food-items/{foodItem}', [FoodItemController::class, 'show']);
+    Route::put('food-items/{foodItem}', [FoodItemController::class, 'update']);
+    Route::delete('food-items/{foodItem}', [FoodItemController::class, 'destroy']);
 });

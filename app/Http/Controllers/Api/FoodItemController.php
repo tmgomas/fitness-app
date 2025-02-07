@@ -58,16 +58,22 @@ class FoodItemController extends Controller
 
     public function search(Request $request): JsonResponse
     {
-        $query = $request->get('q');
-        
+        $query = $request->get('q', ''); // Default to empty string if no query
+
         $foodItems = FoodItem::where('is_active', true)
             ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
-                  ->orWhere('description', 'like', "%{$query}%");
+                    ->orWhere('description', 'like', "%{$query}%");
             })
             ->latest()
             ->paginate(10);
 
-        return response()->json($foodItems);
+        return response()->json([
+            'data' => $foodItems->items(),
+            'current_page' => $foodItems->currentPage(),
+            'last_page' => $foodItems->lastPage(),
+            'per_page' => $foodItems->perPage(),
+            'total' => $foodItems->total()
+        ]);
     }
 }
