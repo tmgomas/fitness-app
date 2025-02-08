@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserFoodLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
@@ -17,27 +20,32 @@ class UserFoodLogController extends Controller
      */
     public function index(Request $request)
     {
-        $query = UserFoodLog::query();
+        try {
+            $query = UserFoodLog::where('user_id', Auth::id());
 
-        if ($request->has('user_id')) {
-            $query->where('user_id', $request->user_id);
+            if ($request->has('start_date') && $request->has('end_date')) {
+                $startDate = Carbon::parse($request->start_date)->startOfDay();
+                $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+                $query->whereBetween('date', [$startDate, $endDate]);
+            }
+
+            $foodLogs = $query->get();
+
+            Log::info('Food Logs Query:', [
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'count' => $foodLogs->count()
+            ]);
+
+            return response()->json(['data' => $foodLogs]);
+        } catch (\Exception $e) {
+            Log::error('Error in food logs index: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $query->whereBetween('date', [$request->start_date, $request->end_date]);
-        }
-
-        if ($request->has('meal_type')) {
-            $query->where('meal_type', $request->meal_type);
-        }
-
-        $foodLogs = $query->with('foodItem')->paginate(15);
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $foodLogs
-        ]);
     }
+
+
 
     /**
      * Store a new food log.

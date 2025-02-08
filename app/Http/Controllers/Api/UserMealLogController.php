@@ -4,7 +4,10 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Models\UserMealLog;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Validator;
 
@@ -13,27 +16,34 @@ class UserMealLogController extends Controller
     /**
      * Display a listing of the meal logs.
      */
+    // MealLogController
     public function index(Request $request)
     {
-        $query = UserMealLog::query();
+        try {
+            $query = UserMealLog::where('user_id', Auth::id());
 
-        // Filter by user_id if provided
-        if ($request->has('user_id')) {
-            $query->where('user_id', $request->user_id);
+            if ($request->has('start_date') && $request->has('end_date')) {
+                $startDate = Carbon::parse($request->start_date)->startOfDay();
+                $endDate = Carbon::parse($request->end_date)->endOfDay();
+
+                $query->whereBetween('date', [$startDate, $endDate]);
+            }
+
+            $mealLogs = $query->get();
+
+            Log::info('Meal Logs Query:', [
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'count' => $mealLogs->count()
+            ]);
+
+            return response()->json(['data' => $mealLogs]);
+        } catch (\Exception $e) {
+            Log::error('Error in meal logs index: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        // Filter by date range if provided
-        if ($request->has('start_date') && $request->has('end_date')) {
-            $query->whereBetween('date', [$request->start_date, $request->end_date]);
-        }
-
-        $mealLogs = $query->paginate(15);
-        
-        return response()->json([
-            'status' => 'success',
-            'data' => $mealLogs
-        ]);
     }
+
 
     /**
      * Store a new meal log.
@@ -57,7 +67,6 @@ class UserMealLogController extends Controller
         }
 
         $mealLog = UserMealLog::create([
-            'log_id' => (string) Str::uuid(),
             'user_id' => $request->user_id,
             'meal_id' => $request->meal_id,
             'date' => $request->date,

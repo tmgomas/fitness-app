@@ -47,19 +47,19 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/measurements/{id}', [UserMeasurementController::class, 'destroy']);
 
 
-    Route::get('meal-logs', [UserMealLogController::class, 'index']);
+    Route::get('meal_log', [UserMealLogController::class, 'index']);
 
     // Create new meal log
-    Route::post('meal-logs', [UserMealLogController::class, 'store']);
+    Route::post('meal_log', [UserMealLogController::class, 'store']);
 
     // Get single meal log by ID
-    Route::get('meal-logs/{log_id}', [UserMealLogController::class, 'show']);
+    Route::get('meal_log/{log_id}', [UserMealLogController::class, 'show']);
 
     // Update meal log
-    Route::put('meal-logs/{log_id}', [UserMealLogController::class, 'update']);
+    Route::put('meal_log/{log_id}', [UserMealLogController::class, 'update']);
 
     // Delete meal log
-    Route::delete('meal-logs/{log_id}', [UserMealLogController::class, 'destroy']);
+    Route::delete('meal_log/{log_id}', [UserMealLogController::class, 'destroy']);
 
     Route::get('food-logs', [UserFoodLogController::class, 'index']);
     Route::post('food-logs', [UserFoodLogController::class, 'store']);

@@ -9,7 +9,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('user_meal_logs', function (Blueprint $table) {
-            $table->id('log_id')->primary();
+            $table->id('meal_log_id')->primary();
             $table->unsignedBigInteger('user_id');  // Changed to unsignedBigInteger to match users table
             $table->string('meal_id');
             $table->datetime('date');
