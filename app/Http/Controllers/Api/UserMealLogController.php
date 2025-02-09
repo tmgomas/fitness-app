@@ -20,8 +20,8 @@ class UserMealLogController extends Controller
     public function index(Request $request)
     {
         try {
-            $query = UserMealLog::where('user_id', Auth::id());
-
+            // $query = UserMealLog::where('user_id', Auth::id());
+            $query = UserMealLog::with('meal')->where('user_id', Auth::id());
             if ($request->has('start_date') && $request->has('end_date')) {
                 $startDate = Carbon::parse($request->start_date)->startOfDay();
                 $endDate = Carbon::parse($request->end_date)->endOfDay();
