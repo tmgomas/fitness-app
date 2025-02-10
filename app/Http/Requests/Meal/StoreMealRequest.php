@@ -36,10 +36,10 @@ class StoreMealRequest extends FormRequest
             'nutrition_facts.*.measurement_unit' => 'required|string|max:20',
 
             // Food Items Validation
-            'foods' => 'required|array|min:1',
-            'foods.*.food_id' => 'required|exists:food_items,food_id',
-            'foods.*.quantity' => 'required|numeric|min:0.01',
-            'foods.*.unit' => 'required|string|max:20'
+            'foods' => 'nullable|array',
+            'foods.*.food_id' => 'exists:food_items,food_id',
+            'foods.*.quantity' => 'numeric|min:0.01',
+            'foods.*.unit' => 'string|max:20'
         ];
     }
 
@@ -72,15 +72,10 @@ class StoreMealRequest extends FormRequest
             'nutrition_facts.*.measurement_unit.max' => 'Measurement unit cannot exceed 20 characters',
 
             // Food Items Messages
-            'foods.required' => 'At least one food item is required',
             'foods.array' => 'Food items must be an array',
-            'foods.min' => 'At least one food item is required',
-            'foods.*.food_id.required' => 'Food item ID is required',
             'foods.*.food_id.exists' => 'Invalid food item selected',
-            'foods.*.quantity.required' => 'Quantity is required',
             'foods.*.quantity.numeric' => 'Quantity must be a number',
             'foods.*.quantity.min' => 'Quantity must be at least 0.01',
-            'foods.*.unit.required' => 'Unit is required',
             'foods.*.unit.max' => 'Unit cannot exceed 20 characters'
         ];
     }

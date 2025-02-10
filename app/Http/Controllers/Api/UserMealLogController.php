@@ -20,21 +20,27 @@ class UserMealLogController extends Controller
     public function index(Request $request)
     {
         try {
-            // $query = UserMealLog::where('user_id', Auth::id());
-            $query = UserMealLog::with('meal')->where('user_id', Auth::id());
+            $query = UserMealLog::with([
+                'meal',
+                'meal.nutritionFacts.nutritionType',  // Load meal nutrition facts with types
+                'meal.foods.foodItem.foodNutrition.nutritionType'  // Load food nutrition also
+            ])->where('user_id', Auth::id());
+
             if ($request->has('start_date') && $request->has('end_date')) {
                 $startDate = Carbon::parse($request->start_date)->startOfDay();
                 $endDate = Carbon::parse($request->end_date)->endOfDay();
-
                 $query->whereBetween('date', [$startDate, $endDate]);
             }
 
             $mealLogs = $query->get();
 
+            // Debug logging
             Log::info('Meal Logs Query:', [
                 'start_date' => $request->start_date,
                 'end_date' => $request->end_date,
-                'count' => $mealLogs->count()
+                'count' => $mealLogs->count(),
+                'meal_nutrition_count' => $mealLogs->first()?->meal?->nutritionFacts?->count() ?? 0,
+                'foods_nutrition_count' => $mealLogs->first()?->meal?->foods?->first()?->foodItem?->foodNutrition?->count() ?? 0
             ]);
 
             return response()->json(['data' => $mealLogs]);
