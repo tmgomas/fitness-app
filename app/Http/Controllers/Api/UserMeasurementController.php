@@ -3,91 +3,98 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserMeasurement;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Validator;
+use App\Http\Requests\Measurement\StoreMeasurementRequest;
+use App\Http\Requests\Measurement\UpdateMeasurementRequest;
+use App\Http\Resources\MeasurementResource;
+use App\Services\Measurement\Interfaces\MeasurementServiceInterface;
+use Illuminate\Http\JsonResponse;
 
 class UserMeasurementController extends Controller
 {
-    public function index()
-    {
-        $measurements = UserMeasurement::where('user_id', Auth::id())
-            ->orderBy('recorded_at', 'desc')
-            ->get();
+    private $measurementService;
 
-        return response()->json(['data' => $measurements]);
+    public function __construct(MeasurementServiceInterface $measurementService)
+    {
+        $this->measurementService = $measurementService;
     }
 
-    public function store(Request $request)
+    public function index(): JsonResponse
     {
-        $validator = Validator::make($request->all(), [
-            'chest' => 'nullable|numeric',
-            'waist' => 'nullable|numeric',
-            'hips' => 'nullable|numeric',
-            'arms' => 'nullable|numeric',
-            'thighs' => 'nullable|numeric',
-            'recorded_at' => 'required|date'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        try {
+            $measurements = $this->measurementService->getAllMeasurements();
+            return response()->json([
+                'success' => true,
+                'data' => MeasurementResource::collection($measurements)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error retrieving measurements'
+            ], 500);
         }
-
-        $measurement = UserMeasurement::create([
-            'user_id' => Auth::id(),
-            'chest' => $request->chest,
-            'waist' => $request->waist,
-            'hips' => $request->hips,
-            'arms' => $request->arms,
-            'thighs' => $request->thighs,
-            'recorded_at' => $request->recorded_at
-        ]);
-
-        return response()->json(['data' => $measurement], 201);
     }
 
-    public function show($id)
+    public function store(StoreMeasurementRequest $request): JsonResponse
     {
-        $measurement = UserMeasurement::where('user_id', Auth::id())
-            ->where('measurement_id', $id)
-            ->firstOrFail();
-
-        return response()->json(['data' => $measurement]);
-    }
-
-    public function update(Request $request, $id)
-    {
-        $measurement = UserMeasurement::where('user_id', Auth::id())
-            ->where('measurement_id', $id)
-            ->firstOrFail();
-
-        $validator = Validator::make($request->all(), [
-            'chest' => 'nullable|numeric',
-            'waist' => 'nullable|numeric',
-            'hips' => 'nullable|numeric',
-            'arms' => 'nullable|numeric',
-            'thighs' => 'nullable|numeric',
-            'recorded_at' => 'required|date'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        try {
+            $measurement = $this->measurementService->createMeasurement($request->validated());
+            return response()->json([
+                'success' => true,
+                'data' => new MeasurementResource($measurement)
+            ], 201);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error creating measurement'
+            ], 500);
         }
-
-        $measurement->update($request->all());
-
-        return response()->json(['data' => $measurement]);
     }
 
-    public function destroy($id)
+    public function show(string $id): JsonResponse
     {
-        $measurement = UserMeasurement::where('user_id', Auth::id())
-            ->where('measurement_id', $id)
-            ->firstOrFail();
+        try {
+            $measurement = $this->measurementService->getMeasurement($id);
+            return response()->json([
+                'success' => true,
+                'data' => new MeasurementResource($measurement)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Measurement not found'
+            ], 404);
+        }
+    }
 
-        $measurement->delete();
+    public function update(UpdateMeasurementRequest $request, string $id): JsonResponse
+    {
+        try {
+            $measurement = $this->measurementService->updateMeasurement($id, $request->validated());
+            return response()->json([
+                'success' => true,
+                'data' => new MeasurementResource($measurement)
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error updating measurement'
+            ], 500);
+        }
+    }
 
-        return response()->json(null, 204);
+    public function destroy(string $id): JsonResponse
+    {
+        try {
+            $this->measurementService->deleteMeasurement($id);
+            return response()->json([
+                'success' => true,
+                'message' => 'Measurement deleted successfully'
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error deleting measurement'
+            ], 500);
+        }
     }
 }

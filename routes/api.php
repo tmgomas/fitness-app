@@ -30,8 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('health-data', HealthDataController::class);
     Route::apiResource('preferences', UserPreferenceController::class);
-
-
+    Route::apiResource('measurements', UserMeasurementController::class);
     // ___________________________________
     Route::post('/logout', [UserController::class, 'logout']);
 
@@ -50,12 +49,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::put('/preferences/{id}', [UserPreferenceController::class, 'update']);
     // Route::delete('/preferences/{id}', [UserPreferenceController::class, 'destroy']);
 
-    // Measurements Routes
-    Route::get('/measurements', [UserMeasurementController::class, 'index']);
-    Route::post('/measurements', [UserMeasurementController::class, 'store']);
-    Route::get('/measurements/{id}', [UserMeasurementController::class, 'show']);
-    Route::put('/measurements/{id}', [UserMeasurementController::class, 'update']);
-    Route::delete('/measurements/{id}', [UserMeasurementController::class, 'destroy']);
+    // // Measurements Routes
+    // Route::get('/measurements', [UserMeasurementController::class, 'index']);
+    // Route::post('/measurements', [UserMeasurementController::class, 'store']);
+    // Route::get('/measurements/{id}', [UserMeasurementController::class, 'show']);
+    // Route::put('/measurements/{id}', [UserMeasurementController::class, 'update']);
+    // Route::delete('/measurements/{id}', [UserMeasurementController::class, 'destroy']);
 
 
     Route::get('meal_log', [UserMealLogController::class, 'index']);
