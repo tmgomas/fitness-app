@@ -3,55 +3,50 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserPreference;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Requests\UserPreference\StoreUserPreferenceRequest;
+use App\Http\Requests\UserPreference\UpdateUserPreferenceRequest;
+use App\Http\Resources\UserPreferenceResource;
+use App\Services\UserPreference\Interfaces\UserPreferenceServiceInterface;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Validator;
 
 class UserPreferenceController extends Controller
 {
-    public function index()
-    {
-        $preferences = UserPreference::where('user_id', Auth::id())
-            ->orderBy('updated_at', 'desc')
-            ->get();
+    protected $preferenceService;
 
-        return response()->json(['data' => $preferences]);
+    public function __construct(UserPreferenceServiceInterface $preferenceService)
+    {
+        $this->preferenceService = $preferenceService;
     }
 
-    public function store(Request $request)
+    // app/Http/Controllers/Api/UserPreferenceController.php
+
+    public function index()
     {
-        $validator = Validator::make($request->all(), [
-            'allergies' => 'nullable|string',
-            'dietary_restrictions' => 'nullable|string',
-            'disliked_foods' => 'nullable|string',
-            'fitness_goals' => 'required|string',
-            'activity_level' => 'required|string'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
-
         try {
-            $preferences = UserPreference::create([
-                'user_id' => Auth::id(),
-                'allergies' => $request->allergies,
-                'dietary_restrictions' => $request->dietary_restrictions,
-                'disliked_foods' => $request->disliked_foods,
-                'fitness_goals' => $request->fitness_goals,
-                'activity_level' => $request->activity_level
-            ]);
-
-            return response()->json([
-                'message' => 'Preferences saved successfully',
-                'data' => $preferences
-            ], 201);
+            $preferences = $this->preferenceService->getUserPreferences();
+            Log::info('Preferences retrieved successfully', ['count' => count($preferences)]);
+            return UserPreferenceResource::collection($preferences);
         } catch (\Exception $e) {
-            Log::error('Preferences Save Error: ' . $e->getMessage());
+            Log::error('Preference index error', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return response()->json([
-                'message' => 'Error saving preferences',
+                'message' => 'Error fetching preferences',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
+    public function store(StoreUserPreferenceRequest $request)
+    {
+        try {
+            $preference = $this->preferenceService->createPreference($request->validated());
+            return new UserPreferenceResource($preference);
+        } catch (\Exception $e) {
+            Log::error('Error creating preference: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Error creating preference',
                 'error' => $e->getMessage()
             ], 500);
         }
@@ -59,43 +54,43 @@ class UserPreferenceController extends Controller
 
     public function show($id)
     {
-        $preferences = UserPreference::where('user_id', Auth::id())
-            ->where('pref_id', $id)
-            ->firstOrFail();
-
-        return response()->json(['data' => $preferences]);
+        try {
+            $preference = $this->preferenceService->getPreference($id);
+            return new UserPreferenceResource($preference);
+        } catch (\Exception $e) {
+            Log::error('Error fetching preference: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Error fetching preference',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
-    public function update(Request $request, $id)
+    public function update(UpdateUserPreferenceRequest $request, $id)
     {
-        $preferences = UserPreference::where('user_id', Auth::id())
-            ->where('pref_id', $id)
-            ->firstOrFail();
-
-        $validator = Validator::make($request->all(), [
-            'allergies' => 'nullable|string',
-            'dietary_restrictions' => 'nullable|string',
-            'disliked_foods' => 'nullable|string',
-            'fitness_goals' => 'nullable|string'
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
+        try {
+            $preference = $this->preferenceService->updatePreference($id, $request->validated());
+            return new UserPreferenceResource($preference);
+        } catch (\Exception $e) {
+            Log::error('Error updating preference: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Error updating preference',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $preferences->update($request->all());
-
-        return response()->json(['data' => $preferences]);
     }
 
     public function destroy($id)
     {
-        $preferences = UserPreference::where('user_id', Auth::id())
-            ->where('pref_id', $id)
-            ->firstOrFail();
-
-        $preferences->delete();
-
-        return response()->json(null, 204);
+        try {
+            $this->preferenceService->deletePreference($id);
+            return response()->json(null, 204);
+        } catch (\Exception $e) {
+            Log::error('Error deleting preference: ' . $e->getMessage());
+            return response()->json([
+                'message' => 'Error deleting preference',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

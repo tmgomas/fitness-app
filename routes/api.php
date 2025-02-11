@@ -5,13 +5,14 @@ use App\Http\Controllers\Api\FoodItemController;
 use App\Http\Controllers\Api\HealthDataController;
 use App\Http\Controllers\Api\MealController;
 use App\Http\Controllers\Api\NutritionTypeController;
+use App\Http\Controllers\Api\PreferenceController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserExerciseLogController;
 use App\Http\Controllers\Api\UserFoodLogController;
-use App\Http\Controllers\API\UserHealthDataController;
+
 use App\Http\Controllers\Api\UserMealLogController;
 use App\Http\Controllers\API\UserMeasurementController;
-use App\Http\Controllers\API\UserPreferenceController;
+use App\Http\Controllers\Api\UserPreferenceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -27,8 +28,9 @@ Route::post('/login', [UserController::class, 'login']);
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
 
+    Route::apiResource('health-data', HealthDataController::class);
+    Route::apiResource('preferences', UserPreferenceController::class);
 
-    Route::resource('health-data', HealthDataController::class);
 
     // ___________________________________
     Route::post('/logout', [UserController::class, 'logout']);
@@ -42,11 +44,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::delete('/health-data/{id}', [UserHealthDataController::class, 'destroy']);
 
     // Preferences Routes
-    Route::get('/preferences', [UserPreferenceController::class, 'index']);
-    Route::post('/preferences', [UserPreferenceController::class, 'store']);
-    Route::get('/preferences/{id}', [UserPreferenceController::class, 'show']);
-    Route::put('/preferences/{id}', [UserPreferenceController::class, 'update']);
-    Route::delete('/preferences/{id}', [UserPreferenceController::class, 'destroy']);
+    // Route::get('/preferences', [UserPreferenceController::class, 'index']);
+    // Route::post('/preferences', [UserPreferenceController::class, 'store']);
+    // Route::get('/preferences/{id}', [UserPreferenceController::class, 'show']);
+    // Route::put('/preferences/{id}', [UserPreferenceController::class, 'update']);
+    // Route::delete('/preferences/{id}', [UserPreferenceController::class, 'destroy']);
 
     // Measurements Routes
     Route::get('/measurements', [UserMeasurementController::class, 'index']);

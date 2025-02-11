@@ -1,24 +1,18 @@
 <?php
 
+// app/Providers/RepositoryServiceProvider.php
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\UserPreference\Interfaces\UserPreferenceRepositoryInterface;
+use App\Repositories\UserPreference\UserPreferenceRepository;
+use App\Services\UserPreference\Interfaces\UserPreferenceServiceInterface;
+use App\Services\UserPreference\UserPreferenceService;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
-    /**
-     * Register services.
-     */
-    public function register(): void
+    public function register()
     {
-        //
-    }
-
-    /**
-     * Bootstrap services.
-     */
-    public function boot(): void
-    {
-        //
+        
     }
 }
