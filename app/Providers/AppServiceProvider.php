@@ -1,24 +1,25 @@
 <?php
-
+// app/Providers/RepositoryServiceProvider.php
 namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use App\Repositories\HealthData\HealthDataRepository;
+use App\Repositories\HealthData\Interfaces\HealthDataRepositoryInterface;
+use App\Services\HealthData\HealthDataService;
+use App\Services\HealthData\Interfaces\HealthDataServiceInterface;
 
-class AppServiceProvider extends ServiceProvider
+class RepositoryServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
-    public function register(): void
+    public function register()
     {
-        //
-    }
+        $this->app->bind(
+            HealthDataRepositoryInterface::class,
+            HealthDataRepository::class
+        );
 
-    /**
-     * Bootstrap any application services.
-     */
-    public function boot(): void
-    {
-        //
+        $this->app->bind(
+            HealthDataServiceInterface::class,
+            HealthDataService::class
+        );
     }
 }

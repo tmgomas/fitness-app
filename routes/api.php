@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\ExerciseController;
 use App\Http\Controllers\Api\FoodItemController;
+use App\Http\Controllers\Api\HealthDataController;
 use App\Http\Controllers\Api\MealController;
 use App\Http\Controllers\Api\NutritionTypeController;
 use App\Http\Controllers\Api\UserController;
@@ -25,15 +26,20 @@ Route::post('/login', [UserController::class, 'login']);
 
 // Protected routes
 Route::middleware('auth:sanctum')->group(function () {
+
+
+    Route::resource('health-data', HealthDataController::class);
+
+    // ___________________________________
     Route::post('/logout', [UserController::class, 'logout']);
 
     Route::get('/current-user', [UserController::class, 'getCurrentUser']);
-    // Health Data Routes
-    Route::get('/health-data', [UserHealthDataController::class, 'index']);
-    Route::post('/health-data', [UserHealthDataController::class, 'store']);
-    Route::get('/health-data/{id}', [UserHealthDataController::class, 'show']);
-    Route::put('/health-data/{id}', [UserHealthDataController::class, 'update']);
-    Route::delete('/health-data/{id}', [UserHealthDataController::class, 'destroy']);
+    // // Health Data Routes
+    // Route::get('/health-data', [UserHealthDataController::class, 'index']);
+    // Route::post('/health-data', [UserHealthDataController::class, 'store']);
+    // Route::get('/health-data/{id}', [UserHealthDataController::class, 'show']);
+    // Route::put('/health-data/{id}', [UserHealthDataController::class, 'update']);
+    // Route::delete('/health-data/{id}', [UserHealthDataController::class, 'destroy']);
 
     // Preferences Routes
     Route::get('/preferences', [UserPreferenceController::class, 'index']);
