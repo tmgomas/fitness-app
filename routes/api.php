@@ -5,7 +5,6 @@ use App\Http\Controllers\Api\FoodItemController;
 use App\Http\Controllers\Api\HealthDataController;
 use App\Http\Controllers\Api\MealController;
 use App\Http\Controllers\Api\NutritionTypeController;
-use App\Http\Controllers\Api\PreferenceController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserExerciseLogController;
 use App\Http\Controllers\Api\UserFoodLogController;
@@ -31,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('health-data', HealthDataController::class);
     Route::apiResource('preferences', UserPreferenceController::class);
     Route::apiResource('measurements', UserMeasurementController::class);
+    Route::apiResource('nutrition-types', NutritionTypeController::class);
     // ___________________________________
     Route::post('/logout', [UserController::class, 'logout']);
 
@@ -92,11 +92,11 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('food-items/{foodItem}', [FoodItemController::class, 'destroy']);
 
 
-    Route::get('/nutrition-types', [NutritionTypeController::class, 'index']);
-    Route::post('/nutrition-types', [NutritionTypeController::class, 'store']);
-    Route::get('/nutrition-types{nutritionType}', [NutritionTypeController::class, 'show']);
-    Route::put('/nutrition-types{nutritionType}', [NutritionTypeController::class, 'update']);
-    Route::delete('/{nutritionType}', [NutritionTypeController::class, 'destroy']);
+    // Route::get('/nutrition-types', [NutritionTypeController::class, 'index']);
+    // Route::post('/nutrition-types', [NutritionTypeController::class, 'store']);
+    // Route::get('/nutrition-types{nutritionType}', [NutritionTypeController::class, 'show']);
+    // Route::put('/nutrition-types{nutritionType}', [NutritionTypeController::class, 'update']);
+    // Route::delete('/{nutritionType}', [NutritionTypeController::class, 'destroy']);
 
     Route::get('/exercise-logs', [UserExerciseLogController::class, 'index']);
     Route::post('/exercise-logs', [UserExerciseLogController::class, 'store']);

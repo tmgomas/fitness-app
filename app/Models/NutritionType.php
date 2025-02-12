@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class NutritionType extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids, SoftDeletes, HasFactory;
 
     protected $primaryKey = 'nutrition_id';
     protected $keyType = 'string';
@@ -24,7 +24,10 @@ class NutritionType extends Model
     ];
 
     protected $casts = [
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+        'deleted_at' => 'datetime'
     ];
 
     public function foodNutrition(): HasMany
@@ -35,5 +38,11 @@ class NutritionType extends Model
     public function mealNutrition(): HasMany
     {
         return $this->hasMany(MealNutrition::class, 'nutrition_id', 'nutrition_id');
+    }
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
     }
 }

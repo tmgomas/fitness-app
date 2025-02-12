@@ -16,13 +16,14 @@ class UpdateNutritionTypeRequest extends FormRequest
     {
         return [
             'name' => [
-                'string', 
+                'required',
+                'string',
                 'max:255',
-                Rule::unique('nutrition_types')->ignore($this->nutritionType)
+                Rule::unique('nutrition_types', 'name')->ignore($this->nutrition_type->nutrition_id, 'nutrition_id')
             ],
-            'description' => ['string'],
-            'unit' => ['string', 'max:50'],
-            'is_active' => ['boolean'],
+            'description' => ['required', 'string'],
+            'unit' => ['required', 'string', 'max:50'],
+            'is_active' => ['boolean']
         ];
     }
 }
