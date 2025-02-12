@@ -8,11 +8,10 @@
                     Back to List
                 </a>
             </div>
-
-            <form action="{{ route('exercises.store') }}" method="POST">
+            <form action="{{ route('exercises.store') }}" method="POST" enctype="multipart/form-data" class="space-y-6">
                 @csrf
 
-                <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                <div class="bg-gray-50 p-4 rounded-lg">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Name -->
                         <div>
@@ -46,7 +45,8 @@
                         <div class="md:col-span-2">
                             <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                             <textarea name="description" id="description" rows="3"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('description') border-red-500 @enderror">{{ old('description') }}</textarea>
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('description') border-red-500 @enderror"
+                                placeholder="Minimum 10 characters">{{ old('description') }}</textarea>
                             @error('description')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -59,24 +59,28 @@
                             <select name="difficulty_level" id="difficulty_level"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('difficulty_level') border-red-500 @enderror">
                                 <option value="">Select Difficulty</option>
-                                <option value="Beginner" {{ old('difficulty_level')=='Beginner' ? 'selected' : '' }}>
+                                <option value="beginner" {{ old('difficulty_level')=='beginner' ? 'selected' : '' }}>
                                     Beginner</option>
-                                <option value="Intermediate" {{ old('difficulty_level')=='Intermediate' ? 'selected'
+                                <option value="intermediate" {{ old('difficulty_level')=='intermediate' ? 'selected'
                                     : '' }}>Intermediate</option>
-                                <option value="Advanced" {{ old('difficulty_level')=='Advanced' ? 'selected' : '' }}>
+                                <option value="advanced" {{ old('difficulty_level')=='advanced' ? 'selected' : '' }}>
                                     Advanced</option>
+                                <option value="expert" {{ old('difficulty_level')=='expert' ? 'selected' : '' }}>Expert
+                                </option>
                             </select>
                             @error('difficulty_level')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
-                        <!-- Image URL -->
+                        <!-- Image Upload -->
                         <div>
-                            <label for="image_url" class="block text-sm font-medium text-gray-700">Image URL</label>
-                            <input type="url" name="image_url" id="image_url" value="{{ old('image_url') }}"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('image_url') border-red-500 @enderror">
-                            @error('image_url')
+                            <label for="image" class="block text-sm font-medium text-gray-700">Image</label>
+                            <input type="file" name="image" id="image" accept="image/jpeg,image/png,image/jpg,image/gif"
+                                class="mt-1 block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-md file:border-0 file:text-sm file:font-semibold file:bg-[#f84525] file:text-white hover:file:bg-red-700 @error('image') border-red-500 @enderror">
+                            <p class="mt-1 text-sm text-gray-500">Max size: 2MB. Allowed formats: JPEG, PNG, JPG, GIF
+                            </p>
+                            @error('image')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
@@ -85,8 +89,8 @@
                         <div>
                             <label for="calories_per_minute" class="block text-sm font-medium text-gray-700">Calories
                                 per Minute</label>
-                            <input type="number" step="0.01" name="calories_per_minute" id="calories_per_minute"
-                                value="{{ old('calories_per_minute') }}"
+                            <input type="number" step="0.01" min="0" max="1000" name="calories_per_minute"
+                                id="calories_per_minute" value="{{ old('calories_per_minute') }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('calories_per_minute') border-red-500 @enderror">
                             @error('calories_per_minute')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -97,8 +101,8 @@
                         <div>
                             <label for="calories_per_km" class="block text-sm font-medium text-gray-700">Calories per
                                 KM</label>
-                            <input type="number" step="0.01" name="calories_per_km" id="calories_per_km"
-                                value="{{ old('calories_per_km') }}"
+                            <input type="number" step="0.01" min="0" max="1000" name="calories_per_km"
+                                id="calories_per_km" value="{{ old('calories_per_km') }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('calories_per_km') border-red-500 @enderror">
                             @error('calories_per_km')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -109,9 +113,18 @@
                         <div>
                             <label for="recommended_intensity"
                                 class="block text-sm font-medium text-gray-700">Recommended Intensity</label>
-                            <input type="text" name="recommended_intensity" id="recommended_intensity"
-                                value="{{ old('recommended_intensity') }}"
+                            <select name="recommended_intensity" id="recommended_intensity"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('recommended_intensity') border-red-500 @enderror">
+                                <option value="">Select Intensity</option>
+                                <option value="low" {{ old('recommended_intensity')=='low' ? 'selected' : '' }}>Low
+                                </option>
+                                <option value="moderate" {{ old('recommended_intensity')=='moderate' ? 'selected' : ''
+                                    }}>Moderate</option>
+                                <option value="high" {{ old('recommended_intensity')=='high' ? 'selected' : '' }}>High
+                                </option>
+                                <option value="very_high" {{ old('recommended_intensity')=='very_high' ? 'selected' : ''
+                                    }}>Very High</option>
+                            </select>
                             @error('recommended_intensity')
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
@@ -165,6 +178,7 @@
                     </button>
                 </div>
             </form>
+
         </div>
     </div>
 </x-app-layout>

@@ -57,6 +57,23 @@ Route::middleware('auth:sanctum')->group(function () {
         'category' => 'id'
     ]);
 
+    Route::apiResource('exercises', ExerciseController::class);
+
+    // Additional Exercise Routes
+    Route::prefix('exercises')->group(function () {
+        // Search Exercises
+        Route::get('search', [ExerciseController::class, 'search'])
+            ->name('api.exercises.search');
+
+        // Get Exercises by Category
+        Route::get('category/{categoryId}', [ExerciseController::class, 'getByCategory'])
+            ->name('api.exercises.by-category');
+
+        // Toggle Exercise Status
+        Route::patch('{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus'])
+            ->name('api.exercises.toggle-status');
+    });
+
     // // Health Data Routes
     // Route::get('/health-data', [UserHealthDataController::class, 'index']);
     // Route::post('/health-data', [UserHealthDataController::class, 'store']);
@@ -127,12 +144,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/{log_id}', [UserExerciseLogController::class, 'destroy']);
     Route::get('/stats/summary', [UserExerciseLogController::class, 'getStats']);
 
-    Route::get('/exercises', [ExerciseController::class, 'index']);
-    Route::post('/exercises', [ExerciseController::class, 'store']);
-    Route::get('/exercises/search', [ExerciseController::class, 'search']);
-    Route::get('/category/{categoryId}', [ExerciseController::class, 'getByCategory']);
-    Route::get('/{exercise}', [ExerciseController::class, 'show']);
-    Route::put('/{exercise}', [ExerciseController::class, 'update']);
-    Route::delete('/{exercise}', [ExerciseController::class, 'destroy']);
-    Route::put('/{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus']);
+    // Route::get('/exercises', [ExerciseController::class, 'index']);
+    // Route::post('/exercises', [ExerciseController::class, 'store']);
+    // Route::get('/exercises/search', [ExerciseController::class, 'search']);
+    // Route::get('/category/{categoryId}', [ExerciseController::class, 'getByCategory']);
+    // Route::get('/{exercise}', [ExerciseController::class, 'show']);
+    // Route::put('/{exercise}', [ExerciseController::class, 'update']);
+    // Route::delete('/{exercise}', [ExerciseController::class, 'destroy']);
+    // Route::put('/{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus']);
 });

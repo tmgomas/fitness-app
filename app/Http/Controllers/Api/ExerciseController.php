@@ -5,21 +5,27 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Exercise\StoreExerciseRequest;
 use App\Http\Requests\Exercise\UpdateExerciseRequest;
+use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
-use Illuminate\Http\Request;
+use App\Services\Exercise\Interfaces\ExerciseServiceInterface;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class ExerciseController extends Controller
 {
+    private ExerciseServiceInterface $exerciseService;
+
+    public function __construct(ExerciseServiceInterface $exerciseService)
+    {
+        $this->exerciseService = $exerciseService;
+    }
+
     public function index(): JsonResponse
     {
-        $exercises = Exercise::with(['category'])
-            ->latest()
-            ->paginate(10);
-
-        return response()->json($exercises);
+        $exercises = $this->exerciseService->getAllExercises();
+        return response()->json(ExerciseResource::collection($exercises));
     }
 
     public function store(StoreExerciseRequest $request): JsonResponse
@@ -27,38 +33,19 @@ class ExerciseController extends Controller
         try {
             DB::beginTransaction();
 
-            // Handle image upload
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('exercises', 'public');
-            }
-
-            // Create exercise
-            $exercise = Exercise::create([
-                'category_id' => $request->category_id,
-                'name' => $request->name,
-                'description' => $request->description,
-                'image_url' => $imagePath ? Storage::url($imagePath) : null,
-                'difficulty_level' => $request->difficulty_level,
-                'calories_per_minute' => $request->calories_per_minute,
-                'calories_per_km' => $request->calories_per_km,
-                'requires_distance' => $request->requires_distance,
-                'requires_heartrate' => $request->requires_heartrate,
-                'recommended_intensity' => $request->recommended_intensity,
-                'is_active' => true
-            ]);
+            $exercise = $this->exerciseService->createExercise(
+                $request->validated(),
+                $request->hasFile('image') ? $request->file('image') : null
+            );
 
             DB::commit();
 
             return response()->json([
                 'message' => 'Exercise created successfully',
-                'exercise' => $exercise->load('category')
+                'exercise' => new ExerciseResource($exercise)
             ], 201);
         } catch (\Exception $e) {
             DB::rollBack();
-            if (isset($imagePath)) {
-                Storage::delete($imagePath);
-            }
             return response()->json([
                 'message' => 'Error creating exercise',
                 'error' => $e->getMessage()
@@ -68,7 +55,7 @@ class ExerciseController extends Controller
 
     public function show(Exercise $exercise): JsonResponse
     {
-        return response()->json($exercise->load('category'));
+        return response()->json(new ExerciseResource($exercise->load('category')));
     }
 
     public function update(UpdateExerciseRequest $request, Exercise $exercise): JsonResponse
@@ -76,37 +63,42 @@ class ExerciseController extends Controller
         try {
             DB::beginTransaction();
 
-            // Handle image upload
-            if ($request->hasFile('image')) {
-                // Delete old image
-                if ($exercise->image_url) {
-                    Storage::delete(str_replace('/storage/', '', $exercise->image_url));
-                }
-                $imagePath = $request->file('image')->store('exercises', 'public');
-                $exercise->image_url = Storage::url($imagePath);
-            }
-
-            // Update exercise
-            $exercise->update([
-                'category_id' => $request->category_id,
-                'name' => $request->name,
-                'description' => $request->description,
-                'difficulty_level' => $request->difficulty_level,
-                'calories_per_minute' => $request->calories_per_minute,
-                'calories_per_km' => $request->calories_per_km,
-                'requires_distance' => $request->requires_distance,
-                'requires_heartrate' => $request->requires_heartrate,
-                'recommended_intensity' => $request->recommended_intensity,
+            Log::info('Update Exercise - Start', [
+                'exercise_id' => $exercise->id,
+                'request_data' => $request->all()
             ]);
+
+            $validated = $request->validated();
+            Log::info('Validated Data', ['validated' => $validated]);
+
+            // Handle image separately since it's optional
+            $validated = array_filter($validated, function ($value) {
+                return $value !== null;
+            });
+            Log::info('Filtered Data', ['filtered' => $validated]);
+
+            $hasFile = $request->hasFile('image');
+            Log::info('Image Upload Check', ['has_file' => $hasFile]);
+
+            $updatedExercise = $this->exerciseService->updateExercise(
+                $exercise->id,
+                $validated,
+                $request->hasFile('image') ? $request->file('image') : null
+            );
 
             DB::commit();
 
             return response()->json([
                 'message' => 'Exercise updated successfully',
-                'exercise' => $exercise->load('category')
+                'exercise' => $updatedExercise
             ]);
         } catch (\Exception $e) {
             DB::rollBack();
+            Log::error('Update Failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
             return response()->json([
                 'message' => 'Error updating exercise',
                 'error' => $e->getMessage()
@@ -119,12 +111,7 @@ class ExerciseController extends Controller
         try {
             DB::beginTransaction();
 
-            // Delete image if exists
-            if ($exercise->image_url) {
-                Storage::delete(str_replace('/storage/', '', $exercise->image_url));
-            }
-
-            $exercise->delete();
+            $this->exerciseService->deleteExercise($exercise);
 
             DB::commit();
 
@@ -141,40 +128,29 @@ class ExerciseController extends Controller
     public function search(Request $request): JsonResponse
     {
         $query = $request->get('q', '');
-
-        $exercises = Exercise::where('is_active', true)
-            ->where(function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
-                    ->orWhere('description', 'like', "%{$query}%");
-            })
-            ->with('category')
-            ->latest()
-            ->paginate(10);
+        $exercises = $this->exerciseService->searchExercises($query);
 
         return response()->json([
-            'data' => $exercises->items(),
-            'current_page' => $exercises->currentPage(),
-            'last_page' => $exercises->lastPage(),
-            'per_page' => $exercises->perPage(),
-            'total' => $exercises->total()
+            'data' => ExerciseResource::collection($exercises),
+            'meta' => [
+                'current_page' => $exercises->currentPage(),
+                'last_page' => $exercises->lastPage(),
+                'per_page' => $exercises->perPage(),
+                'total' => $exercises->total()
+            ]
         ]);
     }
 
-    public function getByCategory(Request $request, $categoryId): JsonResponse
+    public function getByCategory(Request $request, string $categoryId): JsonResponse
     {
-        $exercises = Exercise::where('category_id', $categoryId)
-            ->where('is_active', true)
-            ->with('category')
-            ->latest()
-            ->paginate(10);
-
-        return response()->json($exercises);
+        $exercises = $this->exerciseService->getByCategory($categoryId);
+        return response()->json(ExerciseResource::collection($exercises));
     }
 
     public function toggleStatus(Exercise $exercise): JsonResponse
     {
         try {
-            $exercise->update(['is_active' => !$exercise->is_active]);
+            $exercise = $this->exerciseService->toggleStatus($exercise);
 
             return response()->json([
                 'message' => 'Exercise status updated successfully',

@@ -3,6 +3,8 @@
 // app/Providers/RepositoryServiceProvider.php
 namespace App\Providers;
 
+use App\Repositories\Exercise\ExerciseRepository;
+use App\Repositories\Exercise\Interfaces\ExerciseRepositoryInterface;
 use App\Repositories\ExerciseCategory\ExerciseCategoryRepository;
 use App\Repositories\ExerciseCategory\Interfaces\ExerciseCategoryRepositoryInterface;
 use App\Repositories\FoodItem\FoodItemRepository;
@@ -20,6 +22,8 @@ use App\Repositories\NutritionType\Interfaces\NutritionTypeRepositoryInterface;
 use App\Repositories\NutritionType\NutritionTypeRepository;
 use App\Repositories\UserPreference\Interfaces\UserPreferenceRepositoryInterface;
 use App\Repositories\UserPreference\UserPreferenceRepository;
+use App\Services\Exercise\ExerciseService;
+use App\Services\Exercise\Interfaces\ExerciseServiceInterface;
 use App\Services\ExerciseCategory\ExerciseCategoryService;
 use App\Services\ExerciseCategory\Interfaces\ExerciseCategoryServiceInterface;
 use App\Services\FoodItem\FoodItemService;
@@ -79,6 +83,10 @@ class RepositoryServiceProvider extends ServiceProvider
             ExerciseCategoryRepositoryInterface::class,
             ExerciseCategoryRepository::class
         );
+        $this->app->bind(
+            ExerciseRepositoryInterface::class,
+            ExerciseRepository::class
+        );
 
         // Service Bindings
         $this->app->bind(
@@ -115,6 +123,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ExerciseCategoryServiceInterface::class,
             ExerciseCategoryService::class
+        );
+
+        $this->app->bind(
+            ExerciseServiceInterface::class,
+            ExerciseService::class
         );
     }
 }

@@ -1,5 +1,5 @@
 <?php
-// app/Http/Resources/ExerciseResource.php
+
 namespace App\Http\Resources;
 
 use Illuminate\Http\Request;
@@ -11,7 +11,7 @@ class ExerciseResource extends JsonResource
     {
         return [
             'id' => $this->id,
-            'category_id' => $this->category_id,
+            'category' => new ExerciseCategoryResource($this->whenLoaded('category')),
             'name' => $this->name,
             'description' => $this->description,
             'difficulty_level' => $this->difficulty_level,
@@ -22,9 +22,8 @@ class ExerciseResource extends JsonResource
             'requires_heartrate' => $this->requires_heartrate,
             'recommended_intensity' => $this->recommended_intensity,
             'is_active' => $this->is_active,
-            'category' => new ExerciseCategoryResource($this->whenLoaded('category')),
             'created_at' => $this->created_at,
-            'updated_at' => $this->updated_at
+            'updated_at' => $this->updated_at,
         ];
     }
 }

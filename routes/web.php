@@ -50,6 +50,11 @@ Route::middleware(['auth', 'admin'])->group(function () {
         'category' => 'id'
     ]);
 
+    Route::resource('exercises', ExerciseController::class);
+    Route::post('exercises/{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus'])->name('exercises.toggle-status');
+    Route::get('exercises/search', [ExerciseController::class, 'search'])->name('exercises.search');
+    Route::get('exercises/category/{categoryId}', [ExerciseController::class, 'getByCategory'])->name('exercises.by-category');
+
     // Route::get('exercise-categories', [ExerciseCategoryController::class, 'index'])->name('exercise-categories.index');
     // Route::get('exercise-categories/create', [ExerciseCategoryController::class, 'create'])->name('exercise-categories.create');
     // Route::post('exercise-categories', [ExerciseCategoryController::class, 'store'])->name('exercise-categories.store');
@@ -57,10 +62,10 @@ Route::middleware(['auth', 'admin'])->group(function () {
     // Route::put('exercise-categories/{exerciseCategory}', [ExerciseCategoryController::class, 'update'])->name('exercise-categories.update');
     // Route::delete('exercise-categories/{exerciseCategory}', [ExerciseCategoryController::class, 'destroy'])->name('exercise-categories.destroy');
 
-    // Exercises
-    Route::post('exercises/{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus'])
-        ->name('exercises.toggle-status');
-    Route::resource('exercises', ExerciseController::class);
+    // // Exercises
+    // Route::post('exercises/{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus'])
+    //     ->name('exercises.toggle-status');
+    // Route::resource('exercises', ExerciseController::class);
 
     // Exercise Intensities
     Route::resource('exercise-intensities', ExerciseIntensityController::class);

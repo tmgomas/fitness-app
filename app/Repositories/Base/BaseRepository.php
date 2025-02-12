@@ -1,10 +1,10 @@
 <?php
-// app/Repositories/Base/BaseRepository.php
+
 namespace App\Repositories\Base;
 
 use App\Repositories\Interfaces\BaseRepositoryInterface;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
@@ -22,7 +22,7 @@ abstract class BaseRepository implements BaseRepositoryInterface
 
     public function find($id)
     {
-        return $this->model->find($id);
+        return $this->model->findOrFail($id);
     }
 
     public function create(array $data)
@@ -34,12 +34,12 @@ abstract class BaseRepository implements BaseRepositoryInterface
     {
         $record = $this->find($id);
         $record->update($data);
-        return $record;
+        return $record->fresh();
     }
 
     public function delete($id)
     {
-        return $this->model->destroy($id);
+        return $this->find($id)->delete();
     }
 
     public function query(): Builder
