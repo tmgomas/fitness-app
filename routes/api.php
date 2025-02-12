@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\ExerciseCategoryController;
 use App\Http\Controllers\Api\ExerciseController;
 use App\Http\Controllers\Api\FoodItemController;
 use App\Http\Controllers\Api\HealthDataController;
@@ -49,6 +50,12 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('meals', MealController::class);
     Route::get('meals/search', [MealController::class, 'search']);
+
+    Route::apiResource('exercise-categories', ExerciseCategoryController::class)->parameters([
+        'exercise-categories' => 'category'
+    ])->scoped([
+        'category' => 'id'
+    ]);
 
     // // Health Data Routes
     // Route::get('/health-data', [UserHealthDataController::class, 'index']);

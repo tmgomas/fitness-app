@@ -1,57 +1,77 @@
 <?php
+// app/Http/Controllers/ExerciseCategoryController.php
+namespace App\Http\Controllers;
 
-namespace App\Http\Controllers;  // Changed from App\Http\Controllers
-
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ExerciseCategory\StoreExerciseCategoryRequest;
 use App\Http\Requests\ExerciseCategory\UpdateExerciseCategoryRequest;
-use App\Models\ExerciseCategory;
+use App\Services\ExerciseCategory\Interfaces\ExerciseCategoryServiceInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class ExerciseCategoryController extends Controller
 {
+    protected $categoryService;
+
+    public function __construct(ExerciseCategoryServiceInterface $categoryService)
+    {
+        $this->categoryService = $categoryService;
+    }
+
     public function index(): View
     {
-        $categories = ExerciseCategory::with('exercises')->paginate(10);
-
-        return view('exercise-categories.index', compact('categories')); // Added '' prefix
+        $categories = $this->categoryService->getAllCategories();
+        return view('exercise-categories.index', compact('categories'));
     }
 
     public function create(): View
     {
-        return view('exercise-categories.create'); // Added '' prefix
+        return view('exercise-categories.create');
     }
 
     public function store(StoreExerciseCategoryRequest $request): RedirectResponse
     {
-        ExerciseCategory::create($request->validated());
-
-        return redirect()
-            ->route('exercise-categories.index') // Added '' prefix
-            ->with('success', 'Exercise category created successfully');
+        try {
+            $this->categoryService->createCategory($request->validated());
+            return redirect()
+                ->route('exercise-categories.index')
+                ->with('success', 'Exercise category created successfully');
+        } catch (\Exception $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Error creating exercise category: ' . $e->getMessage());
+        }
     }
 
-    public function edit(ExerciseCategory $exerciseCategory): View  // Changed parameter name
+    public function edit($id): View
     {
-        return view('exercise-categories.edit', compact('exerciseCategory')); // Changed variable name and added '' prefix
+        $exerciseCategory = $this->categoryService->getCategory($id);
+        return view('exercise-categories.edit', compact('exerciseCategory'));
     }
 
-    public function update(UpdateExerciseCategoryRequest $request, ExerciseCategory $exerciseCategory): RedirectResponse // Changed parameter name
+    public function update(UpdateExerciseCategoryRequest $request, $id): RedirectResponse
     {
-        $exerciseCategory->update($request->validated());
-
-        return redirect()
-            ->route('exercise-categories.index') // Added '' prefix
-            ->with('success', 'Exercise category updated successfully');
+        try {
+            $this->categoryService->updateCategory($id, $request->validated());
+            return redirect()
+                ->route('exercise-categories.index')
+                ->with('success', 'Exercise category updated successfully');
+        } catch (\Exception $e) {
+            return back()
+                ->withInput()
+                ->with('error', 'Error updating exercise category: ' . $e->getMessage());
+        }
     }
 
-    public function destroy(ExerciseCategory $exerciseCategory): RedirectResponse // Changed parameter name
+    public function destroy($id): RedirectResponse
     {
-        $exerciseCategory->delete();
-
-        return redirect()
-            ->route('exercise-categories.index') // Added '' prefix
-            ->with('success', 'Exercise category deleted successfully');
+        try {
+            $this->categoryService->deleteCategory($id);
+            return redirect()
+                ->route('exercise-categories.index')
+                ->with('success', 'Exercise category deleted successfully');
+        } catch (\Exception $e) {
+            return back()
+                ->with('error', 'Error deleting exercise category: ' . $e->getMessage());
+        }
     }
 }
