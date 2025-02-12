@@ -78,10 +78,38 @@ class MealController extends Controller
         }
     }
 
+    // app/Http/Controllers/MealController.php
+    // app/Http/Controllers/MealController.php
     public function search(Request $request): JsonResponse
     {
-        $query = $request->get('q', '');
-        $meals = $this->mealService->searchMeals($query);
-        return response()->json(MealResource::collection($meals));
+        try {
+            $query = $request->get('q', '');
+            $meals = $this->mealService->searchMeals($query);
+
+            return response()->json([  // Note: Wrapped in an object
+                'data' => [
+                    'items' => $meals->isEmpty() ? [] : MealResource::collection($meals)->response()->getData()->data,
+                    'total' => $meals->total(),
+                    'currentPage' => $meals->currentPage(),
+                    'perPage' => $meals->perPage(),
+                    'lastPage' => $meals->lastPage()
+                ],
+                'message' => $meals->isEmpty() ? 'No meals found matching your search criteria.' : 'Meals retrieved successfully.',
+                'success' => true
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'data' => [
+                    'items' => [],
+                    'total' => 0,
+                    'currentPage' => 1,
+                    'perPage' => 10,
+                    'lastPage' => 1
+                ],
+                'message' => 'An error occurred while searching meals.',
+                'error' => $e->getMessage(),
+                'success' => false
+            ]);
+        }
     }
 }

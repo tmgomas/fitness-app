@@ -19,16 +19,23 @@ class MealRepository extends BaseRepository implements MealRepositoryInterface
         return $this->model->with(['nutritionFacts', 'foods'])->find($id);
     }
 
+    // app/Repositories/Meal/MealRepository.php
     public function searchMeals(string $query, bool $isActive = true)
     {
-        return $this->model->where('is_active', $isActive)
+        $results = $this->model->where('is_active', $isActive)
             ->where(function ($q) use ($query) {
                 $q->where('name', 'like', "%{$query}%")
                     ->orWhere('description', 'like', "%{$query}%");
             })
             ->with(['nutritionFacts', 'foods'])
-            ->latest()
-            ->paginate(10);
+            ->latest();
+
+        // Check if we have any results before paginating
+        if ($results->count() === 0) {
+            return collect([]);  // Return empty collection instead of null
+        }
+
+        return $results->paginate(10);
     }
 
     public function createWithRelations(array $data)

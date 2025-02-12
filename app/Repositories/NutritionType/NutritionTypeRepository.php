@@ -15,11 +15,10 @@ class NutritionTypeRepository extends BaseRepository implements NutritionTypeRep
 
     public function getAllActive($perPage = 10)
     {
-        return NutritionType::where('is_active', true)
+        return $this->model->where('is_active', true)
             ->orderBy('created_at', 'desc')
             ->paginate($perPage);
     }
-
     public function getById($nutritionId)
     {
         return $this->model->where('nutrition_id', $nutritionId)

@@ -39,17 +39,17 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/current-user', [UserController::class, 'getCurrentUser']);
 
 
-    Route::apiResource('food-items', FoodItemController::class);
+
     // Additional custom routes
-    Route::get('/food-items/search', [FoodItemController::class, 'search'])
-        ->name('api.food-items.search');
+    Route::get('/food-items/search', [FoodItemController::class, 'search']);
+    Route::apiResource('food-items', FoodItemController::class);
 
     Route::apiResource('food-nutrition', FoodNutritionController::class);
     Route::get('food-nutrition/search', [FoodNutritionController::class, 'search'])
         ->name('api.food-nutrition.search');
 
+    Route::get('meals/search', [MealController::class, 'search']); // Should come BEFORE apiResource
     Route::apiResource('meals', MealController::class);
-    Route::get('meals/search', [MealController::class, 'search']);
 
     Route::apiResource('exercise-categories', ExerciseCategoryController::class)->parameters([
         'exercise-categories' => 'category'

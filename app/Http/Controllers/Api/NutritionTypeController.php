@@ -9,6 +9,7 @@ use App\Http\Requests\NutritionType\UpdateNutritionTypeRequest;
 use App\Services\NutritionType\Interfaces\NutritionTypeServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Exception;
+use Illuminate\Support\Facades\Log;
 
 class NutritionTypeController extends Controller
 {
@@ -19,22 +20,41 @@ class NutritionTypeController extends Controller
         $this->nutritionTypeService = $nutritionTypeService;
     }
 
+    // NutritionTypeController.php
     public function index(): JsonResponse
     {
         try {
+            Log::info('Starting to fetch all nutrition types');
+
             $nutritionTypes = $this->nutritionTypeService->getAllNutritionTypes();
+
+            Log::info('Successfully retrieved nutrition types', [
+                'count' => $nutritionTypes->count(),  // Add total count
+                'status' => 'success'
+            ]);
+
             return response()->json([
                 'status' => 'success',
-                'data' => NutritionTypeResource::collection($nutritionTypes)
+                'data' => NutritionTypeResource::collection($nutritionTypes),
+                'meta' => [
+                    'current_page' => $nutritionTypes->currentPage(),
+                    'per_page' => $nutritionTypes->perPage(),
+                    'total' => $nutritionTypes->total()
+                ]
             ]);
         } catch (Exception $e) {
+            Log::error('Error while fetching nutrition types', [
+                'error' => $e->getMessage(),
+                'file' => $e->getFile(),
+                'line' => $e->getLine()
+            ]);
+
             return response()->json([
                 'status' => 'error',
                 'message' => $e->getMessage()
             ], 500);
         }
     }
-
     public function store(StoreNutritionTypeRequest $request): JsonResponse
     {
         try {

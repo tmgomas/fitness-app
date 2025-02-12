@@ -9,7 +9,7 @@ class NutritionTypeResource extends JsonResource
     public function toArray($request)
     {
         return [
-            'id' => $this->nutrition_id,
+            'nutrition_id' => $this->nutrition_id,
             'name' => $this->name,
             'description' => $this->description,
             'unit' => $this->unit,
