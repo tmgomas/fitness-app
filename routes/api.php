@@ -12,6 +12,7 @@ use App\Http\Controllers\Api\UserFoodLogController;
 use App\Http\Controllers\Api\UserMealLogController;
 use App\Http\Controllers\API\UserMeasurementController;
 use App\Http\Controllers\Api\UserPreferenceController;
+use App\Http\Controllers\FoodNutritionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -41,6 +42,10 @@ Route::middleware('auth:sanctum')->group(function () {
     // Additional custom routes
     Route::get('/food-items/search', [FoodItemController::class, 'search'])
         ->name('api.food-items.search');
+
+    Route::apiResource('food-nutrition', FoodNutritionController::class);
+    Route::get('food-nutrition/search', [FoodNutritionController::class, 'search'])
+        ->name('api.food-nutrition.search');
 
     // // Health Data Routes
     // Route::get('/health-data', [UserHealthDataController::class, 'index']);

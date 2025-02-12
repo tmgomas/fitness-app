@@ -42,7 +42,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     Route::resource('food-items', FoodItemController::class);
 
-    Route::resource('food-nutrition', FoodNutritionController::class);
+    // Route::resource('food-nutrition', FoodNutritionController::class);
 
     Route::resource('meals', MealController::class);
 
@@ -60,4 +60,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Exercise Intensities
     Route::resource('exercise-intensities', ExerciseIntensityController::class);
+
+    Route::resource('food-nutrition', FoodNutritionController::class);
 });

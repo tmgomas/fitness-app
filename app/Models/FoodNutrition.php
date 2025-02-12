@@ -25,7 +25,7 @@ class FoodNutrition extends Model
         'amount_per_100g' => 'decimal:2'
     ];
 
-    public function foodItem(): BelongsTo
+    public function food(): BelongsTo
     {
         return $this->belongsTo(FoodItem::class, 'food_id', 'food_id');
     }

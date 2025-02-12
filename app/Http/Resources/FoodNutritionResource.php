@@ -11,9 +11,11 @@ class FoodNutritionResource extends JsonResource
     {
         return [
             'id' => $this->food_nutrition_id,
+            'food_id' => $this->food_id,
             'nutrition_id' => $this->nutrition_id,
             'amount_per_100g' => $this->amount_per_100g,
             'measurement_unit' => $this->measurement_unit,
+            'food' => new FoodItemResource($this->whenLoaded('food')),  // Using 'food' relationship
             'nutrition_type' => new NutritionTypeResource($this->whenLoaded('nutritionType')),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at
