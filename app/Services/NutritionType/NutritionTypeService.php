@@ -19,7 +19,7 @@ class NutritionTypeService implements NutritionTypeServiceInterface
     public function getAllNutritionTypes()
     {
         try {
-            return $this->nutritionTypeRepository->getAllActive();
+            return $this->nutritionTypeRepository->getAllActive(10); // පේජ් එකකට items 10 බැගින්
         } catch (\Exception $e) {
             Log::error('Error fetching nutrition types: ' . $e->getMessage());
             throw $e;

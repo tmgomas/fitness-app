@@ -4,7 +4,7 @@ namespace App\Repositories\NutritionType\Interfaces;
 
 interface NutritionTypeRepositoryInterface
 {
-    public function getAllActive();
+    public function getAllActive($perPage = 10);
     public function getById($nutritionId);
     public function create(array $data);
     public function update($nutritionId, array $data);

@@ -13,11 +13,11 @@ class NutritionTypeRepository extends BaseRepository implements NutritionTypeRep
         parent::__construct($model);
     }
 
-    public function getAllActive()
+    public function getAllActive($perPage = 10)
     {
-        return $this->model->where('is_active', true)
-            ->orderBy('name', 'asc')
-            ->get();
+        return NutritionType::where('is_active', true)
+            ->orderBy('created_at', 'desc')
+            ->paginate($perPage);
     }
 
     public function getById($nutritionId)

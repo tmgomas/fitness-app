@@ -5,7 +5,7 @@ use App\Http\Controllers\ExerciseController;
 use App\Http\Controllers\ExerciseIntensityController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\NutritionTypeController;
+use App\Http\Controllers\Web\NutritionTypeController;
 use App\Http\Controllers\FoodItemController;
 use App\Http\Controllers\FoodNutritionController;
 use App\Http\Controllers\MealController;
@@ -25,7 +25,7 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
 
 Route::middleware(['auth', 'admin'])->group(function () {
     // Users Routes
@@ -52,15 +52,12 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('exercise-categories/{exerciseCategory}/edit', [ExerciseCategoryController::class, 'edit'])->name('exercise-categories.edit');
     Route::put('exercise-categories/{exerciseCategory}', [ExerciseCategoryController::class, 'update'])->name('exercise-categories.update');
     Route::delete('exercise-categories/{exerciseCategory}', [ExerciseCategoryController::class, 'destroy'])->name('exercise-categories.destroy');
-    
+
     // Exercises
     Route::post('exercises/{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus'])
         ->name('exercises.toggle-status');
     Route::resource('exercises', ExerciseController::class);
-    
+
     // Exercise Intensities
     Route::resource('exercise-intensities', ExerciseIntensityController::class);
-    
 });
-
-
