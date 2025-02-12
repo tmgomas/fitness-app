@@ -7,6 +7,8 @@ use App\Repositories\Exercise\ExerciseRepository;
 use App\Repositories\Exercise\Interfaces\ExerciseRepositoryInterface;
 use App\Repositories\ExerciseCategory\ExerciseCategoryRepository;
 use App\Repositories\ExerciseCategory\Interfaces\ExerciseCategoryRepositoryInterface;
+use App\Repositories\ExerciseIntensity\ExerciseIntensityRepository;
+use App\Repositories\ExerciseIntensity\Interfaces\ExerciseIntensityRepositoryInterface;
 use App\Repositories\FoodItem\FoodItemRepository;
 use App\Repositories\FoodItem\Interfaces\FoodItemRepositoryInterface;
 use App\Repositories\FoodNutrition\FoodNutritionRepository;
@@ -26,6 +28,8 @@ use App\Services\Exercise\ExerciseService;
 use App\Services\Exercise\Interfaces\ExerciseServiceInterface;
 use App\Services\ExerciseCategory\ExerciseCategoryService;
 use App\Services\ExerciseCategory\Interfaces\ExerciseCategoryServiceInterface;
+use App\Services\ExerciseIntensity\ExerciseIntensityService;
+use App\Services\ExerciseIntensity\Interfaces\ExerciseIntensityServiceInterface;
 use App\Services\FoodItem\FoodItemService;
 use App\Services\FoodItem\Interfaces\FoodItemServiceInterface;
 use App\Services\FoodNutrition\FoodNutritionService;
@@ -88,6 +92,11 @@ class RepositoryServiceProvider extends ServiceProvider
             ExerciseRepository::class
         );
 
+        $this->app->bind(
+            ExerciseIntensityRepositoryInterface::class,
+            ExerciseIntensityRepository::class
+        );
+
         // Service Bindings
         $this->app->bind(
             HealthDataServiceInterface::class,
@@ -128,6 +137,15 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ExerciseServiceInterface::class,
             ExerciseService::class
+        );
+
+        $this->app->bind(
+            ExerciseIntensityServiceInterface::class,
+            ExerciseIntensityService::class
+        );
+        $this->app->bind(
+            ExerciseIntensityServiceInterface::class,
+            ExerciseIntensityService::class
         );
     }
 }

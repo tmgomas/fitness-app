@@ -8,7 +8,7 @@
                 </a>
             </div>
 
-            <form action="{{ route('exercise-intensities.update', $exerciseIntensity) }}" method="POST">
+            <form action="{{ route('exercise-intensities.update', $intensity->id) }}" method="POST">
                 @csrf
                 @method('PUT')
 
@@ -17,21 +17,22 @@
                         <!-- Name -->
                         <div>
                             <label for="name" class="block text-sm font-medium text-gray-700">Name</label>
-                            <input type="text" name="name" id="name" value="{{ old('name', $exerciseIntensity->name) }}"
+                            <input type="text" name="name" id="name" value="{{ old('name', $intensity->name) }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('name') border-red-500 @enderror">
                             @error('name')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <!-- Calorie Multiplier -->
                         <div>
-                            <label for="calorie_multiplier" class="block text-sm font-medium text-gray-700">Calorie Multiplier</label>
-                            <input type="number" step="0.1" name="calorie_multiplier" id="calorie_multiplier" 
-                                value="{{ old('calorie_multiplier', $exerciseIntensity->calorie_multiplier) }}"
+                            <label for="calorie_multiplier" class="block text-sm font-medium text-gray-700">Calorie
+                                Multiplier</label>
+                            <input type="number" step="0.1" name="calorie_multiplier" id="calorie_multiplier"
+                                value="{{ old('calorie_multiplier', $intensity->calorie_multiplier) }}"
                                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('calorie_multiplier') border-red-500 @enderror">
                             @error('calorie_multiplier')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
 
@@ -39,9 +40,9 @@
                         <div>
                             <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
                             <textarea name="description" id="description" rows="3"
-                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('description') border-red-500 @enderror">{{ old('description', $exerciseIntensity->description) }}</textarea>
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('description') border-red-500 @enderror">{{ old('description', $intensity->description) }}</textarea>
                             @error('description')
-                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
                     </div>

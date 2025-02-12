@@ -1,56 +1,59 @@
 <?php
 
+// app/Http/Controllers/Api/ExerciseIntensityController.php
+
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ExerciseIntensity\StoreExerciseIntensityRequest;
 use App\Http\Requests\ExerciseIntensity\UpdateExerciseIntensityRequest;
-use App\Models\ExerciseIntensity;
+use App\Http\Resources\ExerciseIntensityResource;
+use App\Services\ExerciseIntensity\Interfaces\ExerciseIntensityServiceInterface;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 
 class ExerciseIntensityController extends Controller
 {
+    private $exerciseIntensityService;
+
+    public function __construct(ExerciseIntensityServiceInterface $exerciseIntensityService)
+    {
+        $this->exerciseIntensityService = $exerciseIntensityService;
+    }
+
     public function index(): JsonResponse
     {
-        $intensities = ExerciseIntensity::all();
-        
-        return response()->json([
-            'data' => $intensities
-        ]);
+        $intensities = $this->exerciseIntensityService->getAllIntensities();
+        return response()->json(ExerciseIntensityResource::collection($intensities));
     }
 
     public function store(StoreExerciseIntensityRequest $request): JsonResponse
     {
-        $intensity = ExerciseIntensity::create($request->validated());
-        
+        $intensity = $this->exerciseIntensityService->createIntensity($request->validated());
         return response()->json([
             'message' => 'Exercise intensity created successfully',
-            'data' => $intensity
+            'data' => new ExerciseIntensityResource($intensity)
         ], Response::HTTP_CREATED);
     }
 
-    public function show(ExerciseIntensity $intensity): JsonResponse
+    public function show($id): JsonResponse
     {
-        return response()->json([
-            'data' => $intensity
-        ]);
+        $intensity = $this->exerciseIntensityService->findIntensity($id);
+        return response()->json(new ExerciseIntensityResource($intensity));
     }
 
-    public function update(UpdateExerciseIntensityRequest $request, ExerciseIntensity $intensity): JsonResponse
+    public function update(UpdateExerciseIntensityRequest $request, $id): JsonResponse
     {
-        $intensity->update($request->validated());
-        
+        $intensity = $this->exerciseIntensityService->updateIntensity($id, $request->validated());
         return response()->json([
             'message' => 'Exercise intensity updated successfully',
-            'data' => $intensity
+            'data' => new ExerciseIntensityResource($intensity)
         ]);
     }
 
-    public function destroy(ExerciseIntensity $intensity): JsonResponse
+    public function destroy($id): JsonResponse
     {
-        $intensity->delete();
-        
+        $this->exerciseIntensityService->deleteIntensity($id);
         return response()->json([
             'message' => 'Exercise intensity deleted successfully'
         ]);

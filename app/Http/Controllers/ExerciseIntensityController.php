@@ -1,20 +1,28 @@
 <?php
 
+// app/Http/Controllers/ExerciseIntensityController.php
+
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use App\Http\Requests\ExerciseIntensity\StoreExerciseIntensityRequest;
 use App\Http\Requests\ExerciseIntensity\UpdateExerciseIntensityRequest;
-use App\Models\ExerciseIntensity;
+use App\Services\ExerciseIntensity\Interfaces\ExerciseIntensityServiceInterface;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 
 class ExerciseIntensityController extends Controller
 {
+    private $exerciseIntensityService;
+
+    public function __construct(ExerciseIntensityServiceInterface $exerciseIntensityService)
+    {
+        $this->exerciseIntensityService = $exerciseIntensityService;
+    }
+
     public function index(): View
     {
-        $intensities = ExerciseIntensity::paginate(10);
-        
+
+        $intensities = $this->exerciseIntensityService->getPaginatedIntensities(10);
         return view('exercise-intensities.index', compact('intensities'));
     }
 
@@ -25,31 +33,29 @@ class ExerciseIntensityController extends Controller
 
     public function store(StoreExerciseIntensityRequest $request): RedirectResponse
     {
-        ExerciseIntensity::create($request->validated());
-        
+        $this->exerciseIntensityService->createIntensity($request->validated());
         return redirect()
             ->route('exercise-intensities.index')
             ->with('success', 'Exercise intensity created successfully');
     }
 
-    public function edit(ExerciseIntensity $intensity): View
+    public function edit($id): View
     {
+        $intensity = $this->exerciseIntensityService->findIntensity($id);
         return view('exercise-intensities.edit', compact('intensity'));
     }
 
-    public function update(UpdateExerciseIntensityRequest $request, ExerciseIntensity $intensity): RedirectResponse
+    public function update(UpdateExerciseIntensityRequest $request, $id): RedirectResponse
     {
-        $intensity->update($request->validated());
-        
+        $this->exerciseIntensityService->updateIntensity($id, $request->validated());
         return redirect()
             ->route('exercise-intensities.index')
             ->with('success', 'Exercise intensity updated successfully');
     }
 
-    public function destroy(ExerciseIntensity $intensity): RedirectResponse
+    public function destroy($id): RedirectResponse
     {
-        $intensity->delete();
-        
+        $this->exerciseIntensityService->deleteIntensity($id);
         return redirect()
             ->route('exercise-intensities.index')
             ->with('success', 'Exercise intensity deleted successfully');

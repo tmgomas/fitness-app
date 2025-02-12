@@ -56,23 +56,16 @@ Route::middleware('auth:sanctum')->group(function () {
     ])->scoped([
         'category' => 'id'
     ]);
-
+    Route::get('exercises/search', [ExerciseController::class, 'search']);
     Route::apiResource('exercises', ExerciseController::class);
 
     // Additional Exercise Routes
-    Route::prefix('exercises')->group(function () {
-        // Search Exercises
-        Route::get('search', [ExerciseController::class, 'search'])
-            ->name('api.exercises.search');
 
-        // Get Exercises by Category
-        Route::get('category/{categoryId}', [ExerciseController::class, 'getByCategory'])
-            ->name('api.exercises.by-category');
+    // Search Exercises
 
-        // Toggle Exercise Status
-        Route::patch('{exercise}/toggle-status', [ExerciseController::class, 'toggleStatus'])
-            ->name('api.exercises.toggle-status');
-    });
+    // Get Exercises by Category
+
+
 
     // // Health Data Routes
     // Route::get('/health-data', [UserHealthDataController::class, 'index']);
