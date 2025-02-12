@@ -3,6 +3,8 @@
 // app/Providers/RepositoryServiceProvider.php
 namespace App\Providers;
 
+use App\Repositories\FoodItem\FoodItemRepository;
+use App\Repositories\FoodItem\Interfaces\FoodItemRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\HealthData\HealthDataRepository;
 use App\Repositories\HealthData\Interfaces\HealthDataRepositoryInterface;
@@ -12,6 +14,8 @@ use App\Repositories\NutritionType\Interfaces\NutritionTypeRepositoryInterface;
 use App\Repositories\NutritionType\NutritionTypeRepository;
 use App\Repositories\UserPreference\Interfaces\UserPreferenceRepositoryInterface;
 use App\Repositories\UserPreference\UserPreferenceRepository;
+use App\Services\FoodItem\FoodItemService;
+use App\Services\FoodItem\Interfaces\FoodItemServiceInterface;
 use App\Services\HealthData\HealthDataService;
 use App\Services\HealthData\Interfaces\HealthDataServiceInterface;
 use App\Services\Measurement\Interfaces\MeasurementServiceInterface;
@@ -45,6 +49,10 @@ class RepositoryServiceProvider extends ServiceProvider
             NutritionTypeRepositoryInterface::class,
             NutritionTypeRepository::class
         );
+        $this->app->bind(
+            FoodItemRepositoryInterface::class,
+            FoodItemRepository::class
+        );
 
         // Service Bindings
         $this->app->bind(
@@ -64,6 +72,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             NutritionTypeServiceInterface::class,
             NutritionTypeService::class
+        );
+        $this->app->bind(
+            FoodItemServiceInterface::class,
+            FoodItemService::class
         );
     }
 }

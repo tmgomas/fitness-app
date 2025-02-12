@@ -2,6 +2,8 @@
 
 namespace App\Repositories\Interfaces;
 
+use Illuminate\Database\Eloquent\Builder;
+
 interface BaseRepositoryInterface
 {
     public function all();
@@ -9,4 +11,6 @@ interface BaseRepositoryInterface
     public function create(array $data);
     public function update($id, array $data);
     public function delete($id);
+    public function query(): Builder;
+    public function paginate(int $perPage = 10);
 }

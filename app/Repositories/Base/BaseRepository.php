@@ -4,6 +4,7 @@ namespace App\Repositories\Base;
 
 use App\Repositories\Interfaces\BaseRepositoryInterface;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 abstract class BaseRepository implements BaseRepositoryInterface
 {
@@ -39,5 +40,15 @@ abstract class BaseRepository implements BaseRepositoryInterface
     public function delete($id)
     {
         return $this->model->destroy($id);
+    }
+
+    public function query(): Builder
+    {
+        return $this->model->newQuery();
+    }
+
+    public function paginate(int $perPage = 10)
+    {
+        return $this->query()->paginate($perPage);
     }
 }

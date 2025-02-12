@@ -35,6 +35,13 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/logout', [UserController::class, 'logout']);
 
     Route::get('/current-user', [UserController::class, 'getCurrentUser']);
+
+
+    Route::apiResource('food-items', FoodItemController::class);
+    // Additional custom routes
+    Route::get('/food-items/search', [FoodItemController::class, 'search'])
+        ->name('api.food-items.search');
+
     // // Health Data Routes
     // Route::get('/health-data', [UserHealthDataController::class, 'index']);
     // Route::post('/health-data', [UserHealthDataController::class, 'store']);
@@ -84,12 +91,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('meals/{meal}', [MealController::class, 'update']);
     Route::delete('meals/{meal}', [MealController::class, 'destroy']);
 
-    Route::get('food-items/search', [FoodItemController::class, 'search']); // Move this BEFORE the {foodItem} route
-    Route::get('food-items', [FoodItemController::class, 'index']);
-    Route::post('food-items', [FoodItemController::class, 'store']);
-    Route::get('food-items/{foodItem}', [FoodItemController::class, 'show']);
-    Route::put('food-items/{foodItem}', [FoodItemController::class, 'update']);
-    Route::delete('food-items/{foodItem}', [FoodItemController::class, 'destroy']);
+    // Route::get('food-items/search', [FoodItemController::class, 'search']); // Move this BEFORE the {foodItem} route
+    // Route::get('food-items', [FoodItemController::class, 'index']);
+    // Route::post('food-items', [FoodItemController::class, 'store']);
+    // Route::get('food-items/{foodItem}', [FoodItemController::class, 'show']);
+    // Route::put('food-items/{foodItem}', [FoodItemController::class, 'update']);
+    // Route::delete('food-items/{foodItem}', [FoodItemController::class, 'destroy']);
 
 
     // Route::get('/nutrition-types', [NutritionTypeController::class, 'index']);
