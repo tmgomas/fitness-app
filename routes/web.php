@@ -8,7 +8,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\Web\NutritionTypeController;
 use App\Http\Controllers\FoodItemController;
 use App\Http\Controllers\FoodNutritionController;
-use App\Http\Controllers\MealController;
+use App\Http\Controllers\Web\MealController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -44,7 +44,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
 
     // Route::resource('food-nutrition', FoodNutritionController::class);
 
-    Route::resource('meals', MealController::class);
+
 
     Route::get('exercise-categories', [ExerciseCategoryController::class, 'index'])->name('exercise-categories.index');
     Route::get('exercise-categories/create', [ExerciseCategoryController::class, 'create'])->name('exercise-categories.create');
@@ -62,4 +62,6 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('exercise-intensities', ExerciseIntensityController::class);
 
     Route::resource('food-nutrition', FoodNutritionController::class);
+
+    Route::resource('meals', MealController::class);
 });

@@ -1,69 +1,39 @@
 <?php
-
+// app/Http/Controllers/Api/MealController.php
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Meal\StoreMealRequest;
 use App\Http\Requests\Meal\UpdateMealRequest;
-use App\Models\Meal;
-use Illuminate\Http\Request;
+use App\Http\Resources\MealResource;
+use App\Services\Meal\Interfaces\MealServiceInterface;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Storage;
+use Illuminate\Http\Request;
 
 class MealController extends Controller
 {
+    protected $mealService;
+
+    public function __construct(MealServiceInterface $mealService)
+    {
+        $this->mealService = $mealService;
+    }
+
     public function index(): JsonResponse
     {
-        $meals = Meal::with(['nutritionFacts', 'foods'])
-            ->latest()
-            ->paginate(10);
-
-        return response()->json($meals);
+        $meals = $this->mealService->getAllMeals();
+        return response()->json(MealResource::collection($meals));
     }
 
     public function store(StoreMealRequest $request): JsonResponse
     {
         try {
-            DB::beginTransaction();
-
-            // Handle image upload
-            $imagePath = null;
-            if ($request->hasFile('image')) {
-                $imagePath = $request->file('image')->store('meals', 'public');
-            }
-
-            // Create meal
-            $meal = Meal::create([
-                'name' => $request->name,
-                'description' => $request->description,
-                'image_url' => $imagePath ? Storage::url($imagePath) : null,
-                'default_serving_size' => $request->default_serving_size,
-                'serving_unit' => $request->serving_unit,
-                'is_active' => true
-            ]);
-
-            // Create nutrition facts
-            foreach ($request->nutrition_facts as $nutrition) {
-                $meal->nutritionFacts()->create($nutrition);
-            }
-
-            // Create food items
-            foreach ($request->foods as $food) {
-                $meal->foods()->create($food);
-            }
-
-            DB::commit();
-
+            $meal = $this->mealService->createMeal($request->validated());
             return response()->json([
                 'message' => 'Meal created successfully',
-                'meal' => $meal->load(['nutritionFacts', 'foods'])
+                'data' => new MealResource($meal)
             ], 201);
         } catch (\Exception $e) {
-            DB::rollBack();
-            if (isset($imagePath)) {
-                Storage::delete($imagePath);
-            }
             return response()->json([
                 'message' => 'Error creating meal',
                 'error' => $e->getMessage()
@@ -71,49 +41,21 @@ class MealController extends Controller
         }
     }
 
-    public function show(Meal $meal): JsonResponse
+    public function show($id): JsonResponse
     {
-        return response()->json($meal->load(['nutritionFacts', 'foods']));
+        $meal = $this->mealService->getMeal($id);
+        return response()->json(new MealResource($meal));
     }
 
-    public function update(UpdateMealRequest $request, Meal $meal): JsonResponse
+    public function update(UpdateMealRequest $request, $id): JsonResponse
     {
         try {
-            DB::beginTransaction();
-
-            // Handle image upload
-            if ($request->hasFile('image')) {
-                // Delete old image
-                if ($meal->image_url) {
-                    Storage::delete(str_replace('/storage/', '', $meal->image_url));
-                }
-                $imagePath = $request->file('image')->store('meals', 'public');
-                $meal->image_url = Storage::url($imagePath);
-            }
-
-            // Update meal
-            $meal->update($request->except('image'));
-
-            // Update nutrition facts
-            $meal->nutritionFacts()->delete();
-            foreach ($request->nutrition_facts as $nutrition) {
-                $meal->nutritionFacts()->create($nutrition);
-            }
-
-            // Update food items
-            $meal->foods()->delete();
-            foreach ($request->foods as $food) {
-                $meal->foods()->create($food);
-            }
-
-            DB::commit();
-
+            $meal = $this->mealService->updateMeal($id, $request->validated());
             return response()->json([
                 'message' => 'Meal updated successfully',
-                'meal' => $meal->load(['nutritionFacts', 'foods'])
+                'data' => new MealResource($meal)
             ]);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'message' => 'Error updating meal',
                 'error' => $e->getMessage()
@@ -121,48 +63,25 @@ class MealController extends Controller
         }
     }
 
-    public function destroy(Meal $meal): JsonResponse
+    public function destroy($id): JsonResponse
     {
         try {
-            DB::beginTransaction();
-
-            // Delete image if exists
-            if ($meal->image_url) {
-                Storage::delete(str_replace('/storage/', '', $meal->image_url));
-            }
-
-            $meal->delete();
-
-            DB::commit();
-
-            return response()->json(['message' => 'Meal deleted successfully']);
+            $this->mealService->deleteMeal($id);
+            return response()->json([
+                'message' => 'Meal deleted successfully'
+            ]);
         } catch (\Exception $e) {
-            DB::rollBack();
             return response()->json([
                 'message' => 'Error deleting meal',
                 'error' => $e->getMessage()
             ], 500);
         }
     }
+
     public function search(Request $request): JsonResponse
     {
         $query = $request->get('q', '');
-
-        $meals = Meal::where('is_active', true)
-            ->where(function ($q) use ($query) {
-                $q->where('name', 'like', "%{$query}%")
-                    ->orWhere('description', 'like', "%{$query}%");
-            })
-            ->with(['nutritionFacts', 'foods'])
-            ->latest()
-            ->paginate(10);
-
-        return response()->json([
-            'data' => $meals->items(),
-            'current_page' => $meals->currentPage(),
-            'last_page' => $meals->lastPage(),
-            'per_page' => $meals->perPage(),
-            'total' => $meals->total()
-        ]);
+        $meals = $this->mealService->searchMeals($query);
+        return response()->json(MealResource::collection($meals));
     }
 }

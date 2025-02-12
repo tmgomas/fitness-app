@@ -11,6 +11,8 @@ use App\Repositories\FoodNutrition\Interfaces\FoodNutritionRepositoryInterface;
 use Illuminate\Support\ServiceProvider;
 use App\Repositories\HealthData\HealthDataRepository;
 use App\Repositories\HealthData\Interfaces\HealthDataRepositoryInterface;
+use App\Repositories\Meal\Interfaces\MealRepositoryInterface;
+use App\Repositories\Meal\MealRepository;
 use App\Repositories\Measurement\Interfaces\MeasurementRepositoryInterface;
 use App\Repositories\Measurement\MeasurementRepository;
 use App\Repositories\NutritionType\Interfaces\NutritionTypeRepositoryInterface;
@@ -23,6 +25,8 @@ use App\Services\FoodNutrition\FoodNutritionService;
 use App\Services\FoodNutrition\Interfaces\FoodNutritionServiceInterface;
 use App\Services\HealthData\HealthDataService;
 use App\Services\HealthData\Interfaces\HealthDataServiceInterface;
+use App\Services\Meal\Interfaces\MealServiceInterface;
+use App\Services\Meal\MealService;
 use App\Services\Measurement\Interfaces\MeasurementServiceInterface;
 use App\Services\Measurement\MeasurementService;
 use App\Services\NutritionType\Interfaces\NutritionTypeServiceInterface;
@@ -63,6 +67,10 @@ class RepositoryServiceProvider extends ServiceProvider
             FoodNutritionRepositoryInterface::class,
             FoodNutritionRepository::class
         );
+        $this->app->bind(
+            MealRepositoryInterface::class,
+            MealRepository::class
+        );
 
         // Service Bindings
         $this->app->bind(
@@ -91,6 +99,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             FoodNutritionServiceInterface::class,
             FoodNutritionService::class
+        );
+        $this->app->bind(
+            MealServiceInterface::class,
+            MealService::class
         );
     }
 }

@@ -47,6 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('food-nutrition/search', [FoodNutritionController::class, 'search'])
         ->name('api.food-nutrition.search');
 
+    Route::apiResource('meals', MealController::class);
+    Route::get('meals/search', [MealController::class, 'search']);
+
     // // Health Data Routes
     // Route::get('/health-data', [UserHealthDataController::class, 'index']);
     // Route::post('/health-data', [UserHealthDataController::class, 'store']);
@@ -89,12 +92,12 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::put('food-logs/{log_id}', [UserFoodLogController::class, 'update']);
     Route::delete('food-logs/{log_id}', [UserFoodLogController::class, 'destroy']);
 
-    Route::get('meals/search', [MealController::class, 'search']); // Search route MUST come before {meal} routes
-    Route::get('meals', [MealController::class, 'index']);
-    Route::post('meals', [MealController::class, 'store']);
-    Route::get('meals/{meal}', [MealController::class, 'show']);
-    Route::post('meals/{meal}', [MealController::class, 'update']);
-    Route::delete('meals/{meal}', [MealController::class, 'destroy']);
+    // Route::get('meals/search', [MealController::class, 'search']); // Search route MUST come before {meal} routes
+    // Route::get('meals', [MealController::class, 'index']);
+    // Route::post('meals', [MealController::class, 'store']);
+    // Route::get('meals/{meal}', [MealController::class, 'show']);
+    // Route::post('meals/{meal}', [MealController::class, 'update']);
+    // Route::delete('meals/{meal}', [MealController::class, 'destroy']);
 
     // Route::get('food-items/search', [FoodItemController::class, 'search']); // Move this BEFORE the {foodItem} route
     // Route::get('food-items', [FoodItemController::class, 'index']);
