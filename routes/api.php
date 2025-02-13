@@ -64,6 +64,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('food-logs/daily-nutrition', [UserFoodLogController::class, 'getDailyNutrition']);
     Route::apiResource('food-logs', UserFoodLogController::class);
+
+    Route::get('exercise-logs/stats', [UserExerciseLogController::class, 'getStats']);
+    Route::apiResource('exercise-logs', UserExerciseLogController::class);
     // Additional Exercise Routes
 
     // Search Exercises
@@ -135,12 +138,12 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::put('/nutrition-types{nutritionType}', [NutritionTypeController::class, 'update']);
     // Route::delete('/{nutritionType}', [NutritionTypeController::class, 'destroy']);
 
-    Route::get('/exercise-logs', [UserExerciseLogController::class, 'index']);
-    Route::post('/exercise-logs', [UserExerciseLogController::class, 'store']);
-    Route::get('/{log_id}', [UserExerciseLogController::class, 'show']);
-    Route::put('/{log_id}', [UserExerciseLogController::class, 'update']);
-    Route::delete('/{log_id}', [UserExerciseLogController::class, 'destroy']);
-    Route::get('/stats/summary', [UserExerciseLogController::class, 'getStats']);
+    // Route::get('/exercise-logs', [UserExerciseLogController::class, 'index']);
+    // Route::post('/exercise-logs', [UserExerciseLogController::class, 'store']);
+    // Route::get('/{log_id}', [UserExerciseLogController::class, 'show']);
+    // Route::put('/{log_id}', [UserExerciseLogController::class, 'update']);
+    // Route::delete('/{log_id}', [UserExerciseLogController::class, 'destroy']);
+    // Route::get('/stats/summary', [UserExerciseLogController::class, 'getStats']);
 
     // Route::get('/exercises', [ExerciseController::class, 'index']);
     // Route::post('/exercises', [ExerciseController::class, 'store']);

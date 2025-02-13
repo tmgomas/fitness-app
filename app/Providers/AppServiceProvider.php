@@ -22,6 +22,8 @@ use App\Repositories\Measurement\Interfaces\MeasurementRepositoryInterface;
 use App\Repositories\Measurement\MeasurementRepository;
 use App\Repositories\NutritionType\Interfaces\NutritionTypeRepositoryInterface;
 use App\Repositories\NutritionType\NutritionTypeRepository;
+use App\Repositories\UserExerciseLog\Interfaces\UserExerciseLogRepositoryInterface;
+use App\Repositories\UserExerciseLog\UserExerciseLogRepository;
 use App\Repositories\UserFoodLog\Interfaces\UserFoodLogRepositoryInterface;
 use App\Repositories\UserFoodLog\UserFoodLogRepository;
 use App\Repositories\UserMealLog\Interfaces\UserMealLogRepositoryInterface;
@@ -46,6 +48,8 @@ use App\Services\Measurement\Interfaces\MeasurementServiceInterface;
 use App\Services\Measurement\MeasurementService;
 use App\Services\NutritionType\Interfaces\NutritionTypeServiceInterface;
 use App\Services\NutritionType\NutritionTypeService;
+use App\Services\UserExerciseLog\Interfaces\UserExerciseLogServiceInterface;
+use App\Services\UserExerciseLog\UserExerciseLogService;
 use App\Services\UserFoodLog\Interfaces\UserFoodLogServiceInterface;
 use App\Services\UserFoodLog\UserFoodLogService;
 use App\Services\UserMealLog\Interfaces\UserMealLogServiceInterface;
@@ -113,7 +117,10 @@ class RepositoryServiceProvider extends ServiceProvider
             UserFoodLogRepositoryInterface::class,
             UserFoodLogRepository::class
         );
-
+        $this->app->bind(
+            UserExerciseLogRepositoryInterface::class,
+            UserExerciseLogRepository::class
+        );
         // Service Bindings
         $this->app->bind(
             HealthDataServiceInterface::class,
@@ -172,6 +179,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             UserFoodLogServiceInterface::class,
             UserFoodLogService::class
+        );
+
+        $this->app->bind(
+            UserExerciseLogServiceInterface::class,
+            UserExerciseLogService::class
         );
     }
 }
