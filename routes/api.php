@@ -59,6 +59,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('exercises/search', [ExerciseController::class, 'search']);
     Route::apiResource('exercises', ExerciseController::class);
 
+    Route::apiResource('meal_log', UserMealLogController::class);
+
     // Additional Exercise Routes
 
     // Search Exercises
@@ -89,19 +91,19 @@ Route::middleware('auth:sanctum')->group(function () {
     // Route::delete('/measurements/{id}', [UserMeasurementController::class, 'destroy']);
 
 
-    Route::get('meal_log', [UserMealLogController::class, 'index']);
+    // Route::get('meal_log', [UserMealLogController::class, 'index']);
 
-    // Create new meal log
-    Route::post('meal_log', [UserMealLogController::class, 'store']);
+    // // Create new meal log
+    // Route::post('meal_log', [UserMealLogController::class, 'store']);
 
-    // Get single meal log by ID
-    Route::get('meal_log/{log_id}', [UserMealLogController::class, 'show']);
+    // // Get single meal log by ID
+    // Route::get('meal_log/{log_id}', [UserMealLogController::class, 'show']);
 
-    // Update meal log
-    Route::put('meal_log/{log_id}', [UserMealLogController::class, 'update']);
+    // // Update meal log
+    // Route::put('meal_log/{log_id}', [UserMealLogController::class, 'update']);
 
-    // Delete meal log
-    Route::delete('meal_log/{log_id}', [UserMealLogController::class, 'destroy']);
+    // // Delete meal log
+    // Route::delete('meal_log/{log_id}', [UserMealLogController::class, 'destroy']);
 
     Route::get('food-logs', [UserFoodLogController::class, 'index']);
     Route::post('food-logs', [UserFoodLogController::class, 'store']);

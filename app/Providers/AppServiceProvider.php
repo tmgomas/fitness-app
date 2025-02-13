@@ -22,6 +22,8 @@ use App\Repositories\Measurement\Interfaces\MeasurementRepositoryInterface;
 use App\Repositories\Measurement\MeasurementRepository;
 use App\Repositories\NutritionType\Interfaces\NutritionTypeRepositoryInterface;
 use App\Repositories\NutritionType\NutritionTypeRepository;
+use App\Repositories\UserMealLog\Interfaces\UserMealLogRepositoryInterface;
+use App\Repositories\UserMealLog\UserMealLogRepository;
 use App\Repositories\UserPreference\Interfaces\UserPreferenceRepositoryInterface;
 use App\Repositories\UserPreference\UserPreferenceRepository;
 use App\Services\Exercise\ExerciseService;
@@ -42,6 +44,8 @@ use App\Services\Measurement\Interfaces\MeasurementServiceInterface;
 use App\Services\Measurement\MeasurementService;
 use App\Services\NutritionType\Interfaces\NutritionTypeServiceInterface;
 use App\Services\NutritionType\NutritionTypeService;
+use App\Services\UserMealLog\Interfaces\UserMealLogServiceInterface;
+use App\Services\UserMealLog\UserMealLogService;
 use App\Services\UserPreference\Interfaces\UserPreferenceServiceInterface;
 use App\Services\UserPreference\UserPreferenceService;
 
@@ -97,6 +101,11 @@ class RepositoryServiceProvider extends ServiceProvider
             ExerciseIntensityRepository::class
         );
 
+        $this->app->bind(
+            UserMealLogRepositoryInterface::class,
+            UserMealLogRepository::class
+        );
+
         // Service Bindings
         $this->app->bind(
             HealthDataServiceInterface::class,
@@ -146,6 +155,10 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             ExerciseIntensityServiceInterface::class,
             ExerciseIntensityService::class
+        );
+        $this->app->bind(
+            UserMealLogServiceInterface::class,
+            UserMealLogService::class
         );
     }
 }

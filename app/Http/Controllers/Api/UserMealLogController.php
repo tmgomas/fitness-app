@@ -3,168 +3,159 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\UserMealLog;
+use App\Http\Requests\UserMealLog\StoreUserMealLogRequest;
+use App\Http\Requests\UserMealLog\UpdateUserMealLogRequest;
+use App\Http\Resources\UserMealLogResource;
+use App\Services\UserMealLog\Interfaces\UserMealLogServiceInterface;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Validator;
 
 class UserMealLogController extends Controller
 {
+    protected $userMealLogService;
+
+    public function __construct(UserMealLogServiceInterface $userMealLogService)
+    {
+        $this->userMealLogService = $userMealLogService;
+    }
+
     /**
-     * Display a listing of the meal logs.
+     * Get all meal logs with optional date filtering
+     * 
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    // MealLogController
     public function index(Request $request)
     {
         try {
-            $query = UserMealLog::with([
-                'meal',
-                'meal.nutritionFacts.nutritionType',  // Load meal nutrition facts with types
-                'meal.foods.foodItem.foodNutrition.nutritionType'  // Load food nutrition also
-            ])->where('user_id', Auth::id());
+            $filters = [];
 
-            if ($request->has('start_date') && $request->has('end_date')) {
-                $startDate = Carbon::parse($request->start_date)->startOfDay();
-                $endDate = Carbon::parse($request->end_date)->endOfDay();
-                $query->whereBetween('date', [$startDate, $endDate]);
+            if ($request->has(['start_date', 'end_date'])) {
+                $filters['start_date'] = Carbon::parse($request->start_date)->startOfDay();
+                $filters['end_date'] = Carbon::parse($request->end_date)->endOfDay();
             }
 
-            $mealLogs = $query->get();
+            $mealLogs = $this->userMealLogService->getAllMealLogs($filters);
 
-            // Debug logging
-            Log::info('Meal Logs Query:', [
-                'start_date' => $request->start_date,
-                'end_date' => $request->end_date,
-                'count' => $mealLogs->count(),
-                'meal_nutrition_count' => $mealLogs->first()?->meal?->nutritionFacts?->count() ?? 0,
-                'foods_nutrition_count' => $mealLogs->first()?->meal?->foods?->first()?->foodItem?->foodNutrition?->count() ?? 0
+            return response()->json([
+                'status' => 'success',
+                'data' => UserMealLogResource::collection($mealLogs)
             ]);
-
-            return response()->json(['data' => $mealLogs]);
         } catch (\Exception $e) {
             Log::error('Error in meal logs index: ' . $e->getMessage());
-            return response()->json(['error' => $e->getMessage()], 500);
-        }
-    }
-
-
-    /**
-     * Store a new meal log.
-     */
-    public function store(Request $request)
-    {
-        $validator = Validator::make($request->all(), [
-            'user_id' => 'required|string|exists:users,id',
-            'meal_id' => 'required|string|exists:meals,meal_id',
-            'date' => 'required|date',
-            'meal_type' => 'required|string',
-            'serving_size' => 'required|numeric',
-            'serving_unit' => 'required|string',
-        ]);
-
-        if ($validator->fails()) {
             return response()->json([
                 'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
+                'message' => 'Error retrieving meal logs',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        $mealLog = UserMealLog::create([
-            'user_id' => $request->user_id,
-            'meal_id' => $request->meal_id,
-            'date' => $request->date,
-            'meal_type' => $request->meal_type,
-            'serving_size' => $request->serving_size,
-            'serving_unit' => $request->serving_unit,
-        ]);
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Meal log created successfully',
-            'data' => $mealLog
-        ], 201);
     }
 
     /**
-     * Display the specified meal log.
+     * Store a new meal log
+     * 
+     * @param StoreUserMealLogRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function show($log_id)
+    public function store(StoreUserMealLogRequest $request)
     {
-        $mealLog = UserMealLog::find($log_id);
+        try {
+            $mealLog = $this->userMealLogService->storeMealLog($request->validated());
 
-        if (!$mealLog) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Meal log created successfully',
+                'data' => new UserMealLogResource($mealLog)
+            ], Response::HTTP_CREATED);
+        } catch (\Exception $e) {
+            Log::error('Error creating meal log: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Meal log not found'
-            ], 404);
+                'message' => 'Error creating meal log',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        return response()->json([
-            'status' => 'success',
-            'data' => $mealLog
-        ]);
     }
 
     /**
-     * Update the specified meal log.
+     * Get specific meal log details
+     * 
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $log_id)
+    public function show($id)
     {
-        $mealLog = UserMealLog::find($log_id);
+        try {
+            $mealLog = $this->userMealLogService->getMealLog($id);
 
-        if (!$mealLog) {
+            return response()->json([
+                'status' => 'success',
+                'data' => new UserMealLogResource($mealLog)
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error retrieving meal log: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Meal log not found'
-            ], 404);
+                'message' => 'Meal log not found',
+                'error' => $e->getMessage()
+            ], Response::HTTP_NOT_FOUND);
         }
-
-        $validator = Validator::make($request->all(), [
-            'meal_id' => 'string|exists:meals,meal_id',
-            'date' => 'date',
-            'meal_type' => 'string',
-            'serving_size' => 'numeric',
-            'serving_unit' => 'string',
-        ]);
-
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => 'error',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
-        $mealLog->update($request->all());
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Meal log updated successfully',
-            'data' => $mealLog
-        ]);
     }
 
     /**
-     * Remove the specified meal log.
+     * Update existing meal log
+     * 
+     * @param UpdateUserMealLogRequest $request
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy($log_id)
+    public function update(UpdateUserMealLogRequest $request, $id)
     {
-        $mealLog = UserMealLog::find($log_id);
+        try {
+            $mealLog = $this->userMealLogService->updateMealLog($id, $request->validated());
 
-        if (!$mealLog) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Meal log updated successfully',
+                'data' => new UserMealLogResource($mealLog)
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error updating meal log: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Meal log not found'
-            ], 404);
+                'message' => 'Error updating meal log',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
-
-        $mealLog->delete();
-
-        return response()->json([
-            'status' => 'success',
-            'message' => 'Meal log deleted successfully'
-        ]);
     }
+
+    /**
+     * Delete a meal log
+     * 
+     * @param string $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function destroy($id)
+    {
+        try {
+            $this->userMealLogService->deleteMealLog($id);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'Meal log deleted successfully'
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error deleting meal log: ' . $e->getMessage());
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Error deleting meal log',
+                'error' => $e->getMessage()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    
+    
 }
