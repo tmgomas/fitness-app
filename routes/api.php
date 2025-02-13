@@ -61,6 +61,9 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::apiResource('meal_log', UserMealLogController::class);
 
+
+    Route::get('food-logs/daily-nutrition', [UserFoodLogController::class, 'getDailyNutrition']);
+    Route::apiResource('food-logs', UserFoodLogController::class);
     // Additional Exercise Routes
 
     // Search Exercises
@@ -105,11 +108,11 @@ Route::middleware('auth:sanctum')->group(function () {
     // // Delete meal log
     // Route::delete('meal_log/{log_id}', [UserMealLogController::class, 'destroy']);
 
-    Route::get('food-logs', [UserFoodLogController::class, 'index']);
-    Route::post('food-logs', [UserFoodLogController::class, 'store']);
-    Route::get('food-logs/{log_id}', [UserFoodLogController::class, 'show']);
-    Route::put('food-logs/{log_id}', [UserFoodLogController::class, 'update']);
-    Route::delete('food-logs/{log_id}', [UserFoodLogController::class, 'destroy']);
+    // Route::get('food-logs', [UserFoodLogController::class, 'index']);
+    // Route::post('food-logs', [UserFoodLogController::class, 'store']);
+    // Route::get('food-logs/{log_id}', [UserFoodLogController::class, 'show']);
+    // Route::put('food-logs/{log_id}', [UserFoodLogController::class, 'update']);
+    // Route::delete('food-logs/{log_id}', [UserFoodLogController::class, 'destroy']);
 
     // Route::get('meals/search', [MealController::class, 'search']); // Search route MUST come before {meal} routes
     // Route::get('meals', [MealController::class, 'index']);
