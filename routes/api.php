@@ -44,9 +44,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/food-items/search', [FoodItemController::class, 'search']);
     Route::apiResource('food-items', FoodItemController::class);
 
-    Route::apiResource('food-nutrition', FoodNutritionController::class);
     Route::get('food-nutrition/search', [FoodNutritionController::class, 'search'])
-        ->name('api.food-nutrition.search');
+    ->name('api.food-nutrition.search');
+    Route::apiResource('food-nutrition', FoodNutritionController::class);
+   
 
     Route::get('meals/search', [MealController::class, 'search']); // Should come BEFORE apiResource
     Route::apiResource('meals', MealController::class);
