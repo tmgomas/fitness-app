@@ -8,6 +8,7 @@ use App\Http\Requests\UserMealLog\UpdateUserMealLogRequest;
 use App\Http\Resources\UserMealLogResource;
 use App\Services\UserMealLog\Interfaces\UserMealLogServiceInterface;
 use Carbon\Carbon;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -59,25 +60,25 @@ class UserMealLogController extends Controller
      * @param StoreUserMealLogRequest $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(StoreUserMealLogRequest $request)
+    public function store(StoreUserMealLogRequest $request): JsonResponse
     {
         try {
             $mealLog = $this->userMealLogService->storeMealLog($request->validated());
 
             return response()->json([
                 'status' => 'success',
-                'message' => 'Meal log created successfully',
+                'message' => 'Meal log added successfully',
                 'data' => new UserMealLogResource($mealLog)
             ], Response::HTTP_CREATED);
         } catch (\Exception $e) {
-            Log::error('Error creating meal log: ' . $e->getMessage());
             return response()->json([
                 'status' => 'error',
-                'message' => 'Error creating meal log',
+                'message' => 'Error adding meal log',
                 'error' => $e->getMessage()
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
 
     /**
      * Get specific meal log details
@@ -155,7 +156,4 @@ class UserMealLogController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
-
-    
-    
 }
