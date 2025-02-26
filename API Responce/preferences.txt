@@ -1,0 +1,16 @@
+preferences
+{
+    "data": [
+        {
+            "pref_id": "9e43e56e-e392-4750-896b-e5e0ec38476d",
+            "user_id": 1,
+            "allergies": "No",
+            "dietary_restrictions": "no",
+            "disliked_foods": "no",
+            "fitness_goals": "Loss",
+            "activity_level": "Normal",
+            "created_at": "2024-10-12 00:00:00",
+            "updated_at": "2024-10-12 00:00:00"
+        }
+    ]
+}

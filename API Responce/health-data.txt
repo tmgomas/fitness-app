@@ -1,0 +1,16 @@
+health-data
+{
+    "data": [
+        {
+            "id": "9e43e56e-e392-4750-896b-e5e0ec38476d",
+            "height": 195,
+            "weight": 175,
+            "bmi": 45,
+            "blood_type": "O+",
+            "medical_conditions": null,
+            "recorded_at": "2024-10-12 00:00:00",
+            "created_at": "2024-10-12 00:00:00",
+            "updated_at": "2024-10-12 00:00:00"
+        }
+    ]
+}

@@ -1,0 +1,32 @@
+User Login API Response
+
+{
+    "status": "success",
+    "token": "1|8lPYziDn6mwwlah7ktdhq5fJGYe7VOIPmzCGWN3O4adb7a4c",
+    "user": {
+        "id": 1,
+        "name": "Admin User",
+        "username": "admin",
+        "email": "dgtmgomas@hotmail.com",
+        "email_verified_at": "2025-02-21T13:28:12.000000Z",
+        "is_active": true,
+        "is_admin": true,
+        "gender": "male",
+        "birthday": "1989-12-31T18:30:00.000000Z",
+        "deleted_at": null,
+        "created_at": "2025-02-21T13:28:12.000000Z",
+        "updated_at": "2025-02-21T13:28:12.000000Z"
+    }
+}
+
+current-user
+{
+    "status": "success",
+    "data": {
+        "id": 1,
+        "name": "Admin User",
+        "username": "admin",
+        "gender": "male",
+        "birthday": "1989-12-31T18:30:00.000000Z"
+    }
+}

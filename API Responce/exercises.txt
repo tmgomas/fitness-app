@@ -1,0 +1,62 @@
+exercises
+
+[
+    {
+        "id": "9e4e8465-eec2-4dee-9e68-548cbb951bca",
+        "category": {
+            "id": "9e4e836f-e14c-4fb4-bc7a-c557af6db248",
+            "name": "Cardio",
+            "description": "testtesttesttesttesttesttesttesttesttesttesttesttesttesttest",
+            "measurement_type": "min",
+            "created_at": "2025-02-26T20:08:18.000000Z",
+            "updated_at": "2025-02-26T20:08:18.000000Z"
+        },
+        "name": "Test",
+        "description": "swssssssssssssssssssssssssssss",
+        "difficulty_level": "beginner",
+        "image_url": null,
+        "calories_per_minute": 10,
+        "calories_per_km": 10,
+        "requires_distance": true,
+        "requires_heartrate": true,
+        "recommended_intensity": "low",
+        "is_active": true,
+        "created_at": "2025-02-26T20:10:59.000000Z",
+        "updated_at": "2025-02-26T20:10:59.000000Z"
+    }
+]
+
+exercises/search
+{
+    "data": [
+        {
+            "id": "9e4e8465-eec2-4dee-9e68-548cbb951bca",
+            "category": {
+                "id": "9e4e836f-e14c-4fb4-bc7a-c557af6db248",
+                "name": "Cardio",
+                "description": "testtesttesttesttesttesttesttesttesttesttesttesttesttesttest",
+                "measurement_type": "min",
+                "created_at": "2025-02-26T20:08:18.000000Z",
+                "updated_at": "2025-02-26T20:08:18.000000Z"
+            },
+            "name": "Test",
+            "description": "swssssssssssssssssssssssssssss",
+            "difficulty_level": "beginner",
+            "image_url": null,
+            "calories_per_minute": 10,
+            "calories_per_km": 10,
+            "requires_distance": true,
+            "requires_heartrate": true,
+            "recommended_intensity": "low",
+            "is_active": true,
+            "created_at": "2025-02-26T20:10:59.000000Z",
+            "updated_at": "2025-02-26T20:10:59.000000Z"
+        }
+    ],
+    "meta": {
+        "current_page": 1,
+        "last_page": 1,
+        "per_page": 10,
+        "total": 1
+    }
+}

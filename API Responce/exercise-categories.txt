@@ -1,0 +1,13 @@
+exercise-categories
+
+[
+    {
+        "id": "9e4e836f-e14c-4fb4-bc7a-c557af6db248",
+        "name": "Cardio",
+        "description": "testtesttesttesttesttesttesttesttesttesttesttesttesttesttest",
+        "measurement_type": "min",
+        "exercises": [],
+        "created_at": "2025-02-26T20:08:18.000000Z",
+        "updated_at": "2025-02-26T20:08:18.000000Z"
+    }
+]

@@ -1,0 +1,35 @@
+exercise-logs
+
+{
+    "data": [
+        {
+            "id": 1,
+            "user_id": 1,
+            "exercise_id": "9e4e8465-eec2-4dee-9e68-548cbb951bca",
+            "start_time": "2025-02-21 18:58:12",
+            "end_time": "2025-02-21 19:58:12",
+            "duration_minutes": 20,
+            "distance": 10,
+            "distance_unit": "km",
+            "calories_burned": 100,
+            "avg_heart_rate": 10,
+            "intensity_level": "low",
+            "notes": "Home",
+            "exercise": {
+                "id": "9e4e8465-eec2-4dee-9e68-548cbb951bca",
+                "name": "Test",
+                "description": "swssssssssssssssssssssssssssss",
+                "difficulty_level": "beginner",
+                "calories_per_minute": 10,
+                "calories_per_km": 10,
+                "category": {
+                    "id": "9e4e836f-e14c-4fb4-bc7a-c557af6db248",
+                    "name": "Cardio",
+                    "description": "testtesttesttesttesttesttesttesttesttesttesttesttesttesttest"
+                }
+            },
+            "created_at": "2025-02-21 18:58:12",
+            "updated_at": "2025-02-21 18:58:12"
+        }
+    ]
+}

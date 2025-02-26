@@ -1,0 +1,348 @@
+food-nutrition
+
+{
+    "status": "success",
+    "data": {
+        "current_page": 1,
+        "data": [
+            {
+                "food_nutrition_id": "9e43e56f-1691-48a1-a2fd-fa2008395c96",
+                "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                "nutrition_id": "9e43e56b-8e75-41fc-9e90-36ec4e1b2683",
+                "amount_per_100g": "130.00",
+                "measurement_unit": "kcal",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                    "name": "බත්",
+                    "description": "සුදු බත්",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56b-8e75-41fc-9e90-36ec4e1b2683",
+                    "name": "Calories",
+                    "description": "Energy content of food",
+                    "unit": "kcal",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            },
+            {
+                "food_nutrition_id": "9e43e56f-189a-4f96-8378-df5517cad565",
+                "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                "nutrition_id": "9e43e56c-f664-4f28-910d-cc2a7968c5b0",
+                "amount_per_100g": "28.00",
+                "measurement_unit": "g",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                    "name": "බත්",
+                    "description": "සුදු බත්",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56c-f664-4f28-910d-cc2a7968c5b0",
+                    "name": "Carbohydrates",
+                    "description": "Main source of energy for the body",
+                    "unit": "g",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            },
+            {
+                "food_nutrition_id": "9e43e56f-1a2f-48cb-a08d-16d4cd27ceed",
+                "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                "nutrition_id": "9e43e56c-f52b-4607-abb1-db936e4ab3e1",
+                "amount_per_100g": "2.70",
+                "measurement_unit": "g",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                    "name": "බත්",
+                    "description": "සුදු බත්",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56c-f52b-4607-abb1-db936e4ab3e1",
+                    "name": "Protein",
+                    "description": "Essential for building and repairing tissues",
+                    "unit": "g",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            },
+            {
+                "food_nutrition_id": "9e43e56f-1b83-4d72-917e-0193bd4b1469",
+                "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                "nutrition_id": "9e43e56c-f75c-4e15-b008-06716a4dc56f",
+                "amount_per_100g": "0.30",
+                "measurement_unit": "g",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                    "name": "බත්",
+                    "description": "සුදු බත්",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56c-f75c-4e15-b008-06716a4dc56f",
+                    "name": "Fat",
+                    "description": "Important for nutrient absorption and hormone production",
+                    "unit": "g",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            },
+            {
+                "food_nutrition_id": "9e43e56f-1cea-4d25-ae9a-3bc41a157dae",
+                "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                "nutrition_id": "9e43e56c-f839-4ae0-a383-920f214bd41b",
+                "amount_per_100g": "0.40",
+                "measurement_unit": "g",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+                    "name": "බත්",
+                    "description": "සුදු බත්",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56c-f839-4ae0-a383-920f214bd41b",
+                    "name": "Fiber",
+                    "description": "Aids digestion and promotes gut health",
+                    "unit": "g",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            },
+            {
+                "food_nutrition_id": "9e43e56f-1eb0-4692-8f5d-5e991ef7624f",
+                "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                "nutrition_id": "9e43e56b-8e75-41fc-9e90-36ec4e1b2683",
+                "amount_per_100g": "116.00",
+                "measurement_unit": "kcal",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                    "name": "දාල් කරි",
+                    "description": "පරිප්පු කරි",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56b-8e75-41fc-9e90-36ec4e1b2683",
+                    "name": "Calories",
+                    "description": "Energy content of food",
+                    "unit": "kcal",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            },
+            {
+                "food_nutrition_id": "9e43e56f-20b5-4afa-a0a7-26ad1d7dc605",
+                "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                "nutrition_id": "9e43e56c-f52b-4607-abb1-db936e4ab3e1",
+                "amount_per_100g": "9.00",
+                "measurement_unit": "g",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                    "name": "දාල් කරි",
+                    "description": "පරිප්පු කරි",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56c-f52b-4607-abb1-db936e4ab3e1",
+                    "name": "Protein",
+                    "description": "Essential for building and repairing tissues",
+                    "unit": "g",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            },
+            {
+                "food_nutrition_id": "9e43e56f-2267-4eae-bcee-136d1b89b8b4",
+                "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                "nutrition_id": "9e43e56c-f664-4f28-910d-cc2a7968c5b0",
+                "amount_per_100g": "20.00",
+                "measurement_unit": "g",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                    "name": "දාල් කරි",
+                    "description": "පරිප්පු කරි",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56c-f664-4f28-910d-cc2a7968c5b0",
+                    "name": "Carbohydrates",
+                    "description": "Main source of energy for the body",
+                    "unit": "g",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            },
+            {
+                "food_nutrition_id": "9e43e56f-251f-446e-bea9-e7de19caf653",
+                "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                "nutrition_id": "9e43e56c-f75c-4e15-b008-06716a4dc56f",
+                "amount_per_100g": "0.40",
+                "measurement_unit": "g",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                    "name": "දාල් කරි",
+                    "description": "පරිප්පු කරි",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56c-f75c-4e15-b008-06716a4dc56f",
+                    "name": "Fat",
+                    "description": "Important for nutrient absorption and hormone production",
+                    "unit": "g",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            },
+            {
+                "food_nutrition_id": "9e43e56f-289b-4023-aa4a-1a52a1e3b100",
+                "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                "nutrition_id": "9e43e56c-f839-4ae0-a383-920f214bd41b",
+                "amount_per_100g": "8.00",
+                "measurement_unit": "g",
+                "created_at": "2025-02-21T13:28:12.000000Z",
+                "updated_at": "2025-02-21T13:28:12.000000Z",
+                "food": {
+                    "food_id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+                    "name": "දාල් කරි",
+                    "description": "පරිප්පු කරි",
+                    "serving_size": "100.00",
+                    "serving_unit": "g",
+                    "image_url": null,
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:12.000000Z",
+                    "updated_at": "2025-02-21T13:28:12.000000Z",
+                    "deleted_at": null
+                },
+                "nutrition_type": {
+                    "nutrition_id": "9e43e56c-f839-4ae0-a383-920f214bd41b",
+                    "name": "Fiber",
+                    "description": "Aids digestion and promotes gut health",
+                    "unit": "g",
+                    "is_active": true,
+                    "created_at": "2025-02-21T13:28:11.000000Z",
+                    "updated_at": "2025-02-21T13:28:11.000000Z",
+                    "deleted_at": null
+                }
+            }
+        ],
+        "first_page_url": "http://fitness-app.test/api/v1/food-nutrition?page=1",
+        "from": 1,
+        "last_page": 1,
+        "last_page_url": "http://fitness-app.test/api/v1/food-nutrition?page=1",
+        "links": [
+            {
+                "url": null,
+                "label": "&laquo; Previous",
+                "active": false
+            },
+            {
+                "url": "http://fitness-app.test/api/v1/food-nutrition?page=1",
+                "label": "1",
+                "active": true
+            },
+            {
+                "url": null,
+                "label": "Next &raquo;",
+                "active": false
+            }
+        ],
+        "next_page_url": null,
+        "path": "http://fitness-app.test/api/v1/food-nutrition",
+        "per_page": 10,
+        "prev_page_url": null,
+        "to": 10,
+        "total": 10
+    },
+    "message": "Food nutrition list retrieved successfully"
+}

@@ -1,0 +1,26 @@
+food-logs
+
+{
+    "data": [
+        {
+            "id": "666f8f2c-d2a8-46af-8fe1-6e3730721d83",
+            "user_id": 1,
+            "food_id": "9e43e56e-e392-4750-896b-e5e0ec38476d",
+            "date": "2025-02-26 18:58:12",
+            "meal_type": "lunch",
+            "serving_size": 1,
+            "serving_unit": "10g",
+            "food_item": {
+                "id": "9e43e56e-e392-4750-896b-e5e0ec38476d",
+                "name": "Rice",
+                "description": "පොල් සම්බල්",
+                "serving_size": 50,
+                "serving_unit": "g",
+                "nutrition": []
+            },
+            "calculated_nutrition": [],
+            "created_at": "2025-02-26 18:58:12",
+            "updated_at": "2025-02-26 18:58:12"
+        }
+    ]
+}

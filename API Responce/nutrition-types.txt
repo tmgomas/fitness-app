@@ -1,0 +1,122 @@
+nutrition-types
+
+{
+    "status": "success",
+    "data": [
+        {
+            "nutrition_id": "9e43e56b-8e75-41fc-9e90-36ec4e1b2683",
+            "name": "Calories",
+            "description": "Energy content of food",
+            "unit": "kcal",
+            "is_active": true,
+            "food_nutrition_count": 2,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        },
+        {
+            "nutrition_id": "9e43e56c-f52b-4607-abb1-db936e4ab3e1",
+            "name": "Protein",
+            "description": "Essential for building and repairing tissues",
+            "unit": "g",
+            "is_active": true,
+            "food_nutrition_count": 2,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        },
+        {
+            "nutrition_id": "9e43e56c-f664-4f28-910d-cc2a7968c5b0",
+            "name": "Carbohydrates",
+            "description": "Main source of energy for the body",
+            "unit": "g",
+            "is_active": true,
+            "food_nutrition_count": 2,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        },
+        {
+            "nutrition_id": "9e43e56c-f75c-4e15-b008-06716a4dc56f",
+            "name": "Fat",
+            "description": "Important for nutrient absorption and hormone production",
+            "unit": "g",
+            "is_active": true,
+            "food_nutrition_count": 2,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        },
+        {
+            "nutrition_id": "9e43e56c-f839-4ae0-a383-920f214bd41b",
+            "name": "Fiber",
+            "description": "Aids digestion and promotes gut health",
+            "unit": "g",
+            "is_active": true,
+            "food_nutrition_count": 2,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        },
+        {
+            "nutrition_id": "9e43e56c-f958-4e2f-9815-df4c71a5d354",
+            "name": "Vitamin A",
+            "description": "Important for vision and immune system",
+            "unit": "IU",
+            "is_active": true,
+            "food_nutrition_count": 0,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        },
+        {
+            "nutrition_id": "9e43e56c-fa4d-4f1c-8416-4771fc748bc3",
+            "name": "Vitamin C",
+            "description": "Antioxidant that supports immune system",
+            "unit": "mg",
+            "is_active": true,
+            "food_nutrition_count": 0,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        },
+        {
+            "nutrition_id": "9e43e56c-fbf2-415b-ac36-1f0e51370eb1",
+            "name": "Vitamin D",
+            "description": "Essential for bone health and immune function",
+            "unit": "mcg",
+            "is_active": true,
+            "food_nutrition_count": 0,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        },
+        {
+            "nutrition_id": "9e43e56c-fd41-466e-b576-b877f05277c9",
+            "name": "Calcium",
+            "description": "Essential for bone and teeth health",
+            "unit": "mg",
+            "is_active": true,
+            "food_nutrition_count": 0,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        },
+        {
+            "nutrition_id": "9e43e56c-fe6b-4e3d-a2e9-e7afc43d24bd",
+            "name": "Iron",
+            "description": "Important for blood oxygen transport",
+            "unit": "mg",
+            "is_active": true,
+            "food_nutrition_count": 0,
+            "meal_nutrition_count": 0,
+            "created_at": "2025-02-21 18:58:11",
+            "updated_at": "2025-02-21 18:58:11"
+        }
+    ],
+    "meta": {
+        "current_page": 1,
+        "per_page": 10,
+        "total": 14
+    }
+}

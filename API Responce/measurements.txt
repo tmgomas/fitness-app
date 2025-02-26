@@ -1,0 +1,19 @@
+measurements
+{
+    "success": true,
+    "data": [
+        {
+            "id": "9e43e56e-e392-4750-896b-e5e0ec38476d",
+            "measurements": {
+                "chest": 90,
+                "waist": 90,
+                "hips": 90,
+                "arms": 90,
+                "thighs": 90
+            },
+            "recorded_at": "2024-12-11T18:30:00.000000Z",
+            "created_at": "2024-12-11T18:30:00.000000Z",
+            "updated_at": "2024-12-11T18:30:00.000000Z"
+        }
+    ]
+}

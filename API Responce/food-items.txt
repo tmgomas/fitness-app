@@ -1,0 +1,86 @@
+food-items
+
+[
+    {
+        "id": "9e43e56e-e392-4750-896b-e5e0ec38476d",
+        "name": "සම්බල්",
+        "description": "පොල් සම්බල්",
+        "serving_size": "50.00",
+        "serving_unit": "g",
+        "image_url": null,
+        "is_active": true,
+        "created_at": "2025-02-21T13:28:12.000000Z",
+        "updated_at": "2025-02-21T13:28:12.000000Z"
+    },
+    {
+        "id": "9e43e56e-e564-4bef-aef5-1bc79c1fc377",
+        "name": "දාල් කරි",
+        "description": "පරිප්පු කරි",
+        "serving_size": "100.00",
+        "serving_unit": "g",
+        "image_url": null,
+        "is_active": true,
+        "created_at": "2025-02-21T13:28:12.000000Z",
+        "updated_at": "2025-02-21T13:28:12.000000Z"
+    },
+    {
+        "id": "9e43e56e-e6b9-4626-aaf3-f68df385e251",
+        "name": "බත්",
+        "description": "සුදු බත්",
+        "serving_size": "100.00",
+        "serving_unit": "g",
+        "image_url": null,
+        "is_active": true,
+        "created_at": "2025-02-21T13:28:12.000000Z",
+        "updated_at": "2025-02-21T13:28:12.000000Z"
+    },
+    {
+        "id": "9e43e56e-e801-4177-be3a-ddf25858ccff",
+        "name": "මාළු කරි",
+        "description": "තෝර මාළු කරි",
+        "serving_size": "100.00",
+        "serving_unit": "g",
+        "image_url": null,
+        "is_active": true,
+        "created_at": "2025-02-21T13:28:12.000000Z",
+        "updated_at": "2025-02-21T13:28:12.000000Z"
+    },
+    {
+        "id": "9e43e56e-e920-4624-8dff-6b5adb2872bf",
+        "name": "පොල් සම්බෝල",
+        "description": "පොල් සම්බෝල",
+        "serving_size": "50.00",
+        "serving_unit": "g",
+        "image_url": null,
+        "is_active": true,
+        "created_at": "2025-02-21T13:28:12.000000Z",
+        "updated_at": "2025-02-21T13:28:12.000000Z"
+    },
+    {
+        "id": "9e43e56e-ea57-47c7-9e6a-fa4bc05b13f1",
+        "name": "ගෝවා මාලුව",
+        "description": "ගෝවා තෙම්පරාදුව",
+        "serving_size": "75.00",
+        "serving_unit": "g",
+        "image_url": null,
+        "is_active": true,
+        "created_at": "2025-02-21T13:28:12.000000Z",
+        "updated_at": "2025-02-21T13:28:12.000000Z"
+    }
+]
+
+Foot Item Search
+
+[
+    {
+        "id": "9e43e56e-e392-4750-896b-e5e0ec38476d",
+        "name": "Rice",
+        "description": "පොල් සම්බල්",
+        "serving_size": "50.00",
+        "serving_unit": "g",
+        "image_url": null,
+        "is_active": true,
+        "created_at": "2025-02-21T13:28:12.000000Z",
+        "updated_at": "2025-02-21T13:28:12.000000Z"
+    }
+]
