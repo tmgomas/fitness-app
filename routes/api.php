@@ -5,6 +5,7 @@ use App\Http\Controllers\Api\ExerciseController;
 use App\Http\Controllers\Api\FoodItemController;
 use App\Http\Controllers\Api\HealthDataController;
 use App\Http\Controllers\Api\MealController;
+use App\Http\Controllers\Api\NutritionSummaryController;
 use App\Http\Controllers\Api\NutritionTypeController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\UserExerciseLogController;
@@ -67,10 +68,12 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
         Route::get('exercise-logs/stats', [UserExerciseLogController::class, 'getStats'])->name('exercise-logs.stats');
         Route::apiResource('exercise-logs', UserExerciseLogController::class);
 
-        Route::get('/nutrition/summary', [App\Http\Controllers\Api\NutritionSummaryController::class, 'getSummary']);
-        Route::get('/nutrition/recommended', [App\Http\Controllers\Api\NutritionSummaryController::class, 'getRecommendedCalories']);
-        Route::get('/nutrition/consumed', [App\Http\Controllers\Api\NutritionSummaryController::class, 'getConsumedCalories']);
-        Route::get('/nutrition/burned', [App\Http\Controllers\Api\NutritionSummaryController::class, 'getBurnedCalories']);
-        Route::get('/nutrition/weekly', [App\Http\Controllers\Api\NutritionSummaryController::class, 'getWeeklySummary']);
+        Route::prefix('nutrition')->group(function () {
+            Route::get('/summary', [NutritionSummaryController::class, 'getSummary']);
+            Route::get('/recommended', [NutritionSummaryController::class, 'getRecommendedCalories']);
+            Route::get('/consumed', [NutritionSummaryController::class, 'getConsumedCalories']);
+            Route::get('/burned', [NutritionSummaryController::class, 'getBurnedCalories']);
+            Route::get('/weekly', [NutritionSummaryController::class, 'getWeeklySummary']);
+        });
     }
 );

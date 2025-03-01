@@ -47,6 +47,7 @@ use App\Services\Meal\MealService;
 use App\Services\Measurement\Interfaces\MeasurementServiceInterface;
 use App\Services\Measurement\MeasurementService;
 use App\Services\Nutrition\DailyNutritionService;
+use App\Services\Nutrition\Interfaces\DailyNutritionServiceInterface;
 use App\Services\NutritionType\Interfaces\NutritionTypeServiceInterface;
 use App\Services\NutritionType\NutritionTypeService;
 use App\Services\UserExerciseLog\Interfaces\UserExerciseLogServiceInterface;
@@ -188,7 +189,8 @@ class RepositoryServiceProvider extends ServiceProvider
         );
 
         $this->app->bind(
-            DailyNutritionService::class,
+            DailyNutritionServiceInterface::class,
+            DailyNutritionService::class
 
         );
     }

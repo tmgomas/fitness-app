@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Services\Nutrition\DailyNutritionService;
+use App\Services\Nutrition\Interfaces\DailyNutritionServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
@@ -12,7 +12,7 @@ class NutritionSummaryController extends Controller
 {
     protected $nutritionService;
 
-    public function __construct(DailyNutritionService $nutritionService)
+    public function __construct(DailyNutritionServiceInterface $nutritionService)
     {
         $this->nutritionService = $nutritionService;
     }
@@ -82,7 +82,9 @@ class NutritionSummaryController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'data' => $consumed,
+                'data' => [
+                    'calories_consumed' => $consumed
+                ],
             ]);
         } catch (\Exception $e) {
             return response()->json([
