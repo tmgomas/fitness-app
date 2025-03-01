@@ -14,6 +14,8 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
+use function Illuminate\Log\log;
+
 class DailyNutritionService implements DailyNutritionServiceInterface
 {
     /**
@@ -37,6 +39,8 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                 ->with(['foodItem.foodNutrition.nutritionType'])
                 ->get();
 
+            Log::info('Food Logs Data:', $foodLogs->toArray());
+
             // Get exercise logs for calculating burned calories
             $exerciseLogs = UserExerciseLog::where('user_id', $user->id)
                 ->whereBetween('start_time', [$startOfDay, $endOfDay])
@@ -47,6 +51,7 @@ class DailyNutritionService implements DailyNutritionServiceInterface
 
             // Calculate totals
             $totalCaloriesConsumed = $this->calculateTotalCaloriesFromLogs($foodLogs);
+            // log($totalCaloriesConsumed);
             $totalCaloriesBurned = $exerciseLogs->sum('calories_burned');
             $netCalories = $totalCaloriesConsumed - $totalCaloriesBurned;
 
@@ -288,32 +293,38 @@ class DailyNutritionService implements DailyNutritionServiceInterface
      */
     private function calculateTotalCaloriesFromLogs($foodLogs): float
     {
+
         $totalCalories = 0;
 
-        // Calculate calories from food logs
         foreach ($foodLogs as $log) {
             if (!$log->foodItem || !$log->foodItem->foodNutrition) {
+                Log::warning('Missing Food Item or Nutrition Data', ['log_id' => $log->id]);
                 continue;
             }
 
-            $caloriesNutrition = $log->foodItem->foodNutrition
-                ->where('nutrition_id', function ($query) {
+            $caloriesNutrition = $log->foodItem->foodNutrition()
+                ->whereIn('nutrition_id', function ($query) {
                     $query->select('nutrition_id')
                         ->from('nutrition_types')
                         ->where('name', 'like', '%calorie%')
                         ->orWhere('name', 'like', '%Calories%')
-                        ->orWhere('name', 'like', '%energy%')
-                        ->first();
+                        ->orWhere('name', 'like', '%energy%');
                 })
                 ->first();
 
-            if ($caloriesNutrition) {
-                // Calculate based on serving size
-                $servingRatio = $log->serving_size / 100; // Assuming nutrition is per 100g
-                $totalCalories += $caloriesNutrition->amount_per_100g * $servingRatio;
+            if (!$caloriesNutrition) {
+                Log::warning('No Calories Nutrition Found for Log', ['log_id' => $log->id]);
+                continue;
             }
+
+            $servingRatio = $log->serving_size / 100;
+            $calculatedCalories = $caloriesNutrition->amount_per_100g * $servingRatio;
+            Log::info("Calculated Calories for Log ID {$log->id}: " . $calculatedCalories);
+
+            $totalCalories += $calculatedCalories;
         }
 
+        Log::info('Total Calories:', ['total' => $totalCalories]);
         return $totalCalories;
     }
 
@@ -394,17 +405,15 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                 $mealTypes[$mealType] = 0;
             }
 
-            $caloriesNutrition = $log->foodItem->foodNutrition
-                ->where('nutrition_id', function ($query) {
+            $caloriesNutrition = $log->foodItem->foodNutrition()
+                ->whereIn('nutrition_id', function ($query) {
                     $query->select('nutrition_id')
                         ->from('nutrition_types')
                         ->where('name', 'like', '%calorie%')
                         ->orWhere('name', 'like', '%Calories%')
-                        ->orWhere('name', 'like', '%energy%')
-                        ->first();
+                        ->orWhere('name', 'like', '%energy%');
                 })
                 ->first();
-
             if ($caloriesNutrition) {
                 $servingRatio = $log->serving_size / 100;
                 $mealTypes[$mealType] += $caloriesNutrition->amount_per_100g * $servingRatio;
