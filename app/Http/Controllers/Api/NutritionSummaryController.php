@@ -3,6 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Nutrition\GetNutritionSummaryRequest;
+use App\Http\Requests\Nutrition\GetWeeklyNutritionSummaryRequest;
+use App\Http\Resources\NutritionSummary\NutritionSummaryResource;
+use App\Http\Resources\NutritionSummary\WeeklyNutritionSummaryResource;
 use App\Services\Nutrition\Interfaces\DailyNutritionServiceInterface;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
@@ -20,10 +24,10 @@ class NutritionSummaryController extends Controller
     /**
      * Get full nutrition summary for the authenticated user
      *
-     * @param Request $request
+     * @param GetNutritionSummaryRequest $request
      * @return JsonResponse
      */
-    public function getSummary(Request $request): JsonResponse
+    public function getSummary(GetNutritionSummaryRequest $request): JsonResponse
     {
         try {
             $date = $request->get('date');
@@ -33,7 +37,7 @@ class NutritionSummaryController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'data' => $summary,
+                'data' => new NutritionSummaryResource($summary),
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -69,10 +73,10 @@ class NutritionSummaryController extends Controller
     /**
      * Get consumed calories for a specific date
      *
-     * @param Request $request
+     * @param GetNutritionSummaryRequest $request
      * @return JsonResponse
      */
-    public function getConsumedCalories(Request $request): JsonResponse
+    public function getConsumedCalories(GetNutritionSummaryRequest $request): JsonResponse
     {
         try {
             $date = $request->get('date');
@@ -97,10 +101,10 @@ class NutritionSummaryController extends Controller
     /**
      * Get burned calories for a specific date
      *
-     * @param Request $request
+     * @param GetNutritionSummaryRequest $request
      * @return JsonResponse
      */
-    public function getBurnedCalories(Request $request): JsonResponse
+    public function getBurnedCalories(GetNutritionSummaryRequest $request): JsonResponse
     {
         try {
             $date = $request->get('date');
@@ -125,10 +129,10 @@ class NutritionSummaryController extends Controller
     /**
      * Get weekly summary of nutrition data
      *
-     * @param Request $request
+     * @param GetWeeklyNutritionSummaryRequest $request
      * @return JsonResponse
      */
-    public function getWeeklySummary(Request $request): JsonResponse
+    public function getWeeklySummary(GetWeeklyNutritionSummaryRequest $request): JsonResponse
     {
         try {
             $user = Auth::user();
@@ -150,7 +154,7 @@ class NutritionSummaryController extends Controller
 
             return response()->json([
                 'status' => 'success',
-                'data' => $weeklySummary,
+                'data' => new WeeklyNutritionSummaryResource(collect($weeklySummary)),
             ]);
         } catch (\Exception $e) {
             return response()->json([
