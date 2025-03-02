@@ -77,6 +77,12 @@ class UserFoodLogService implements UserFoodLogServiceInterface
         }
     }
 
+    /**
+     * Calculate daily nutrition totals from food logs
+     * 
+     * @param \Illuminate\Database\Eloquent\Collection $foodLogs
+     * @return array
+     */
     protected function calculateDailyNutrition($foodLogs)
     {
         $dailyTotals = [];
@@ -86,31 +92,45 @@ class UserFoodLogService implements UserFoodLogServiceInterface
 
             if (!isset($dailyTotals[$date])) {
                 $dailyTotals[$date] = [
-                    'calories' => 0,
-                    'protein' => 0,
-                    'carbs' => 0,
-                    'fat' => 0,
+                    'calories' => 0.0,
+                    'protein' => 0.0,
+                    'carbs' => 0.0,
+                    'fat' => 0.0,
                     'meal_count' => 0
                 ];
             }
 
-            if ($log->foodItem && $log->foodItem->foodNutrition) {
-                foreach ($log->foodItem->foodNutrition as $nutrition) {
-                    $amount = ($nutrition->amount_per_100g * $log->serving_size) / 100;
+            if ($log->foodItem && $log->foodItem->nutrition) {
+                // 🚀 **Convert Serving Unit to Grams (Ensure Correct Conversion)**
+                $servingUnitToGram = $this->convertServingUnitToGrams($log->serving_unit, $log->foodItem->name);
+                $servingInGrams = $log->serving_size * $servingUnitToGram;
 
-                    switch ($nutrition->nutritionType->name) {
-                        case 'Calories':
-                            $dailyTotals[$date]['calories'] += $amount;
-                            break;
-                        case 'Protein':
-                            $dailyTotals[$date]['protein'] += $amount;
-                            break;
-                        case 'Carbohydrates':
-                            $dailyTotals[$date]['carbs'] += $amount;
-                            break;
-                        case 'Fat':
-                            $dailyTotals[$date]['fat'] += $amount;
-                            break;
+                Log::info("Food log ID {$log->id} serving details", [
+                    'serving_size' => $log->serving_size,
+                    'serving_unit' => $log->serving_unit,
+                    'serving_in_grams' => $servingInGrams,
+                ]);
+
+                foreach ($log->foodItem->nutrition as $nutrition) {
+                    if (!$nutrition->nutrition_type || $nutrition->amount_per_100g === null) {
+                        continue;
+                    }
+
+                    // 🏷️ **Get Nutrition Name in Lowercase**
+                    $nutritionName = strtolower(trim($nutrition->nutrition_type->name));
+
+                    // 🍎 **Fix Calculation: Use Proper 100g Conversion**
+                    $amount = round(($nutrition->amount_per_100g * $servingInGrams) / 100, 2);
+
+                    // 🔍 **Identify Nutrition Type & Assign Values**
+                    if (strpos($nutritionName, 'calorie') !== false || strpos($nutritionName, 'energy') !== false) {
+                        $dailyTotals[$date]['calories'] += $amount;
+                    } elseif (strpos($nutritionName, 'protein') !== false) {
+                        $dailyTotals[$date]['protein'] += $amount;
+                    } elseif (strpos($nutritionName, 'carbohydrate') !== false || strpos($nutritionName, 'carb') !== false) {
+                        $dailyTotals[$date]['carbs'] += $amount;
+                    } elseif (strpos($nutritionName, 'fat') !== false || strpos($nutritionName, 'total fat') !== false) {
+                        $dailyTotals[$date]['fat'] += $amount;
                     }
                 }
             }
@@ -118,6 +138,50 @@ class UserFoodLogService implements UserFoodLogServiceInterface
             $dailyTotals[$date]['meal_count']++;
         }
 
+        // 🔥 **Round Final Nutritional Values for Precision**
+        foreach ($dailyTotals as $date => $nutritionData) {
+            $dailyTotals[$date]['calories'] = round($nutritionData['calories'], 2);
+            $dailyTotals[$date]['protein'] = round($nutritionData['protein'], 2);
+            $dailyTotals[$date]['carbs'] = round($nutritionData['carbs'], 2);
+            $dailyTotals[$date]['fat'] = round($nutritionData['fat'], 2);
+        }
+
         return $dailyTotals;
+    }
+
+    /**
+     * Convert serving unit to equivalent grams
+     *
+     * @param string $unit
+     * @return float
+     */
+    private function convertServingUnitToGrams(string $unit, $foodItemName = null): float
+    {
+        $unit = strtolower(trim($unit));
+
+        $unitConversions = [
+            'g' => 1.0,
+            'kg' => 1000.0,
+            'mg' => 0.001,
+            'oz' => 28.35,
+            'lb' => 453.59,
+            'ml' => 1.0,
+            'l' => 1000.0,
+            'cup' => 100.0, // Default 100g for rice-based foods
+            'tbsp' => 15.0,
+            'tsp' => 5.0,
+        ];
+
+        // Specific food items that need different conversions
+        $foodSpecificConversions = [
+            'Cooked White Rice' => 158.0, // 1 Cup of Rice ≈ 158g
+            'Scrambled Egg' => 240.0, // 1 Cup of Scrambled Egg ≈ 240g
+        ];
+
+        if (isset($foodSpecificConversions[$foodItemName])) {
+            return $foodSpecificConversions[$foodItemName];
+        }
+
+        return $unitConversions[$unit] ?? 100.0;
     }
 }

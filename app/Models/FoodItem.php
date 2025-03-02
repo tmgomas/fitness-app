@@ -21,12 +21,14 @@ class FoodItem extends Model
         'description',
         'serving_size',
         'serving_unit',
+        'weight_per_serving',  // g වලින් එක සේවින් එකක බර
         'image_url',
         'is_active'
     ];
 
     protected $casts = [
         'serving_size' => 'decimal:2',
+        'weight_per_serving' => 'decimal:2',
         'is_active' => 'boolean'
     ];
 

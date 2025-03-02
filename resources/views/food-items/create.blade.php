@@ -57,6 +57,18 @@
                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                             @enderror
                         </div>
+                        <div>
+                            <label for="weight_per_serving" class="block text-sm font-medium text-gray-700">Serving
+                                Weight (g)
+                                Unit</label>
+                            <input type="text" name="weight_per_serving" id="weight_per_serving"
+                                value="{{ $foodItem->weight_per_serving ?? '' }}"
+                                placeholder="Weight in grams per serving"
+                                class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-[#f84525] focus:ring focus:ring-[#f84525] focus:ring-opacity-50 @error('serving_unit') border-red-500 @enderror">
+                            @error('weight_per_serving')
+                            <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                            @enderror
+                        </div>
 
                         <!-- Image URL -->
                         <div>
@@ -82,7 +94,7 @@
 
                 <!-- Nutritional Information Section -->
                 <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                    <h3 class="text-lg font-medium text-gray-900 mb-4">Nutritional Information</h3>
+                    <h3 class="text-lg font-medium text-gray-900 mb-4">Nutritional Information 100 g</h3>
                     <div id="nutrition-container">
                         @foreach($nutritionTypes as $type)
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 items-center">

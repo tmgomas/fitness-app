@@ -19,9 +19,10 @@ class UpdateFoodItemRequest extends FormRequest
             'description' => ['sometimes', 'nullable', 'string'],
             'serving_size' => ['sometimes', 'required', 'numeric', 'min:0'],
             'serving_unit' => ['sometimes', 'required', 'string', 'max:50'],
+            'weight_per_serving' => ['sometimes', 'required', 'numeric', 'min:0'],
             'image_url' => ['sometimes', 'nullable', 'url', 'max:255'],
             'is_active' => ['sometimes', 'boolean'],
-    
+
             // Nutrition Validation
             'nutrition' => ['array'],
             'nutrition.*.nutrition_id' => ['required', 'uuid', 'exists:nutrition_types,nutrition_id'],  // Changed from 'id' to 'nutrition_id'

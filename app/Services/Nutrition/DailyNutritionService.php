@@ -293,7 +293,6 @@ class DailyNutritionService implements DailyNutritionServiceInterface
      */
     private function calculateTotalCaloriesFromLogs($foodLogs): float
     {
-
         $totalCalories = 0;
 
         foreach ($foodLogs as $log) {
@@ -317,15 +316,67 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                 continue;
             }
 
-            $servingRatio = $log->serving_size / 100;
+            // ප්‍රධාන වෙනස මෙතැන සිට ආරම්භ වේ
+            // ඒකක පරිවර්තනය - සේවන ඒකකය ග්‍රෑම් වලට පරිවර්තනය කිරීම
+            $servingUnitToGram = $this->convertServingUnitToGrams($log->serving_unit);
+
+            // සේවන ප්‍රමාණය ග්‍රෑම් වලට පරිවර්තනය කරමු
+            $servingInGrams = $log->serving_size * $servingUnitToGram;
+
+            // 100g සේවන අනුපාතය ගණනය කරන්න
+            $servingRatio = $servingInGrams / 100;
+
             $calculatedCalories = $caloriesNutrition->amount_per_100g * $servingRatio;
-            Log::info("Calculated Calories for Log ID {$log->id}: " . $calculatedCalories);
+            Log::info("Calculated Calories for Log ID {$log->id}: " . $calculatedCalories, [
+                'serving_size' => $log->serving_size,
+                'serving_unit' => $log->serving_unit,
+                'serving_in_grams' => $servingInGrams,
+                'amount_per_100g' => $caloriesNutrition->amount_per_100g
+            ]);
 
             $totalCalories += $calculatedCalories;
         }
 
         Log::info('Total Calories:', ['total' => $totalCalories]);
         return $totalCalories;
+    }
+
+    /**
+     * Convert serving unit to equivalent grams
+     *
+     * @param string $unit
+     * @return float
+     */
+    private function convertServingUnitToGrams(string $unit): float
+    {
+        // ඒකක පරිවර්තන සංගුණක - මෙම අගයන් ආහාර වර්ගය අනුව වෙනස් විය හැකියි
+        $unitConversions = [
+            'g' => 1.0, // ග්‍රෑම් සඳහා සෘජු අගය
+            'kg' => 1000.0, // කිලෝග්‍රෑම්
+            'mg' => 0.001, // මිලිග්‍රෑම්
+            'oz' => 28.35, // අවුන්ස
+            'lb' => 453.59, // පවුම්
+            'cup' => 240.0, // කෝප්පය - මෙය ආහාර අනුව වෙනස් විය හැකියි
+            'කෝප්ප' => 240.0, // කෝප්පය - සිංහල
+            'tbsp' => 15.0, // මේස හැඳි
+            'tsp' => 5.0, // තේ හැඳි
+            'ml' => 1.0, // මිලිලීටර් (දියර සඳහා)
+            'l' => 1000.0, // ලීටර්
+            'piece' => 50.0, // කෑල්ල - මෙය ආහාර අනුව වෙනස් විය හැකියි
+            'slice' => 30.0, // පෙති - මෙය ආහාර අනුව වෙනස් විය හැකියි
+            'serving' => 100.0, // සේවනය - මෙය ආහාර අනුව වෙනස් විය හැකියි
+        ];
+
+        // ඒකකය පරිවර්තන සිතියමේ ඇත්දැයි පරීක්ෂා කරන්න (කුඩා අකුරු භාවිතයෙන්)
+        $unit = strtolower(trim($unit));
+
+        if (isset($unitConversions[$unit])) {
+            return $unitConversions[$unit];
+        }
+
+        // පෙරනිමි අගය (ඒකකය හමු නොවුණු විට)
+        Log::warning("Unknown serving unit: {$unit}, defaulting to 100g");
+        return 100.0;
     }
 
     /**

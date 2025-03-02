@@ -48,15 +48,21 @@ class UserFoodLogResource extends JsonResource
             'calculated_nutrition' => $this->when(
                 $this->relationLoaded('foodItem') && $this->foodItem->relationLoaded('foodNutrition'),
                 function () {
-                    $servingMultiplier = $this->serving_size / 100;
-                    return $this->foodItem->foodNutrition->map(function ($nutrition) use ($servingMultiplier) {
+                    // සේවින් එකකට ග්‍රෑම් ගණන, නැත්නම් default 100g
+                    $weightPerServing = $this->foodItem->weight_per_serving ?? 100;
+
+                    // මුළු ග්‍රෑම් ප්‍රමාණය
+                    $servingWeightInGrams = $this->serving_size * $weightPerServing;
+
+                    // පෝෂක ගණනය කිරීම
+                    return $this->foodItem->foodNutrition->map(function ($nutrition) use ($servingWeightInGrams) {
                         return [
                             'nutrition_type' => [
                                 'id' => $nutrition->nutritionType->nutrition_id,
                                 'name' => $nutrition->nutritionType->name,
                                 'unit' => $nutrition->nutritionType->unit
                             ],
-                            'amount' => (float) ($nutrition->amount_per_100g * $servingMultiplier),
+                            'amount' => (float) ($nutrition->amount_per_100g * $servingWeightInGrams / 100),
                             'measurement_unit' => $nutrition->measurement_unit
                         ];
                     });

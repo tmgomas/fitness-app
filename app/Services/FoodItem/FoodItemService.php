@@ -16,9 +16,9 @@ class FoodItemService implements FoodItemServiceInterface
         $query = $this->foodItemRepository->query();
 
         if (isset($filters['search'])) {
-            $query->where(function($q) use ($filters) {
+            $query->where(function ($q) use ($filters) {
                 $q->where('name', 'like', "%{$filters['search']}%")
-                  ->orWhere('description', 'like', "%{$filters['search']}%");
+                    ->orWhere('description', 'like', "%{$filters['search']}%");
             });
         }
 
@@ -67,6 +67,7 @@ class FoodItemService implements FoodItemServiceInterface
             'description' => $data['description'],
             'serving_size' => $data['serving_size'],
             'serving_unit' => $data['serving_unit'],
+            'weight_per_serving' => $data['weight_per_serving'],
             'image_url' => $data['image_url'] ?? null,
             'is_active' => $data['is_active'] ?? true
         ];
