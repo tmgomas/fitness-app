@@ -20,7 +20,7 @@ class UpdateUserExerciseLogRequest extends FormRequest
             'distance' => 'nullable|numeric|min:0',
             'distance_unit' => 'required_with:distance|in:km,mi',
             'avg_heart_rate' => 'nullable|numeric|min:0|max:250',
-            'intensity_level' => 'sometimes|in:low,medium,high',
+            'intensity_level' => 'sometimes|in:low,medium,high,moderate',
             'notes' => 'nullable|string|max:500'
         ];
     }
