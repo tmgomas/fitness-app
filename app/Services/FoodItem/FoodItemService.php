@@ -26,6 +26,9 @@ class FoodItemService implements FoodItemServiceInterface
             $query->where('is_active', $filters['status'] === 'active');
         }
 
+        // with() method එක එකතු කිරීම
+        $query->with('foodNutrition.nutritionType');
+
         return $query->latest()->paginate(10);
     }
 
@@ -52,12 +55,16 @@ class FoodItemService implements FoodItemServiceInterface
 
     public function searchFoodItems(string $query)
     {
-        return $this->foodItemRepository->searchActive($query);
-    }
+        $foodItems = $this->foodItemRepository->searchActive($query);
 
+        // Eager loading the relationship
+        $foodItems->load('foodNutrition.nutritionType');
+
+        return $foodItems;
+    }
     public function getFoodItemById(string $id)
     {
-        return $this->foodItemRepository->find($id);
+        return $this->foodItemRepository->find($id)->load('foodNutrition.nutritionType');
     }
 
     private function extractFoodData(array $data): array
