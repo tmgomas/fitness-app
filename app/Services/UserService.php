@@ -5,9 +5,12 @@ namespace App\Services;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use App\Mail\NewUserCredentials;
 
 class UserService
 {
@@ -20,14 +23,32 @@ class UserService
             'username' => $user->username,
             'gender' => $user->gender,
             'birthday' => $user->birthday,
-
         ];
     }
+
     public function createUser(array $data)
     {
-        $data['username'] = $this->generateUniqueUsername($data['name']);
-        $data['password'] = Hash::make($this->generateRandomPassword());
-        return User::create($data);
+        // Generate username and password
+        $username = $this->generateUniqueUsername($data['name']);
+        $password = $this->generateRandomPassword();
+
+        // Create user with generated credentials
+        $userData = array_merge($data, [
+            'username' => $username,
+            'password' => Hash::make($password)
+        ]);
+
+        $user = User::create($userData);
+
+        // Send credentials email
+        try {
+            Mail::to($user->email)->send(new NewUserCredentials($user, $username, $password));
+            Log::info('Credentials email sent to: ' . $user->email);
+        } catch (\Exception $e) {
+            Log::error('Failed to send credentials email: ' . $e->getMessage());
+        }
+
+        return $user;
     }
 
     private function generateUniqueUsername($name)
@@ -48,6 +69,7 @@ class UserService
     {
         return str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
     }
+
     public function getPaginatedUsers($search = null, $role = null, $status = null, $trashed = null, $perPage = 10)
     {
         $query = User::query();
@@ -80,8 +102,6 @@ class UserService
 
         return $query->latest()->paginate($perPage);
     }
-
-
 
     public function updateUser(User $user, array $data)
     {

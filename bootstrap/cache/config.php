@@ -481,12 +481,12 @@
       'smtp' => 
       array (
         'transport' => 'smtp',
-        'scheme' => 'tls',
+        'scheme' => NULL,
         'url' => NULL,
         'host' => 'smtp.hostinger.com',
-        'port' => '587',
-        'username' => 'your-email@buildyourfitself.lk',
-        'password' => 'your-mail-password',
+        'port' => '465',
+        'username' => 'info@buildyourfitself.lk',
+        'password' => 'Ws4Ht1g!',
         'timeout' => NULL,
         'local_domain' => 'fitness-app.test',
       ),
@@ -537,7 +537,7 @@
     ),
     'from' => 
     array (
-      'address' => 'your-email@buildyourfitself.lk',
+      'address' => 'info@buildyourfitself.lk',
       'name' => 'Build Your Fit',
     ),
     'markdown' => 
