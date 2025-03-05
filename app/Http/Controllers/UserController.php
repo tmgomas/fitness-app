@@ -84,20 +84,48 @@ class UserController extends Controller
     }
     public function show(User $user)
     {
+
+        // Get health data for this user
+        $healthData = $user->healthData()->orderBy('recorded_at', 'desc')->take(5)->get();
         
-        return view('users.show', compact('user'));
+        // Get preferences for this user
+        $preferences = $user->preferences()->orderBy('updated_at', 'desc')->take(1)->get();
+
+        // Get body measurements for this user
+        $measurements = $user->measurements()->orderBy('recorded_at', 'desc')->take(5)->get();
+
+        // Get recent food logs
+        $foodLogs = $user->foodLogs()->with('foodItem.foodNutrition.nutritionType')
+            ->orderBy('date', 'desc')
+            ->take(10)
+            ->get();
+
+        // Get recent exercise logs
+        $exerciseLogs = $user->exerciseLogs()->with('exercise')
+            ->orderBy('start_time', 'desc')
+            ->take(10)
+            ->get();
+
+        return view('users.show', compact(
+            'user',
+            'healthData',
+            'preferences',
+            'measurements',
+            'foodLogs',
+            'exerciseLogs'
+        ));
     }
 
     public function edit(User $user)
     {
-       
+
         return view('users.edit', compact('user'));
     }
 
     public function update(UpdateUserRequest $request, User $user)
     {
         try {
-            
+
             DB::beginTransaction();
             $user = $this->userService->updateUser($user, $request->validated());
             DB::commit();
@@ -112,7 +140,7 @@ class UserController extends Controller
     public function destroy(User $user)
     {
         try {
-           
+
             DB::beginTransaction();
             if (!$this->userService->canDeleteUser($user)) {
                 throw new \Exception('This user cannot be deleted.');

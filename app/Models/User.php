@@ -18,6 +18,7 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+    protected $primaryKey = 'id';
     protected $fillable = [
         'name',
         'username',
@@ -97,5 +98,47 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    // Add these relationship methods to the User model
+
+    /**
+     * Get the health data records for the user.
+     */
+    public function healthData()
+    {
+        return $this->hasMany(UserHealthData::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the preferences for the user.
+     */
+    public function preferences()
+    {
+        return $this->hasMany(UserPreference::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the measurements for the user.
+     */
+    public function measurements()
+    {
+        return $this->hasMany(UserMeasurement::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the food logs for the user.
+     */
+    public function foodLogs()
+    {
+        return $this->hasMany(UserFoodLog::class, 'user_id', 'id');
+    }
+
+    /**
+     * Get the exercise logs for the user.
+     */
+    public function exerciseLogs()
+    {
+        return $this->hasMany(UserExerciseLog::class, 'user_id', 'id');
     }
 }
