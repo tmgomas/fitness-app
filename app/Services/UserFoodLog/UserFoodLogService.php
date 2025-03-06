@@ -100,29 +100,39 @@ class UserFoodLogService implements UserFoodLogServiceInterface
                 ];
             }
 
-            if ($log->foodItem && $log->foodItem->nutrition) {
-                // 🚀 **Convert Serving Unit to Grams (Ensure Correct Conversion)**
-                $servingUnitToGram = $this->convertServingUnitToGrams($log->serving_unit, $log->foodItem->name);
-                $servingInGrams = $log->serving_size * $servingUnitToGram;
+            if ($log->foodItem && $log->foodItem->foodNutrition) {
+                // weight_per_serving field භාවිතා කරමු
+                $servingInGrams = 0;
+
+                // weight_per_serving තිබේ නම් එය භාවිතා කරන්න
+                if ($log->foodItem->weight_per_serving) {
+                    // එක සේවනයක ග්‍රෑම් ප්‍රමාණය weight_per_serving වලින් ලබා ගනිමු
+                    $servingInGrams = $log->foodItem->weight_per_serving * $log->serving_size;
+                } else {
+                    // weight_per_serving නැති නම් පරණ ක්‍රමයට ගණනය කරමු
+                    $servingUnitToGram = $this->convertServingUnitToGrams($log->serving_unit, $log->foodItem->name);
+                    $servingInGrams = $log->serving_size * $servingUnitToGram;
+                }
 
                 Log::info("Food log ID {$log->id} serving details", [
                     'serving_size' => $log->serving_size,
                     'serving_unit' => $log->serving_unit,
+                    'weight_per_serving' => $log->foodItem->weight_per_serving,
                     'serving_in_grams' => $servingInGrams,
                 ]);
 
-                foreach ($log->foodItem->nutrition as $nutrition) {
-                    if (!$nutrition->nutrition_type || $nutrition->amount_per_100g === null) {
+                foreach ($log->foodItem->foodNutrition as $nutrition) {
+                    if (!$nutrition->nutritionType || $nutrition->amount_per_100g === null) {
                         continue;
                     }
 
-                    // 🏷️ **Get Nutrition Name in Lowercase**
-                    $nutritionName = strtolower(trim($nutrition->nutrition_type->name));
+                    // Get Nutrition Name in Lowercase
+                    $nutritionName = strtolower(trim($nutrition->nutritionType->name));
 
-                    // 🍎 **Fix Calculation: Use Proper 100g Conversion**
+                    // Fix Calculation: Use Proper 100g Conversion
                     $amount = round(($nutrition->amount_per_100g * $servingInGrams) / 100, 2);
 
-                    // 🔍 **Identify Nutrition Type & Assign Values**
+                    // Identify Nutrition Type & Assign Values
                     if (strpos($nutritionName, 'calorie') !== false || strpos($nutritionName, 'energy') !== false) {
                         $dailyTotals[$date]['calories'] += $amount;
                     } elseif (strpos($nutritionName, 'protein') !== false) {
@@ -138,7 +148,7 @@ class UserFoodLogService implements UserFoodLogServiceInterface
             $dailyTotals[$date]['meal_count']++;
         }
 
-        // 🔥 **Round Final Nutritional Values for Precision**
+        // Round Final Nutritional Values for Precision
         foreach ($dailyTotals as $date => $nutritionData) {
             $dailyTotals[$date]['calories'] = round($nutritionData['calories'], 2);
             $dailyTotals[$date]['protein'] = round($nutritionData['protein'], 2);

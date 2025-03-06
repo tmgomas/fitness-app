@@ -316,12 +316,22 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                 continue;
             }
 
-            // ප්‍රධාන වෙනස මෙතැන සිට ආරම්භ වේ
-            // ඒකක පරිවර්තනය - සේවන ඒකකය ග්‍රෑම් වලට පරිවර්තනය කිරීම
-            $servingUnitToGram = $this->convertServingUnitToGrams($log->serving_unit);
+            // weight_per_serving field එක භාවිතා කරමු
+            $servingInGrams = 0;
 
-            // සේවන ප්‍රමාණය ග්‍රෑම් වලට පරිවර්තනය කරමු
-            $servingInGrams = $log->serving_size * $servingUnitToGram;
+            // weight_per_serving තිබේ නම් එය භාවිතා කරන්න
+            if ($log->foodItem->weight_per_serving) {
+                // එක සේවනයක ග්‍රෑම් ප්‍රමාණය weight_per_serving වලින් ලබා ගනිමු
+                $servingInGrams = $log->foodItem->weight_per_serving * $log->serving_size;
+
+                Log::info("Using weight_per_serving for food ID {$log->foodItem->food_id}: {$log->foodItem->weight_per_serving}g per serving");
+            } else {
+                // weight_per_serving නැති නම් පරණ ක්‍රමයට ගණනය කරමු
+                $servingUnitToGram = $this->convertServingUnitToGrams($log->serving_unit);
+                $servingInGrams = $log->serving_size * $servingUnitToGram;
+
+                Log::info("No weight_per_serving for food ID {$log->foodItem->food_id}, using conversion: {$log->serving_unit} -> {$servingUnitToGram}g");
+            }
 
             // 100g සේවන අනුපාතය ගණනය කරන්න
             $servingRatio = $servingInGrams / 100;
@@ -340,7 +350,6 @@ class DailyNutritionService implements DailyNutritionServiceInterface
         Log::info('Total Calories:', ['total' => $totalCalories]);
         return $totalCalories;
     }
-
     /**
      * Convert serving unit to equivalent grams
      *

@@ -15,6 +15,7 @@ class FoodItemResource extends JsonResource
             'description' => $this->description,
             'serving_size' => $this->serving_size,
             'serving_unit' => $this->serving_unit,
+            'weight_per_serving' => $this->weight_per_serving,
             'image_url' => $this->image_url,
             'is_active' => $this->is_active,
             'nutrition' => FoodNutritionResource::collection($this->whenLoaded('foodNutrition')),
