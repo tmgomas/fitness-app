@@ -14,7 +14,7 @@ class UpdateMeasurementRequest extends FormRequest
     public function authorize(): bool
     {
         $measurementId = $this->route('measurement');
-        
+
         // Check if the measurement belongs to the authenticated user
         $measurement = UserMeasurement::where('measurement_id', $measurementId)
             ->where('user_id', Auth::id())
@@ -34,6 +34,7 @@ class UpdateMeasurementRequest extends FormRequest
             'hips' => 'nullable|numeric|between:0,500',
             'arms' => 'nullable|numeric|between:0,500',
             'thighs' => 'nullable|numeric|between:0,500',
+            'neck' => 'nullable|numeric|between:0,500',
             'recorded_at' => 'required|date|before_or_equal:now'
         ];
     }

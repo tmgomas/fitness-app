@@ -8,7 +8,7 @@ use Laravel\Sanctum\HasApiTokens;
 
 class UserMeasurement extends Model
 {
-    use HasUuids,HasApiTokens;
+    use HasUuids, HasApiTokens;
 
     protected $primaryKey = 'measurement_id';
     protected $keyType = 'string';
@@ -20,6 +20,7 @@ class UserMeasurement extends Model
         'hips',
         'arms',
         'thighs',
+        'neck',   // Added new column
         'recorded_at'
     ];
 
@@ -29,6 +30,7 @@ class UserMeasurement extends Model
         'waist' => 'float',
         'hips' => 'float',
         'arms' => 'float',
+        'neck' => 'float',  // Added cast for new column
         'thighs' => 'float'
     ];
 

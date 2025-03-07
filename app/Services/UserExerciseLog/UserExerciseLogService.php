@@ -121,14 +121,13 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
     public function calculateCaloriesBurned($durationMinutes, $intensityLevel)
     {
         $calorieMultiplier = [
-            'low' => 5,
-            'medium' => 7,
-            'high' => 10
+            'low' => 7.5,    // 5 සිට 7.5 දක්වා වැඩි කළා
+            'medium' => 9.2, // 7 සිට 9.2 දක්වා වැඩි කළා
+            'high' => 13     // 10 සිට 13 දක්වා වැඩි කළා
         ][$intensityLevel];
 
         return $durationMinutes * $calorieMultiplier;
     }
-
     protected function getDefaultDateRange(array $dateRange)
     {
         return [

@@ -17,6 +17,7 @@ class CreateUserMeasurementsTable extends Migration
             $table->float('hips')->nullable();
             $table->float('arms')->nullable();
             $table->float('thighs')->nullable();
+            $table->float('neck')->nullable();
             $table->timestamp('recorded_at');
             $table->timestamps();
         });

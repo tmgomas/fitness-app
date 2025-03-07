@@ -16,6 +16,7 @@ class MeasurementResource extends JsonResource
                 'hips' => $this->hips,
                 'arms' => $this->arms,
                 'thighs' => $this->thighs,
+                'neck' => $this->neck,  // Added new field
             ],
             'recorded_at' => $this->recorded_at,
             'created_at' => $this->created_at,

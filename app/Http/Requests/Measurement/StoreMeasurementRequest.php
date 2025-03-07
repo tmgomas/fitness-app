@@ -19,6 +19,7 @@ class StoreMeasurementRequest extends FormRequest
             'hips' => 'nullable|numeric',
             'arms' => 'nullable|numeric',
             'thighs' => 'nullable|numeric',
+            'neck' => 'nullable|numeric',  // Added new validation rule
             'recorded_at' => 'required|date'
         ];
     }
