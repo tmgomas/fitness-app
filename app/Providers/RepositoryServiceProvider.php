@@ -50,6 +50,8 @@ use App\Services\Nutrition\DailyNutritionService;
 use App\Services\Nutrition\Interfaces\DailyNutritionServiceInterface;
 use App\Services\NutritionType\Interfaces\NutritionTypeServiceInterface;
 use App\Services\NutritionType\NutritionTypeService;
+use App\Services\Report\Interfaces\MonthlyReportServiceInterface;
+use App\Services\Report\MonthlyReportService;
 use App\Services\UserExerciseLog\Interfaces\UserExerciseLogServiceInterface;
 use App\Services\UserExerciseLog\UserExerciseLogService;
 use App\Services\UserFoodLog\Interfaces\UserFoodLogServiceInterface;
@@ -191,6 +193,11 @@ class RepositoryServiceProvider extends ServiceProvider
         $this->app->bind(
             DailyNutritionServiceInterface::class,
             DailyNutritionService::class
+
+        );
+        $this->app->bind(
+            MonthlyReportServiceInterface::class,
+            MonthlyReportService::class
 
         );
     }

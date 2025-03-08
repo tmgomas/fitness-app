@@ -75,5 +75,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
             Route::get('/burned', [NutritionSummaryController::class, 'getBurnedCalories']);
             Route::get('/weekly', [NutritionSummaryController::class, 'getWeeklySummary']);
         });
+
+        Route::get('/reports/monthly/calories/summary', [App\Http\Controllers\Api\MonthlyReportController::class, 'getMonthlyCaloriesSummary']);
+        Route::get('/reports/monthly/calories/details', [App\Http\Controllers\Api\MonthlyReportController::class, 'getMonthlyCaloriesDetails']);
     }
 );
