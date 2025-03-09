@@ -4,6 +4,7 @@ namespace App\Services\UserExerciseLog;
 
 use App\Services\UserExerciseLog\Interfaces\UserExerciseLogServiceInterface;
 use App\Repositories\UserExerciseLog\Interfaces\UserExerciseLogRepositoryInterface;
+use App\Repositories\Exercise\Interfaces\ExerciseRepositoryInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -11,10 +12,14 @@ use Illuminate\Support\Facades\Log;
 class UserExerciseLogService implements UserExerciseLogServiceInterface
 {
     protected $exerciseLogRepository;
+    protected $exerciseRepository;
 
-    public function __construct(UserExerciseLogRepositoryInterface $exerciseLogRepository)
-    {
+    public function __construct(
+        UserExerciseLogRepositoryInterface $exerciseLogRepository,
+        ExerciseRepositoryInterface $exerciseRepository
+    ) {
         $this->exerciseLogRepository = $exerciseLogRepository;
+        $this->exerciseRepository = $exerciseRepository;
     }
 
     public function getAllExerciseLogs(array $filters = [])
@@ -37,10 +42,17 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
 
             // Calculate calories burned
             $data['calories_burned'] = $this->calculateCaloriesBurned(
+                $data['exercise_id'],
                 $data['duration_minutes'],
                 $data['intensity_level']
             );
+            if (isset($data['calories_burned']) && $data['calories_burned'] < 0) {
+                $data['calories_burned'] = abs($data['calories_burned']); // ඍණ අගයක් නම්, එය නරපේක්ෂ අගයට පරිවර්තනය කරන්න
+            }
 
+            if (isset($data['duration_minutes']) && $data['duration_minutes'] < 0) {
+                $data['duration_minutes'] = abs($data['duration_minutes']); // ඍණ අගයක් නම්, එය නරපේක්ෂ අගයට පරිවර්තනය කරන්න
+            }
             return $this->exerciseLogRepository->createForUser(Auth::id(), $data);
         } catch (\Exception $e) {
             Log::error('Error storing exercise log: ' . $e->getMessage());
@@ -70,14 +82,22 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
                 $data['duration_minutes'] = $endTime->diffInMinutes($startTime);
             }
 
-            // Recalculate calories if duration or intensity changed
-            if (isset($data['duration_minutes']) || isset($data['intensity_level'])) {
+            // Recalculate calories if duration, exercise or intensity changed
+            if (isset($data['duration_minutes']) || isset($data['exercise_id']) || isset($data['intensity_level'])) {
                 $data['calories_burned'] = $this->calculateCaloriesBurned(
+                    $data['exercise_id'] ?? $exerciseLog->exercise_id,
                     $data['duration_minutes'] ?? $exerciseLog->duration_minutes,
                     $data['intensity_level'] ?? $exerciseLog->intensity_level
                 );
             }
+            // සහතික කරන්න calories_burned හා duration_minutes ධන අගයන් ලෙස ගබඩාවන බවට
+            if (isset($data['calories_burned']) && $data['calories_burned'] < 0) {
+                $data['calories_burned'] = abs($data['calories_burned']); // ඍණ අගයක් නම්, එය නරපේක්ෂ අගයට පරිවර්තනය කරන්න
+            }
 
+            if (isset($data['duration_minutes']) && $data['duration_minutes'] < 0) {
+                $data['duration_minutes'] = abs($data['duration_minutes']); // ඍණ අගයක් නම්, එය නරපේක්ෂ අගයට පරිවර්තනය කරන්න
+            }
             return $this->exerciseLogRepository->updateForUser(Auth::id(), $logId, $data);
         } catch (\Exception $e) {
             Log::error('Error updating exercise log: ' . $e->getMessage());
@@ -118,16 +138,45 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
         }
     }
 
-    public function calculateCaloriesBurned($durationMinutes, $intensityLevel)
+    public function calculateCaloriesBurned($exerciseId, $durationMinutes, $intensityLevel)
     {
-        $calorieMultiplier = [
-            'low' => 7.5,    // 5 සිට 7.5 දක්වා වැඩි කළා
-            'medium' => 9.2, // 7 සිට 9.2 දක්වා වැඩි කළා
-            'high' => 13     // 10 සිට 13 දක්වා වැඩි කළා
-        ][$intensityLevel];
+        // ව්‍යායාමය ලබා ගන්න
+        $exercise = $this->exerciseRepository->find($exerciseId);
 
-        return $durationMinutes * $calorieMultiplier;
+        if (!$exercise) {
+            Log::error('Exercise not found: ' . $exerciseId);
+            return 0;
+        }
+
+        // ව්‍යායාමයේ විනාඩියකට කැලරි අගය භාවිතා කරන්න
+        $baseCaloriesPerMinute = $exercise->calories_per_minute;
+
+        // තීව්‍රතාවය ගුණකය - මුල් ගුණක භාවිතා කරමු
+        $intensityMultipliers = [
+            'low' => 0.8,
+            'medium' => 1.0,
+            'high' => 1.3
+        ];
+
+        $intensityMultiplier = $intensityMultipliers[$intensityLevel] ?? 1.0;
+
+        // මූලික ගණනය - මුල් විදිහටම
+        $originalCalories = $durationMinutes * $baseCaloriesPerMinute * $intensityMultiplier;
+
+        // විවේක කාලය සහ යථාර්ථවාදීත්වය සඳහා සුළු අඩු කිරීමක්
+        // 600 වෙනුවට 590 වැනි අගයක් ලබා දීමට 1.5% - 2% අතර අඩු කරමු
+        $reductionPercentage = mt_rand(15, 20) / 10; // 1.5% - 2.0% අතර අහඹු අගයක්
+
+        // අවසාන කැලරි ගණනය
+        $adjustedCalories = $originalCalories * (1 - ($reductionPercentage / 100));
+
+        // උදාහරණයක්:
+        // පිහිනීම (medium): 60 * 10 * 1.0 = 600 කැලරි
+        // 2% අඩු කළ විට: 600 * 0.98 = 588 කැලරි
+
+        return round($adjustedCalories); // අගය ගොනු කරමු
     }
+
     protected function getDefaultDateRange(array $dateRange)
     {
         return [

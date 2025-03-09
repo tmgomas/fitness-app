@@ -10,5 +10,14 @@ interface UserExerciseLogServiceInterface
     public function updateExerciseLog($logId, array $data);
     public function deleteExerciseLog($logId);
     public function getExerciseStats(array $dateRange = []);
-    public function calculateCaloriesBurned($durationMinutes, $intensityLevel);
+
+    /**
+     * Calculate calories burned during an exercise
+     * 
+     * @param string $exerciseId The ID of the exercise
+     * @param float $durationMinutes Duration of the exercise in minutes
+     * @param string $intensityLevel Intensity level of the exercise (low, medium, high)
+     * @return float The calories burned
+     */
+    public function calculateCaloriesBurned($exerciseId, $durationMinutes, $intensityLevel);
 }
