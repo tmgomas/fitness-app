@@ -124,14 +124,30 @@ class DailyNutritionService implements DailyNutritionServiceInterface
     {
         try {
             // Get the latest health data
+            // Get the latest health data
             $healthData = UserHealthData::where('user_id', $user->id)
                 ->orderBy('recorded_at', 'desc')
                 ->first();
+
+            Log::info('Retrieved health data for user', [
+                'user_id' => $user->id,
+                'has_health_data' => !is_null($healthData),
+                'health_data_id' => $healthData ? $healthData->health_id : null,
+                'recorded_at' => $healthData ? $healthData->recorded_at : null
+            ]);
 
             // Get user preferences
             $preferences = UserPreference::where('user_id', $user->id)
                 ->orderBy('updated_at', 'desc')
                 ->first();
+
+            Log::info('Retrieved preferences for user', [
+                'user_id' => $user->id,
+                'has_preferences' => !is_null($preferences),
+                'preference_id' => $preferences ? $preferences->pref_id : null,
+                'activity_level' => $preferences ? $preferences->activity_level : 'not set',
+                'fitness_goals' => $preferences ? $preferences->fitness_goals : 'not set'
+            ]);
 
             if (!$healthData) {
                 // Return default values if no health data is available
@@ -164,19 +180,19 @@ class DailyNutritionService implements DailyNutritionServiceInterface
 
             if ($preferences) {
                 switch ($preferences->activity_level) {
-                    case 'sedentary':
+                    case 'Sedentary':
                         $activityMultiplier = 1.2;
                         break;
-                    case 'lightly_active':
+                    case 'Lightly Active':
                         $activityMultiplier = 1.375;
                         break;
-                    case 'moderately_active':
+                    case 'Moderately Active':
                         $activityMultiplier = 1.55;
                         break;
-                    case 'very_active':
+                    case 'Very Active':
                         $activityMultiplier = 1.725;
                         break;
-                    case 'extra_active':
+                    case 'Extra Active':
                         $activityMultiplier = 1.9;
                         break;
                 }
@@ -189,14 +205,26 @@ class DailyNutritionService implements DailyNutritionServiceInterface
             $goalAdjustment = 0;
             if ($preferences) {
                 switch ($preferences->fitness_goals) {
-                    case 'lose_weight':
-                        $goalAdjustment = -500; // Caloric deficit
+                    case 'Weight Loss':
+                        $goalAdjustment = -500; // Caloric deficit for weight loss
                         break;
-                    case 'gain_weight':
-                    case 'build_muscle':
-                        $goalAdjustment = 500; // Caloric surplus
+                    case 'Weight Gain':
+                        $goalAdjustment = 500; // Caloric surplus for weight gain
                         break;
-                        // For maintenance, no adjustment needed
+                    case 'Build Muscle':
+                        $goalAdjustment = 500; // Caloric surplus for muscle building
+                        break;
+                    case 'Improve Endurance':
+                        $goalAdjustment = -250; // Slight deficit for endurance improvement
+                        break;
+                    case 'Maintain Weight':
+                        $goalAdjustment = 0; // No adjustment for weight maintenance
+                        break;
+                    case 'Other':
+                        $goalAdjustment = 0; // Default no adjustment for other goals
+                        break;
+                    default:
+                        $goalAdjustment = 0; // Default if no specific goal is set
                 }
             }
 
