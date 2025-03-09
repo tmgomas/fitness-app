@@ -124,7 +124,6 @@ class DailyNutritionService implements DailyNutritionServiceInterface
     {
         try {
             // Get the latest health data
-            // Get the latest health data
             $healthData = UserHealthData::where('user_id', $user->id)
                 ->orderBy('recorded_at', 'desc')
                 ->first();
@@ -153,7 +152,18 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                 // Return default values if no health data is available
                 return [
                     'total_calories' => 2000,
+                    'base_tdee' => 2000,
+                    'goal_adjustment' => 0,
+                    'goal_type' => 'default',
                     'calculation_method' => 'default',
+                    'parameters' => [
+                        'gender' => 'not_set',
+                        'age' => 30,
+                        'height' => 0,
+                        'weight' => 0,
+                        'activity_level' => 'sedentary',
+                        'fitness_goal' => 'maintain'
+                    ],
                     'breakdown' => [
                         'carbohydrates' => 250, // 50% of calories (1000) / 4 kcal per gram
                         'protein' => 100, // 20% of calories (400) / 4 kcal per gram
@@ -174,6 +184,16 @@ class DailyNutritionService implements DailyNutritionServiceInterface
             } else {
                 $bmr = (10 * $weightKg) + (6.25 * $heightCm) - (5 * $age) - 161;
             }
+
+            // Log the BMR calculation for debugging
+            Log::info('BMR Calculation', [
+                'user_id' => $user->id,
+                'gender' => $gender,
+                'age' => $age,
+                'height_cm' => $heightCm,
+                'weight_kg' => $weightKg,
+                'calculated_bmr' => $bmr
+            ]);
 
             // Activity multiplier based on user preferences
             $activityMultiplier = 1.2; // Default: Sedentary
@@ -201,34 +221,70 @@ class DailyNutritionService implements DailyNutritionServiceInterface
             // Calculate TDEE (Total Daily Energy Expenditure)
             $tdee = $bmr * $activityMultiplier;
 
+            // Store the base TDEE (this matches Calculator.net value)
+            $baseTdee = $tdee;
+
+            // Log the TDEE calculation for debugging
+            Log::info('TDEE Calculation', [
+                'user_id' => $user->id,
+                'bmr' => $bmr,
+                'activity_level' => $preferences ? $preferences->activity_level : 'Not set',
+                'activity_multiplier' => $activityMultiplier,
+                'calculated_tdee' => $tdee
+            ]);
+
             // Adjust based on fitness goals
             $goalAdjustment = 0;
+            $goalType = '';
+
             if ($preferences) {
                 switch ($preferences->fitness_goals) {
                     case 'Weight Loss':
                         $goalAdjustment = -500; // Caloric deficit for weight loss
+                        $goalType = 'weight_loss';
                         break;
                     case 'Weight Gain':
                         $goalAdjustment = 500; // Caloric surplus for weight gain
+                        $goalType = 'weight_gain';
                         break;
                     case 'Build Muscle':
                         $goalAdjustment = 500; // Caloric surplus for muscle building
+                        $goalType = 'build_muscle';
                         break;
                     case 'Improve Endurance':
                         $goalAdjustment = -250; // Slight deficit for endurance improvement
+                        $goalType = 'improve_endurance';
                         break;
                     case 'Maintain Weight':
                         $goalAdjustment = 0; // No adjustment for weight maintenance
+                        $goalType = 'maintain_weight';
                         break;
                     case 'Other':
                         $goalAdjustment = 0; // Default no adjustment for other goals
+                        $goalType = 'other';
                         break;
                     default:
                         $goalAdjustment = 0; // Default if no specific goal is set
+                        $goalType = 'not_set';
                 }
             }
 
-            $recommendedCalories = max(1200, $tdee + $goalAdjustment); // Never go below 1200 calories
+            // Apply goal adjustment, ensuring we don't go below 1200 calories
+            $adjustedTdee = max(1200, $tdee + $goalAdjustment);
+
+            // Use adjusted TDEE for the traditional return value (backwards compatibility)
+            $recommendedCalories = $adjustedTdee;
+
+            // Log the goal adjustment for debugging
+            Log::info('Goal Adjustment', [
+                'user_id' => $user->id,
+                'fitness_goal' => $preferences ? $preferences->fitness_goals : 'Not set',
+                'goal_type' => $goalType,
+                'adjustment_amount' => $goalAdjustment,
+                'base_tdee' => $baseTdee,
+                'adjusted_tdee' => $adjustedTdee,
+                'final_recommendation' => $recommendedCalories
+            ]);
 
             // Macro breakdown
             // Default: 50% carbs, 20% protein, 30% fat
@@ -237,7 +293,10 @@ class DailyNutritionService implements DailyNutritionServiceInterface
             $fat = ($recommendedCalories * 0.3) / 9; // 9 calories per gram of fat
 
             return [
-                'total_calories' => round($recommendedCalories),
+                'total_calories' => round($recommendedCalories), // Traditional return value (with goal adjustment)
+                'base_tdee' => round($baseTdee), // New value for comparison with Calculator.net
+                'goal_adjustment' => $goalAdjustment, // How much we adjusted by
+                'goal_type' => $goalType, // What kind of goal was applied
                 'calculation_method' => 'mifflin_st_jeor',
                 'parameters' => [
                     'gender' => $gender,
@@ -254,12 +313,26 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                 ]
             ];
         } catch (\Exception $e) {
-            Log::error('Error in getRecommendedCalories: ' . $e->getMessage());
+            Log::error('Error in getRecommendedCalories: ' . $e->getMessage(), [
+                'user_id' => $user->id,
+                'trace' => $e->getTraceAsString()
+            ]);
 
             // Return default values on error
             return [
                 'total_calories' => 2000,
+                'base_tdee' => 2000,
+                'goal_adjustment' => 0,
+                'goal_type' => 'error',
                 'calculation_method' => 'default',
+                'parameters' => [
+                    'gender' => 'not_set',
+                    'age' => 30,
+                    'height' => 0,
+                    'weight' => 0,
+                    'activity_level' => 'sedentary',
+                    'fitness_goal' => 'maintain'
+                ],
                 'breakdown' => [
                     'carbohydrates' => 250,
                     'protein' => 100,
