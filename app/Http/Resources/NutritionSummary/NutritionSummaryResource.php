@@ -20,10 +20,10 @@ class NutritionSummaryResource extends JsonResource
             'calories' => [
                 'consumed' => $this['calories']['consumed'],
                 'burned' => $this['calories']['burned'],
-                'net' => $this['calories']['net'],
                 'recommended' => $this['calories']['recommended'],
                 'remaining' => $this['calories']['remaining']
             ],
+            'base_recommended' => $this['base_recommended'], 
             'nutrition_breakdown' => $this['nutrition_breakdown'],
             'meal_types' => $this['meal_types'],
             'food_logs_count' => $this['food_logs_count'],

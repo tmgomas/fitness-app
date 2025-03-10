@@ -48,30 +48,22 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                 ->whereBetween('start_time', [$startOfDay, $endOfDay])
                 ->get();
 
-            // Get the user's recommended calories 
+            // Get the user's base recommended calories
             $recommended = $this->getRecommendedCalories($user);
             $baseRecommendedCalories = $recommended['total_calories'] ?? 2000;
 
             // Calculate totals
             $totalCaloriesConsumed = $this->calculateTotalCaloriesFromLogs($foodLogs);
+            $totalCaloriesBurned = abs($exerciseLogs->sum('calories_burned')); // Ensure positive
 
-            // ===== වෙනස තිබෙන්නේ මෙතැන =====
-            // Ensure calories burned is a positive value by using abs()
-            $totalCaloriesBurned = abs($exerciseLogs->sum('calories_burned'));
+            // Update recommended calories to include burned calories
+            $updatedRecommendedCalories = $baseRecommendedCalories + $totalCaloriesBurned;
 
-            // Add burned calories to daily goal
-            $adjustedRecommendedCalories = $baseRecommendedCalories + $totalCaloriesBurned;
-
-            // Net calories is consumed calories
-            $netCalories = $totalCaloriesConsumed;
-
-            // Remaining is adjusted goal minus consumed
-            $remainingCalories = $adjustedRecommendedCalories - $totalCaloriesConsumed;
+            // Remaining Calories Calculation
+            $remainingCalories = $updatedRecommendedCalories - $totalCaloriesConsumed;
 
             // Get detailed nutrition breakdown
             $nutritionBreakdown = $this->calculateNutritionBreakdown($foodLogs);
-
-            // Get meal types summary 
             $mealTypeSummary = $this->getMealTypeSummary($foodLogs);
 
             return [
@@ -79,11 +71,11 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                 'user_id' => $user->id,
                 'calories' => [
                     'consumed' => round($totalCaloriesConsumed, 2),
-                    'burned' => round($totalCaloriesBurned, 2), // Always positive now using abs()
-                    'net' => round($netCalories, 2),
-                    'recommended' => round($adjustedRecommendedCalories, 2),
+                    'burned' => round($totalCaloriesBurned, 2),
+                    'recommended' => round($updatedRecommendedCalories, 2), // Base + Burned
                     'remaining' => round($remainingCalories, 2)
                 ],
+                'base_recommended' => round($baseRecommendedCalories, 2), // Base calories separately
                 'nutrition_breakdown' => $nutritionBreakdown,
                 'meal_types' => $mealTypeSummary,
                 'food_logs_count' => $foodLogs->count(),
@@ -94,17 +86,16 @@ class DailyNutritionService implements DailyNutritionServiceInterface
             Log::error('Error in getNutritionSummary: ' . $e->getMessage());
             Log::error($e->getTraceAsString());
 
-            // Return a basic structure even on error
             return [
                 'date' => $date ?? Carbon::today()->format('Y-m-d'),
                 'user_id' => $user->id,
                 'calories' => [
                     'consumed' => 0,
-                    'burned' => 0, // Make sure this defaults to 0 (not -0)
-                    'net' => 0,
-                    'recommended' => 2000,
+                    'burned' => 0,
+                    'recommended' => 2000, // Base + Burned
                     'remaining' => 2000
                 ],
+                'base_recommended' => 2000, // Base calories separately
                 'nutrition_breakdown' => [],
                 'meal_types' => [],
                 'food_logs_count' => 0,
@@ -114,6 +105,8 @@ class DailyNutritionService implements DailyNutritionServiceInterface
             ];
         }
     }
+
+
     /**
      * Get recommended daily calories for a user based on their health data and preferences
      *

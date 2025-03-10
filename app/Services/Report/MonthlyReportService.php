@@ -12,6 +12,9 @@ use Illuminate\Support\Facades\Log;
 
 class MonthlyReportService implements MonthlyReportServiceInterface
 {
+    // Standard conversion: ~7700 calories = 1 kg weight change
+    private const CALORIES_PER_KG = 7700.0;
+
     /**
      * Get monthly summary of calories consumed and burned
      *
@@ -28,6 +31,12 @@ class MonthlyReportService implements MonthlyReportServiceInterface
 
             // Calculate total calories burned from exercise logs
             $totalCaloriesBurned = $this->calculateTotalCaloriesBurned($userId, $startDate, $endDate);
+
+            // Calculate net calories
+            $netCalories = $totalCaloriesConsumed - $totalCaloriesBurned;
+
+            // Calculate estimated weight change
+            $estimatedWeightChange = $this->calculateEstimatedWeightChange($netCalories);
 
             // Get food log count
             $foodLogCount = UserFoodLog::where('user_id', $userId)
@@ -48,7 +57,8 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 'end_date' => $endDate->format('Y-m-d'),
                 'total_calories_consumed' => round($totalCaloriesConsumed, 2),
                 'total_calories_burned' => round($totalCaloriesBurned, 2),
-                'net_calories' => round($totalCaloriesConsumed - $totalCaloriesBurned, 2),
+                'net_calories' => round($netCalories, 2),
+                'estimated_weight_change_kg' => round($estimatedWeightChange, 3),
                 'food_log_count' => $foodLogCount,
                 'exercise_log_count' => $exerciseLogCount
             ];
@@ -61,6 +71,7 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 'total_calories_consumed' => 0,
                 'total_calories_burned' => 0,
                 'net_calories' => 0,
+                'estimated_weight_change_kg' => 0,
                 'food_log_count' => 0,
                 'exercise_log_count' => 0,
                 'error' => $e->getMessage()
@@ -95,6 +106,7 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                     'calories_consumed' => 0,
                     'calories_burned' => 0,
                     'net_calories' => 0,
+                    'estimated_weight_change_kg' => 0,
                     'food_logs' => 0,
                     'exercise_logs' => 0
                 ];
@@ -132,11 +144,13 @@ class MonthlyReportService implements MonthlyReportServiceInterface
 
             foreach ($dailyData as &$day) {
                 $day['net_calories'] = $day['calories_consumed'] - $day['calories_burned'];
+                $day['estimated_weight_change_kg'] = $this->calculateEstimatedWeightChange($day['net_calories']);
 
                 // Round values
                 $day['calories_consumed'] = round($day['calories_consumed'], 2);
                 $day['calories_burned'] = round($day['calories_burned'], 2);
                 $day['net_calories'] = round($day['net_calories'], 2);
+                $day['estimated_weight_change_kg'] = round($day['estimated_weight_change_kg'], 3);
 
                 // Add to totals
                 $totalCaloriesConsumed += $day['calories_consumed'];
@@ -144,10 +158,14 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             }
 
             // Calculate month totals
+            $totalNetCalories = $totalCaloriesConsumed - $totalCaloriesBurned;
+            $estimatedWeightChange = $this->calculateEstimatedWeightChange($totalCaloriesConsumed, $totalCaloriesBurned);
+
             $monthTotals = [
                 'total_calories_consumed' => round($totalCaloriesConsumed, 2),
                 'total_calories_burned' => round($totalCaloriesBurned, 2),
-                'total_net_calories' => round($totalCaloriesConsumed - $totalCaloriesBurned, 2),
+                'total_net_calories' => round($totalNetCalories, 2),
+                'estimated_weight_change_kg' => round($estimatedWeightChange, 3),
                 'avg_daily_calories_consumed' => count($dailyData) > 0 ? round($totalCaloriesConsumed / count($dailyData), 2) : 0,
                 'avg_daily_calories_burned' => count($dailyData) > 0 ? round($totalCaloriesBurned / count($dailyData), 2) : 0
             ];
@@ -170,12 +188,26 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                     'total_calories_consumed' => 0,
                     'total_calories_burned' => 0,
                     'total_net_calories' => 0,
+                    'estimated_weight_change_kg' => 0,
                     'avg_daily_calories_consumed' => 0,
                     'avg_daily_calories_burned' => 0
                 ],
                 'error' => $e->getMessage()
             ];
         }
+    }
+
+    /**
+     * Calculate estimated weight change based on calorie surplus/deficit
+     *
+     * @param float $netCalories
+     * @return float Estimated weight change in kg (positive for gain, negative for loss)
+     */
+    private function calculateEstimatedWeightChange(float $netCalories): float
+    {
+        // Standard formula: netCalories / CALORIES_PER_KG = weight change in kg
+        // Positive value means weight gain, negative means weight loss
+        return $netCalories / self::CALORIES_PER_KG;
     }
 
     /**
