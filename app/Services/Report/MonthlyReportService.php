@@ -10,6 +10,7 @@ use App\Services\Nutrition\Interfaces\DailyNutritionServiceInterface;
 use App\Services\Report\Interfaces\MonthlyReportServiceInterface;
 use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -61,45 +62,23 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             // Get user fitness goal
             $fitnessGoal = $this->getUserFitnessGoal($userId);
 
-            // Get daily recommended calories (assuming 3390 if service not available)
-            $dailyRecommendedCalories = 3390; // Default value
-
-            if ($this->dailyNutritionService) {
-                try {
-                    $user = User::findOrFail($userId);
-                    $dailyRecommendedCalories = $this->dailyNutritionService->getRecommendedCalories($user);
-
-                    // Make sure $dailyRecommendedCalories is a float/int, not an array
-                    if (is_array($dailyRecommendedCalories)) {
-                        if (isset($dailyRecommendedCalories['calories'])) {
-                            $dailyRecommendedCalories = (float) $dailyRecommendedCalories['calories'];
-                        } else {
-                            // Default to 3390 if we can't extract a numeric value
-                            Log::warning('Recommended calories is an array without a "calories" key', ['data' => $dailyRecommendedCalories]);
-                            $dailyRecommendedCalories = 3390;
-                        }
-                    }
-                } catch (\Exception $e) {
-                    Log::warning('Could not get recommended calories: ' . $e->getMessage());
-                }
-            }
+            // Get daily recommended calories for this specific user using our new method
+            $dailyRecommendedCalories = $this->getRecommendedCalories($userId);
 
             // Calculate monthly recommended calories
             $daysInMonth = $startDate->daysInMonth;
-            $monthlyRecommendedCalories = (float) $dailyRecommendedCalories * $daysInMonth;
+            $monthlyRecommendedCalories = $dailyRecommendedCalories * $daysInMonth;
 
-            // Calculate allowed calories including exercise calories burned
-            // This adds burned calories to the recommendation for weight loss goals
+            // Calculate adjusted recommended calories including exercise calories burned
             $adjustedRecommendedCalories = $monthlyRecommendedCalories + $totalCaloriesBurned;
 
             // Calculate calories deficit (negative means surplus)
             $caloriesDeficit = $adjustedRecommendedCalories - $totalCaloriesConsumed;
 
             // Calculate estimated weight change based on deficit/surplus
-            // Negative deficit (surplus) means weight gain, positive deficit means weight loss
             $estimatedWeightChange = ($caloriesDeficit / self::CALORIES_PER_KG);
 
-            // Calculate averages for days with data
+            // Calculate days with data for more accurate averages
             $daysWithData = max(1, $foodLogCount > 0 || $exerciseLogCount > 0 ?
                 DB::table('user_food_logs')
                 ->select(DB::raw('DATE(date) as log_date'))
@@ -133,7 +112,9 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             // Projection calculations for incomplete months
             if ($daysElapsed < $daysInMonth) {
                 // Project consumed calories for whole month
-                $projectedCaloriesConsumed = ($totalCaloriesConsumed / $daysElapsed) * $daysInMonth;
+                $projectedCaloriesConsumed = $daysElapsed > 0
+                    ? ($totalCaloriesConsumed / $daysElapsed) * $daysInMonth
+                    : 0;
 
                 // Use actual burned calories for projection (more accurate than projection)
                 $projectedCaloriesDeficit = ($adjustedRecommendedCalories - $projectedCaloriesConsumed);
@@ -155,7 +136,7 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 'total_calories_burned' => round($totalCaloriesBurned, 2),
                 'net_calories' => round($netCalories, 2),
                 'estimated_weight_change_kg' => round($estimatedWeightChange, 3),
-                'daily_recommended_calories' => round((float) $dailyRecommendedCalories, 2),
+                'daily_recommended_calories' => round($dailyRecommendedCalories, 2),
                 'monthly_recommended_calories' => round($monthlyRecommendedCalories, 2),
                 'adjusted_recommended_calories' => round($adjustedRecommendedCalories, 2),
                 'fitness_goal' => $fitnessGoal,
@@ -178,6 +159,7 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             ];
         } catch (\Exception $e) {
             Log::error('Error in getMonthlyCaloriesSummary: ' . $e->getMessage(), [
+                'user_id' => $userId,
                 'trace' => $e->getTraceAsString()
             ]);
 
@@ -189,9 +171,9 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 'total_calories_burned' => 0,
                 'net_calories' => 0,
                 'estimated_weight_change_kg' => 0,
-                'daily_recommended_calories' => 3390,
-                'monthly_recommended_calories' => 3390 * $startDate->daysInMonth,
-                'adjusted_recommended_calories' => 3390 * $startDate->daysInMonth,
+                'daily_recommended_calories' => 2000, // Changed from 3390 to 2000
+                'monthly_recommended_calories' => 2000 * $startDate->daysInMonth, // Updated default
+                'adjusted_recommended_calories' => 2000 * $startDate->daysInMonth, // Updated default
                 'fitness_goal' => 'Unknown',
                 'goal_progress' => null,
                 'food_log_count' => 0,
@@ -231,32 +213,12 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             // Get user fitness goal
             $fitnessGoal = $this->getUserFitnessGoal($userId);
 
-            // Get daily recommended calories (assuming 3390 if service not available)
-            $dailyRecommendedCalories = 3390; // Default value
-
-            if ($this->dailyNutritionService) {
-                try {
-                    $user = User::findOrFail($userId);
-                    $dailyRecommendedCalories = $this->dailyNutritionService->getRecommendedCalories($user);
-
-                    // Make sure $dailyRecommendedCalories is a float/int, not an array
-                    if (is_array($dailyRecommendedCalories)) {
-                        if (isset($dailyRecommendedCalories['calories'])) {
-                            $dailyRecommendedCalories = (float) $dailyRecommendedCalories['calories'];
-                        } else {
-                            // Default to 3390 if we can't extract a numeric value
-                            Log::warning('Recommended calories is an array without a "calories" key', ['data' => $dailyRecommendedCalories]);
-                            $dailyRecommendedCalories = 3390;
-                        }
-                    }
-                } catch (\Exception $e) {
-                    Log::warning('Could not get recommended calories: ' . $e->getMessage());
-                }
-            }
+            // Get daily recommended calories for this specific user using our new method
+            $dailyRecommendedCalories = $this->getRecommendedCalories($userId);
 
             // Calculate monthly recommended calories
             $daysInMonth = $startDate->daysInMonth;
-            $monthlyRecommendedCalories = (float) $dailyRecommendedCalories * $daysInMonth;
+            $monthlyRecommendedCalories = $dailyRecommendedCalories * $daysInMonth;
 
             // Initialize array to hold daily data
             $dailyData = [];
@@ -358,7 +320,9 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             // Projection calculations for incomplete months
             if ($daysElapsed < $daysInMonth) {
                 // Project consumed calories for whole month
-                $projectedCaloriesConsumed = ($totalCaloriesConsumed / $daysElapsed) * $daysInMonth;
+                $projectedCaloriesConsumed = $daysElapsed > 0
+                    ? ($totalCaloriesConsumed / $daysElapsed) * $daysInMonth
+                    : 0;
 
                 // Use actual burned calories for projection (more accurate than projection)
                 $projectedCaloriesDeficit = ($adjustedMonthlyRecommendedCalories - $projectedCaloriesConsumed);
@@ -382,7 +346,7 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 'total_calories_consumed' => round($totalCaloriesConsumed, 2),
                 'total_calories_burned' => round($totalCaloriesBurned, 2),
                 'total_net_calories' => round($totalNetCalories, 2),
-                'daily_recommended_calories' => round((float) $dailyRecommendedCalories, 2),
+                'daily_recommended_calories' => round($dailyRecommendedCalories, 2),
                 'monthly_recommended_calories' => round($monthlyRecommendedCalories, 2),
                 'adjusted_monthly_recommended_calories' => round($adjustedMonthlyRecommendedCalories, 2),
                 'calories_deficit' => round($caloriesDeficit, 2),
@@ -412,6 +376,7 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             ];
         } catch (\Exception $e) {
             Log::error('Error in getMonthlyCaloriesDetails: ' . $e->getMessage(), [
+                'user_id' => $userId,
                 'trace' => $e->getTraceAsString()
             ]);
 
@@ -424,9 +389,9 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                     'total_calories_consumed' => 0,
                     'total_calories_burned' => 0,
                     'total_net_calories' => 0,
-                    'daily_recommended_calories' => 3390,
-                    'monthly_recommended_calories' => 3390 * $startDate->daysInMonth,
-                    'adjusted_monthly_recommended_calories' => 3390 * $startDate->daysInMonth,
+                    'daily_recommended_calories' => 2000, // Changed from 3390 to 2000
+                    'monthly_recommended_calories' => 2000 * $startDate->daysInMonth, // Updated default
+                    'adjusted_monthly_recommended_calories' => 2000 * $startDate->daysInMonth, // Updated default
                     'calories_deficit' => 0,
                     'estimated_weight_change_kg' => 0,
                     'fitness_goal' => 'Unknown',
@@ -446,6 +411,119 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 ],
                 'error' => $e->getMessage()
             ];
+        }
+    }
+
+    /**
+     * Get monthly summary of calories consumed and burned using current authenticated user
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return array
+     */
+    public function getAuthUserMonthlyCaloriesSummary(Carbon $startDate, Carbon $endDate): array
+    {
+        // Get the current authenticated user ID
+        $userId = Auth::id();
+
+        // Call the original method with the authenticated user ID
+        return $this->getMonthlyCaloriesSummary($userId, $startDate, $endDate);
+    }
+
+    /**
+     * Get detailed daily calories data for the month using current authenticated user
+     *
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return array
+     */
+    public function getAuthUserMonthlyCaloriesDetails(Carbon $startDate, Carbon $endDate): array
+    {
+        // Get the current authenticated user ID
+        $userId = Auth::id();
+
+        // Call the original method with the authenticated user ID
+        return $this->getMonthlyCaloriesDetails($userId, $startDate, $endDate);
+    }
+
+    /**
+     * Get daily recommended calories for a specific user
+     *
+     * @param int $userId
+     * @return float
+     */
+    private function getRecommendedCalories(int $userId): float
+    {
+        try {
+            // Default value - will be used if we can't calculate a better value
+            $defaultCalories = 2000;
+
+            // Only proceed if the nutrition service is available
+            if (!$this->dailyNutritionService) {
+                Log::warning('DailyNutritionService not available, using default calories', [
+                    'user_id' => $userId,
+                    'default_calories' => $defaultCalories
+                ]);
+                return $defaultCalories;
+            }
+
+            // Get the user
+            $user = User::findOrFail($userId);
+
+            // If user is not found or inactive, return default
+            if (!$user || !$user->is_active) {
+                Log::warning('User not found or inactive, using default calories', [
+                    'user_id' => $userId,
+                    'default_calories' => $defaultCalories
+                ]);
+                return $defaultCalories;
+            }
+
+            // Get recommended calories from the nutrition service
+            $recommendedData = $this->dailyNutritionService->getRecommendedCalories($user);
+
+            // Handle different response formats
+            if (is_numeric($recommendedData)) {
+                return (float) $recommendedData;
+            } elseif (is_array($recommendedData)) {
+                // Try to find calories in the array - check various common keys
+                if (isset($recommendedData['total_calories'])) {
+                    return (float) $recommendedData['total_calories'];
+                } elseif (isset($recommendedData['calories'])) {
+                    return (float) $recommendedData['calories'];
+                } elseif (isset($recommendedData['daily_calories'])) {
+                    return (float) $recommendedData['daily_calories'];
+                }
+
+                // Extract the first numeric value if we can't find a specific key
+                foreach ($recommendedData as $key => $value) {
+                    if (is_numeric($value)) {
+                        Log::info('Using numeric value from array key for calories', [
+                            'user_id' => $userId,
+                            'key' => $key,
+                            'value' => $value
+                        ]);
+                        return (float) $value;
+                    }
+                }
+            }
+
+            // If we get here, we couldn't extract a value from the service
+            Log::warning('Could not extract calories from nutrition service, using default', [
+                'user_id' => $userId,
+                'default_calories' => $defaultCalories,
+                'service_response' => $recommendedData
+            ]);
+
+            return $defaultCalories;
+        } catch (\Exception $e) {
+            Log::error('Error getting recommended calories: ' . $e->getMessage(), [
+                'user_id' => $userId,
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            // Fall back to default on error
+            return 2000;
         }
     }
 
