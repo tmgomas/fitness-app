@@ -78,5 +78,14 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
 
         Route::get('/reports/monthly/calories/summary', [App\Http\Controllers\Api\MonthlyReportController::class, 'getMonthlyCaloriesSummary']);
         Route::get('/reports/monthly/calories/details', [App\Http\Controllers\Api\MonthlyReportController::class, 'getMonthlyCaloriesDetails']);
+
+
+        // User profile routes
+
+        Route::get('/profile', [App\Http\Controllers\Api\UserProfileController::class, 'getProfile']);
+        Route::put('/profile', [App\Http\Controllers\Api\UserProfileController::class, 'updateProfile']);
+        Route::post('/password', [App\Http\Controllers\Api\UserProfileController::class, 'updatePassword']);
+        Route::post('/picture', [App\Http\Controllers\Api\UserProfileController::class, 'uploadProfilePicture']);
+        Route::delete('/picture', [App\Http\Controllers\Api\UserProfileController::class, 'deleteProfilePicture']);
     }
 );

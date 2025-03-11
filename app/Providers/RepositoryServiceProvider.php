@@ -60,6 +60,8 @@ use App\Services\UserMealLog\Interfaces\UserMealLogServiceInterface;
 use App\Services\UserMealLog\UserMealLogService;
 use App\Services\UserPreference\Interfaces\UserPreferenceServiceInterface;
 use App\Services\UserPreference\UserPreferenceService;
+use App\Services\UserProfile\Interfaces\UserProfileServiceInterface;
+use App\Services\UserProfile\UserProfileService;
 
 class RepositoryServiceProvider extends ServiceProvider
 {
@@ -199,6 +201,10 @@ class RepositoryServiceProvider extends ServiceProvider
             MonthlyReportServiceInterface::class,
             MonthlyReportService::class
 
+        );
+        $this->app->bind(
+            UserProfileServiceInterface::class,
+            UserProfileService::class
         );
     }
 }
