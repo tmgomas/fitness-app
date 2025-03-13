@@ -84,8 +84,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
 
         Route::get('/profile', [App\Http\Controllers\Api\UserProfileController::class, 'getProfile']);
         Route::put('/profile', [App\Http\Controllers\Api\UserProfileController::class, 'updateProfile']);
-        Route::post('/password', [App\Http\Controllers\Api\UserProfileController::class, 'updatePassword']);
-        Route::post('/picture', [App\Http\Controllers\Api\UserProfileController::class, 'uploadProfilePicture']);
-        Route::delete('/picture', [App\Http\Controllers\Api\UserProfileController::class, 'deleteProfilePicture']);
+        Route::post('/profile/password', [App\Http\Controllers\Api\UserProfileController::class, 'updatePassword']);
+        Route::post('/profile/picture', [App\Http\Controllers\Api\UserProfileController::class, 'uploadProfilePicture']);
+        Route::delete('/profile/picture', [App\Http\Controllers\Api\UserProfileController::class, 'deleteProfilePicture']);
     }
 );
