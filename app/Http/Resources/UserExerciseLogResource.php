@@ -10,7 +10,7 @@ class UserExerciseLogResource extends JsonResource
     {
         $exerciseDetails = null;
 
-        if ($this->exercise_id && $this->relationLoaded('exercise')) {
+        if ($this->exercise_id && $this->relationLoaded('exercise') && $this->exercise) {
             $exerciseDetails = [
                 'id' => $this->exercise->id,
                 'name' => $this->exercise->name,
@@ -19,7 +19,7 @@ class UserExerciseLogResource extends JsonResource
                 'calories_per_minute' => (float) $this->exercise->calories_per_minute,
                 'is_custom' => false,
                 // Add other fields as needed
-                'category' => $this->when($this->exercise->relationLoaded('category'), function () {
+                'category' => $this->when($this->exercise->relationLoaded('category') && $this->exercise->category, function () {
                     return [
                         'id' => $this->exercise->category->id,
                         'name' => $this->exercise->category->name,
@@ -27,21 +27,22 @@ class UserExerciseLogResource extends JsonResource
                     ];
                 })
             ];
-        } elseif ($this->custom_exercise_id && $this->relationLoaded('customExercise')) {
+        } elseif ($this->custom_exercise_id && $this->relationLoaded('customExercise') && $this->customExercise) {
             $exerciseDetails = [
                 'id' => $this->customExercise->id,
                 'name' => $this->customExercise->name,
                 'description' => $this->customExercise->description,
-                'difficulty_level' => $this->customExercise->difficulty_level,
+                'difficulty_level' => $this->customExercise->difficulty_level ?? 'medium',
                 'calories_per_minute' => (float) $this->customExercise->calories_per_minute,
                 'is_custom' => true,
+                'created_by_user' => true
             ];
         }
 
         return [
             'id' => $this->id,
             'user_id' => $this->user_id,
-            'exercise_id' => $this->exercise_id,
+            'exercise_id' => $this->exercise_id !== '00000000-0000-0000-0000-000000000000' ? $this->exercise_id : null,
             'custom_exercise_id' => $this->custom_exercise_id,
             'start_time' => $this->start_time->format('Y-m-d H:i:s'),
             'end_time' => $this->end_time->format('Y-m-d H:i:s'),

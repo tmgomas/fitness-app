@@ -20,7 +20,7 @@ class UserExerciseLogRepository implements UserExerciseLogRepositoryInterface
     {
         $query = $this->model
             ->where('user_id', $userId)
-            ->with(['exercise', 'exercise.category']);
+            ->with(['exercise', 'customExercise']);
 
         if (isset($filters['start_date']) && isset($filters['end_date'])) {
             $query->whereBetween('start_time', [
@@ -46,8 +46,8 @@ class UserExerciseLogRepository implements UserExerciseLogRepositoryInterface
     {
         return $this->model
             ->where('user_id', $userId)
-            ->where('id', $logId)
-            ->with(['exercise', 'exercise.category'])
+            ->where('id', $logId)  // or whatever your primary key is
+            ->with(['exercise', 'customExercise'])
             ->firstOrFail();
     }
 

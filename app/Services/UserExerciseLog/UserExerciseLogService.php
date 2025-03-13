@@ -26,7 +26,10 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
     public function getAllExerciseLogs(array $filters = [])
     {
         try {
-            return $this->exerciseLogRepository->getAllForUser(Auth::id(), $filters);
+            $logs = $this->exerciseLogRepository->getAllForUser(Auth::id(), $filters);
+
+            // This ensures both standard exercises and custom exercises are loaded
+            return $logs->load(['exercise', 'customExercise']);
         } catch (\Exception $e) {
             Log::error('Error fetching exercise logs: ' . $e->getMessage());
             throw $e;
@@ -115,7 +118,10 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
     public function getExerciseLog($logId)
     {
         try {
-            return $this->exerciseLogRepository->findForUser(Auth::id(), $logId);
+            $log = $this->exerciseLogRepository->findForUser(Auth::id(), $logId);
+
+            // Make sure to load both relationships
+            return $log->load(['exercise', 'customExercise']);
         } catch (\Exception $e) {
             Log::error('Error fetching exercise log: ' . $e->getMessage());
             throw $e;
