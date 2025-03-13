@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Exercise\StoreExerciseRequest;
 use App\Http\Requests\Exercise\UpdateExerciseRequest;
+use App\Http\Resources\CombinedExerciseResource;
 use App\Http\Resources\ExerciseResource;
 use App\Models\Exercise;
 use App\Services\Exercise\Interfaces\ExerciseServiceInterface;
@@ -125,20 +126,40 @@ class ExerciseController extends Controller
         }
     }
 
+    /**
+     * Search for exercises including user custom exercises
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     public function search(Request $request): JsonResponse
     {
-        $query = $request->get('q', '');
-        $exercises = $this->exerciseService->searchExercises($query);
+        try {
+            $query = $request->get('q', '');
+            $exercises = $this->exerciseService->searchExercises($query);
 
-        return response()->json([
-            'data' => ExerciseResource::collection($exercises),
-            'meta' => [
-                'current_page' => $exercises->currentPage(),
-                'last_page' => $exercises->lastPage(),
-                'per_page' => $exercises->perPage(),
-                'total' => $exercises->total()
-            ]
-        ]);
+            // Use the special CombinedExerciseResource to handle both types
+            // This will automatically detect and properly format both standard and custom exercises
+            return response()->json([
+                'data' => CombinedExerciseResource::collection($exercises),
+                'meta' => [
+                    'current_page' => $exercises->currentPage(),
+                    'last_page' => $exercises->lastPage(),
+                    'per_page' => $exercises->perPage(),
+                    'total' => $exercises->total()
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Search Failed', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return response()->json([
+                'message' => 'Error searching exercises',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function getByCategory(Request $request, string $categoryId): JsonResponse

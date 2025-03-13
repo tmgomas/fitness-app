@@ -23,7 +23,7 @@ return new class extends Migration
         Schema::table('user_exercise_logs', function (Blueprint $table) {
             $table->uuid('custom_exercise_id')->nullable()->after('exercise_id');
             // user_custom_exercises තේබලය සමඟ foreign key constraint එකතු කිරීම අමතක නොකරන්න
-            // $table->foreign('custom_exercise_id')->references('id')->on('user_custom_exercises')->onDelete('set null');
+            $table->foreign('custom_exercise_id')->references('id')->on('user_custom_exercises')->onDelete('set null');
         });
     }
 

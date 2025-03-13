@@ -18,6 +18,12 @@ interface ExerciseServiceInterface
 
     public function toggleStatus(string $id): Exercise;
 
+    /**
+     * Search exercises including user's custom exercises
+     * 
+     * @param string $query The search term
+     * @return LengthAwarePaginator Combined paginated results
+     */
     public function searchExercises(string $query): LengthAwarePaginator;
 
     public function getByCategory(string $categoryId): LengthAwarePaginator;
