@@ -14,7 +14,8 @@ class StoreUserExerciseLogRequest extends FormRequest
     public function rules()
     {
         return [
-            'exercise_id' => 'required|string|exists:exercises,id',
+            'exercise_id' => 'nullable|string|exists:exercises,id',
+            'custom_exercise_id' => 'nullable|string|exists:user_custom_exercises,id',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
             'distance' => 'nullable|numeric|min:0',
@@ -30,6 +31,7 @@ class StoreUserExerciseLogRequest extends FormRequest
         return [
             'exercise_id.required' => 'An exercise must be selected',
             'exercise_id.exists' => 'The selected exercise is invalid',
+            'custom_exercise_id.exists' => 'The selected custom exercise is invalid',
             'start_time.required' => 'Start time is required',
             'end_time.required' => 'End time is required',
             'end_time.after' => 'End time must be after start time',
@@ -44,5 +46,14 @@ class StoreUserExerciseLogRequest extends FormRequest
             'intensity_level.in' => 'Intensity level must be low, medium, or high',
             'notes.max' => 'Notes cannot exceed 500 characters'
         ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+            if (empty($this->exercise_id) && empty($this->custom_exercise_id)) {
+                $validator->errors()->add('exercise', 'Either a standard exercise or custom exercise must be selected');
+            }
+        });
     }
 }

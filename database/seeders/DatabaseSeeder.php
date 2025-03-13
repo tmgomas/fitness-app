@@ -21,8 +21,7 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             FoodItemSeeder::class,
             FoodNutritionSeeder::class,
-            MealSeeder::class,
-            MealFoodSeeder::class,
+            ExerciseCategorySeeder::class,
         ]);
     }
 }

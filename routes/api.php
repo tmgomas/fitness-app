@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\CustomExerciseController;
 use App\Http\Controllers\Api\ExerciseCategoryController;
 use App\Http\Controllers\Api\ExerciseController;
 use App\Http\Controllers\Api\FoodItemController;
@@ -67,7 +68,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
 
         Route::get('exercise-logs/stats', [UserExerciseLogController::class, 'getStats'])->name('exercise-logs.stats');
         Route::apiResource('exercise-logs', UserExerciseLogController::class);
-
+        Route::apiResource('custom-exercises', CustomExerciseController::class);
         Route::prefix('nutrition')->group(function () {
             Route::get('/summary', [NutritionSummaryController::class, 'getSummary']);
             Route::get('/recommended', [NutritionSummaryController::class, 'getRecommendedCalories']);

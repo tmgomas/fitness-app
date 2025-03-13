@@ -5,6 +5,7 @@ namespace App\Services\UserExerciseLog;
 use App\Services\UserExerciseLog\Interfaces\UserExerciseLogServiceInterface;
 use App\Repositories\UserExerciseLog\Interfaces\UserExerciseLogRepositoryInterface;
 use App\Repositories\Exercise\Interfaces\ExerciseRepositoryInterface;
+use App\Services\CustomExercise\Interfaces\CustomExerciseServiceInterface;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -40,23 +41,74 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
             $endTime = Carbon::parse($data['end_time']);
             $data['duration_minutes'] = $endTime->diffInMinutes($startTime);
 
-            // Calculate calories burned
-            $data['calories_burned'] = $this->calculateCaloriesBurned(
-                $data['exercise_id'],
-                $data['duration_minutes'],
-                $data['intensity_level']
-            );
+            // Calculate calories burned based on exercise type
+            if (isset($data['exercise_id']) && $data['exercise_id']) {
+                // Standard exercise
+                $data['calories_burned'] = $this->calculateCaloriesBurned(
+                    $data['exercise_id'],
+                    $data['duration_minutes'],
+                    $data['intensity_level']
+                );
+            } elseif (isset($data['custom_exercise_id']) && $data['custom_exercise_id']) {
+                // Custom exercise
+                $data['calories_burned'] = $this->calculateCustomExerciseCaloriesBurned(
+                    $data['custom_exercise_id'],
+                    $data['duration_minutes'],
+                    $data['intensity_level']
+                );
+            }
+
+            // Ensure positive values for duration and calories
             if (isset($data['calories_burned']) && $data['calories_burned'] < 0) {
-                $data['calories_burned'] = abs($data['calories_burned']); // ඍණ අගයක් නම්, එය නරපේක්ෂ අගයට පරිවර්තනය කරන්න
+                $data['calories_burned'] = abs($data['calories_burned']);
             }
 
             if (isset($data['duration_minutes']) && $data['duration_minutes'] < 0) {
-                $data['duration_minutes'] = abs($data['duration_minutes']); // ඍණ අගයක් නම්, එය නරපේක්ෂ අගයට පරිවර්තනය කරන්න
+                $data['duration_minutes'] = abs($data['duration_minutes']);
             }
+
             return $this->exerciseLogRepository->createForUser(Auth::id(), $data);
         } catch (\Exception $e) {
             Log::error('Error storing exercise log: ' . $e->getMessage());
             throw $e;
+        }
+    }
+
+    // අලුත් ක්‍රමයක් custom exercises සඳහා
+    private function calculateCustomExerciseCaloriesBurned($customExerciseId, $durationMinutes, $intensityLevel)
+    {
+        try {
+            // Get custom exercise
+            $customExercise = app(CustomExerciseServiceInterface::class)->getCustomExercise($customExerciseId);
+
+            if (!$customExercise) {
+                Log::error('Custom exercise not found: ' . $customExerciseId);
+                return 0;
+            }
+
+            // Get base calories per minute
+            $baseCaloriesPerMinute = $customExercise->calories_per_minute;
+
+            // Apply intensity multiplier
+            $intensityMultipliers = [
+                'low' => 0.8,
+                'medium' => 1.0,
+                'high' => 1.3
+            ];
+
+            $intensityMultiplier = $intensityMultipliers[$intensityLevel] ?? 1.0;
+
+            // Basic calculation
+            $originalCalories = $durationMinutes * $baseCaloriesPerMinute * $intensityMultiplier;
+
+            // Small reduction for realism (1.5% - 2.0%)
+            $reductionPercentage = mt_rand(15, 20) / 10;
+            $adjustedCalories = $originalCalories * (1 - ($reductionPercentage / 100));
+
+            return round($adjustedCalories);
+        } catch (\Exception $e) {
+            Log::error('Error calculating custom exercise calories: ' . $e->getMessage());
+            return 0;
         }
     }
 

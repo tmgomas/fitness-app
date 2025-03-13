@@ -14,6 +14,7 @@ class UserExerciseLog extends Model
     protected $fillable = [
         'user_id',
         'exercise_id',
+        'custom_exercise_id', // Added this new field
         'start_time',
         'end_time',
         'duration_minutes',
@@ -43,5 +44,22 @@ class UserExerciseLog extends Model
     public function exercise()
     {
         return $this->belongsTo(Exercise::class);
+    }
+
+    // Add this new relation
+    public function customExercise()
+    {
+        return $this->belongsTo(UserCustomExercise::class, 'custom_exercise_id', 'id');
+    }
+
+    // Add this helper method
+    public function getExerciseDetails()
+    {
+        if ($this->exercise_id && $this->exercise) {
+            return $this->exercise;
+        } elseif ($this->custom_exercise_id && $this->customExercise) {
+            return $this->customExercise;
+        }
+        return null;
     }
 }

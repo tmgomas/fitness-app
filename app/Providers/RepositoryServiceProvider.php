@@ -206,5 +206,15 @@ class RepositoryServiceProvider extends ServiceProvider
             UserProfileServiceInterface::class,
             UserProfileService::class
         );
+
+        $this->app->bind(
+            \App\Repositories\CustomExercise\Interfaces\CustomExerciseRepositoryInterface::class,
+            \App\Repositories\CustomExercise\CustomExerciseRepository::class
+        );
+
+        $this->app->bind(
+            \App\Services\CustomExercise\Interfaces\CustomExerciseServiceInterface::class,
+            \App\Services\CustomExercise\CustomExerciseService::class
+        );
     }
 }
