@@ -14,7 +14,8 @@ class UpdateUserExerciseLogRequest extends FormRequest
     public function rules()
     {
         return [
-            'exercise_id' => 'sometimes|string|exists:exercises,id',
+            'exercise_id' => 'nullable|string|exists:exercises,id',
+            'custom_exercise_id' => 'nullable|string|exists:user_custom_exercises,id',
             'start_time' => 'sometimes|date',
             'end_time' => 'sometimes|date|after:start_time',
             'distance' => 'nullable|numeric|min:0',
@@ -28,7 +29,7 @@ class UpdateUserExerciseLogRequest extends FormRequest
     public function messages()
     {
         return [
-            'exercise_id.exists' => 'The selected exercise is invalid',
+
             'end_time.after' => 'End time must be after start time',
             'distance.numeric' => 'Distance must be a number',
             'distance.min' => 'Distance cannot be negative',

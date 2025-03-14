@@ -140,22 +140,44 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
                 $data['duration_minutes'] = $endTime->diffInMinutes($startTime);
             }
 
-            // Recalculate calories if duration, exercise or intensity changed
-            if (isset($data['duration_minutes']) || isset($data['exercise_id']) || isset($data['intensity_level'])) {
-                $data['calories_burned'] = $this->calculateCaloriesBurned(
-                    $data['exercise_id'] ?? $exerciseLog->exercise_id,
-                    $data['duration_minutes'] ?? $exerciseLog->duration_minutes,
-                    $data['intensity_level'] ?? $exerciseLog->intensity_level
-                );
+            // Recalculate calories for standard exercises
+            if ((isset($data['exercise_id']) && $data['exercise_id']) ||
+                ($exerciseLog->exercise_id && !isset($data['exercise_id']))
+            ) {
+                // Handle standard exercise
+                $exerciseId = $data['exercise_id'] ?? $exerciseLog->exercise_id;
+                if (isset($data['duration_minutes']) || isset($data['exercise_id']) || isset($data['intensity_level'])) {
+                    $data['calories_burned'] = $this->calculateCaloriesBurned(
+                        $exerciseId,
+                        $data['duration_minutes'] ?? $exerciseLog->duration_minutes,
+                        $data['intensity_level'] ?? $exerciseLog->intensity_level
+                    );
+                }
             }
-            // සහතික කරන්න calories_burned හා duration_minutes ධන අගයන් ලෙස ගබඩාවන බවට
+            // Recalculate calories for custom exercises
+            elseif ((isset($data['custom_exercise_id']) && $data['custom_exercise_id']) ||
+                ($exerciseLog->custom_exercise_id && !isset($data['custom_exercise_id']))
+            ) {
+                // Handle custom exercise
+                $customExerciseId = $data['custom_exercise_id'] ?? $exerciseLog->custom_exercise_id;
+                if (isset($data['duration_minutes']) || isset($data['custom_exercise_id']) || isset($data['intensity_level'])) {
+                    $data['calories_burned'] = $this->calculateCustomExerciseCaloriesBurned(
+                        $customExerciseId,
+                        $data['duration_minutes'] ?? $exerciseLog->duration_minutes,
+                        $data['intensity_level'] ?? $exerciseLog->intensity_level
+                    );
+                }
+            }
+
+            // Ensure positive values
             if (isset($data['calories_burned']) && $data['calories_burned'] < 0) {
-                $data['calories_burned'] = abs($data['calories_burned']); // ඍණ අගයක් නම්, එය නරපේක්ෂ අගයට පරිවර්තනය කරන්න
+                $data['calories_burned'] = abs($data['calories_burned']);
             }
 
             if (isset($data['duration_minutes']) && $data['duration_minutes'] < 0) {
-                $data['duration_minutes'] = abs($data['duration_minutes']); // ඍණ අගයක් නම්, එය නරපේක්ෂ අගයට පරිවර්තනය කරන්න
+                $data['duration_minutes'] = abs($data['duration_minutes']);
             }
+
             return $this->exerciseLogRepository->updateForUser(Auth::id(), $logId, $data);
         } catch (\Exception $e) {
             Log::error('Error updating exercise log: ' . $e->getMessage());

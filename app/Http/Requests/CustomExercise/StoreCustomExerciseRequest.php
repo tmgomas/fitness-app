@@ -16,7 +16,7 @@ class StoreCustomExerciseRequest extends FormRequest
         return [
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'difficulty_level' => 'nullable|string|in:beginner,intermediate,advanced,expert',
+            'difficulty_level' => 'nullable|string|in:beginner,intermediate,advanced',
             'calories_per_minute' => 'required|numeric|min:0|max:50',
             'is_active' => 'boolean'
         ];
