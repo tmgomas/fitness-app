@@ -21,6 +21,7 @@ class UserExerciseLog extends Model
         'distance',
         'distance_unit',
         'calories_burned',
+        'real_calories_burned',
         'avg_heart_rate',
         'intensity_level',
         'notes'
@@ -32,6 +33,7 @@ class UserExerciseLog extends Model
         'duration_minutes' => 'float',
         'distance' => 'float',
         'calories_burned' => 'float',
+        'real_calories_burned' => 'float',
         'avg_heart_rate' => 'float',
         'created_at' => 'datetime'
     ];

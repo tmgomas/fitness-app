@@ -236,6 +236,10 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                         $goalAdjustment = -500; // Caloric deficit for weight loss
                         $goalType = 'weight_loss';
                         break;
+                    case 'Extreme Weight Loss':
+                        $goalAdjustment = -1000; // Caloric deficit for weight loss
+                        $goalType = 'extreme_weight_loss';
+                        break;
                     case 'Weight Gain':
                         $goalAdjustment = 500; // Caloric surplus for weight gain
                         $goalType = 'weight_gain';
@@ -244,9 +248,9 @@ class DailyNutritionService implements DailyNutritionServiceInterface
                         $goalAdjustment = 500; // Caloric surplus for muscle building
                         $goalType = 'build_muscle';
                         break;
-                    case 'Improve Endurance':
+                    case 'Mild Weight Loss':
                         $goalAdjustment = -250; // Slight deficit for endurance improvement
-                        $goalType = 'improve_endurance';
+                        $goalType = 'mild_weight_loss';
                         break;
                     case 'Maintain Weight':
                         $goalAdjustment = 0; // No adjustment for weight maintenance

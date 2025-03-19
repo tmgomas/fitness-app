@@ -50,6 +50,8 @@ class UserExerciseLogResource extends JsonResource
             'distance' => $this->when($this->distance !== null, (float) $this->distance),
             'distance_unit' => $this->when($this->distance !== null, $this->distance_unit),
             'calories_burned' => (float) $this->calories_burned,
+            
+            'real_calories_burned' => $this->when($this->real_calories_burned !== null, (float) $this->real_calories_burned),
             'avg_heart_rate' => $this->when($this->avg_heart_rate !== null, (float) $this->avg_heart_rate),
             'intensity_level' => $this->intensity_level,
             'notes' => $this->notes,
