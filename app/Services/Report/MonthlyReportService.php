@@ -536,16 +536,23 @@ class MonthlyReportService implements MonthlyReportServiceInterface
     private function getUserFitnessGoal(int $userId): string
     {
         try {
-            $preference = UserPreference::where('user_id', $userId)->first();
+            $preference = UserPreference::where('user_id', $userId)
+                ->orderBy('updated_at', 'desc')  // Get most recent preference
+                ->first();
 
             if ($preference && !empty($preference->fitness_goals)) {
+                // Add debugging log
+                Log::info('Retrieved fitness goal', [
+                    'user_id' => $userId,
+                    'fitness_goal' => $preference->fitness_goals
+                ]);
                 return $preference->fitness_goals;
             }
 
-            return 'Maintenance'; // Default goal if none specified
+            return 'Maintain Weight'; // Changed from 'Maintenance' to match system values
         } catch (\Exception $e) {
             Log::warning('Error getting user fitness goal: ' . $e->getMessage());
-            return 'Maintenance';
+            return 'Maintain Weight'; // Changed from 'Maintenance' to match system values
         }
     }
 
@@ -603,7 +610,7 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 $progress['percentage'] = 0;
                 $progress['target_achieved'] = false;
             }
-        } elseif (strpos($simplifiedGoal, 'maintenance') !== false) {
+        } elseif (strpos($simplifiedGoal, 'maintain weight') !== false) {
             // For weight maintenance goal (minimal weight change is good)
             if (abs($estimatedWeightChange) < 0.5) {
                 $progress['status'] = 'On Track';
