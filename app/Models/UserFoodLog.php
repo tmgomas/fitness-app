@@ -20,12 +20,14 @@ class UserFoodLog extends Model
         'date',
         'meal_type',
         'serving_size',
-        'serving_unit'
+        'serving_unit',
+        'recommended_calories', // New field
     ];
 
     protected $casts = [
         'date' => 'datetime',
-        'serving_size' => 'float'
+        'serving_size' => 'float',
+        'recommended_calories' => 'float', // New field cast
     ];
 
     // Relationships

@@ -13,10 +13,11 @@ trait CustomUuid
                 // Random UUID Generate කරන්න
                 $uuid = Str::uuid()->toString();
 
-                // 11-14 character (xxxxxx-xxxx-11ef-xxxx-xxxxxxxxxxxx) වෙනුවට "fffe" replace කරන්න
-                $customUuid = substr($uuid, 0, 9) . '-fffe-' . substr($uuid, 14);
+                // UUID format එකේ 11-14 digit "fffe" ලෙස වෙනස් කරන්න
+                $customUuid = substr($uuid, 0, 9) . 'fffe' . substr($uuid, 13);
 
-                $model->{$model->getKeyName()} = $customUuid;
+                // UUID එකේ අමතර dash නැතිවෙලා තියෙද කියලා check කරන්න
+                $model->{$model->getKeyName()} = str_replace('--', '-', $customUuid);
             }
         });
     }

@@ -25,8 +25,29 @@ class ExerciseController extends Controller
 
     public function index(): JsonResponse
     {
-        $exercises = $this->exerciseService->getAllExercises();
-        return response()->json(ExerciseResource::collection($exercises));
+        try {
+            $exercises = $this->exerciseService->getAllExercises();
+            
+            // Use the special CombinedExerciseResource to handle both standard and custom exercises
+            return response()->json([
+                'data' => CombinedExerciseResource::collection($exercises),
+                'meta' => [
+                    'current_page' => $exercises->currentPage(),
+                    'last_page' => $exercises->lastPage(),
+                    'per_page' => $exercises->perPage(),
+                    'total' => $exercises->total()
+                ]
+            ]);
+        } catch (\Exception $e) {
+            Log::error('Error retrieving exercises: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return response()->json([
+                'message' => 'Error retrieving exercises',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     public function store(StoreExerciseRequest $request): JsonResponse
@@ -137,7 +158,7 @@ class ExerciseController extends Controller
         try {
             $query = $request->get('q', '');
             $exercises = $this->exerciseService->searchExercises($query);
-
+            
             // Use the special CombinedExerciseResource to handle both types
             // This will automatically detect and properly format both standard and custom exercises
             return response()->json([
@@ -154,7 +175,7 @@ class ExerciseController extends Controller
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
-
+            
             return response()->json([
                 'message' => 'Error searching exercises',
                 'error' => $e->getMessage()

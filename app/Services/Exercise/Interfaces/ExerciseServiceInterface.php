@@ -8,6 +8,11 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 interface ExerciseServiceInterface
 {
+    /**
+     * Get all exercises including user's custom exercises
+     * 
+     * @return LengthAwarePaginator Combined paginated results
+     */
     public function getAllExercises(): LengthAwarePaginator;
 
     public function createExercise(array $data, ?UploadedFile $image = null): Exercise;

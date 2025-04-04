@@ -23,9 +23,79 @@ class ExerciseService implements ExerciseServiceInterface
         $this->exerciseRepository = $exerciseRepository;
     }
 
+    /**
+     * Get all exercises including user's custom exercises
+     * 
+     * @return LengthAwarePaginator Combined paginated results
+     */
     public function getAllExercises(): LengthAwarePaginator
     {
-        return $this->exerciseRepository->getAllWithPagination();
+        // Get current authenticated user ID
+        $userId = Auth::id();
+        
+        try {
+            // First, get standard exercises
+            $standardExercises = $this->exerciseRepository->getAllWithPagination();
+            $standardItems = $standardExercises->items();
+            
+            // Get the user's custom exercises
+            $customExercises = UserCustomExercise::where('user_id', $userId)
+                ->where('is_active', true)
+                ->get();
+                
+            Log::info('Retrieved exercises', [
+                'standard_count' => count($standardItems),
+                'custom_count' => $customExercises->count()
+            ]);
+                
+            // No custom exercises found, just return standard results
+            if ($customExercises->isEmpty()) {
+                return $standardExercises;
+            }
+            
+            // Prepare custom exercises for merging (with type indicator)
+            $formattedCustomExercises = $customExercises->map(function($exercise) {
+                // Add an indicator that this is a custom exercise
+                $exercise->is_custom = true;
+                return $exercise;
+            });
+            
+            // Prepare standard exercises for merging (with type indicator)
+            $formattedStandardExercises = collect($standardItems)->map(function($exercise) {
+                // Add an indicator that this is a standard exercise
+                $exercise->is_custom = false;
+                return $exercise;
+            });
+            
+            // Merge both collections
+            $allExercises = $formattedStandardExercises->concat($formattedCustomExercises);
+            
+            // Sort combined results (newest first)
+            $sortedExercises = $allExercises->sortByDesc('created_at');
+            
+            // Create a new paginator with the combined results
+            $page = Paginator::resolveCurrentPage() ?: 1;
+            $perPage = $standardExercises->perPage();
+            $items = $sortedExercises->forPage($page, $perPage);
+            
+            $paginator = new LengthAwarePaginator(
+                $items,
+                $sortedExercises->count(),
+                $perPage,
+                $page,
+                ['path' => Paginator::resolveCurrentPath()]
+            );
+            
+            return $paginator;
+            
+        } catch (\Exception $e) {
+            Log::error('Error retrieving exercises: ' . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            // If an error occurs, return the standard result as fallback
+            return $this->exerciseRepository->getAllWithPagination();
+        }
     }
 
     public function createExercise(array $data, ?UploadedFile $image = null): Exercise
@@ -41,7 +111,7 @@ class ExerciseService implements ExerciseServiceInterface
     public function updateExercise(string $id, array $data, ?UploadedFile $image = null): Exercise
     {
         try {
-            Log::info('Exercise Service - Update Start', [
+           Log::info('Exercise Service - Update Start', [
                 'exercise_id' => $id,
                 'data' => $data,
                 'has_image' => !is_null($image)
@@ -56,27 +126,27 @@ class ExerciseService implements ExerciseServiceInterface
                 $id = $id->id;
             }
 
-            Log::info('Processed ID', ['id' => $id]);
+           Log::info('Processed ID', ['id' => $id]);
 
             $exercise = $this->exerciseRepository->find($id);
 
             if ($image) {
                 if ($exercise->image_url) {
-                    Log::info('Deleting Old Image', ['old_image' => $exercise->image_url]);
+                   Log::info('Deleting Old Image', ['old_image' => $exercise->image_url]);
                     Storage::delete(str_replace('/storage/', '', $exercise->image_url));
                 }
 
                 $imagePath = $image->store('exercises', 'public');
-                Log::info('New Image Stored', ['path' => $imagePath]);
+               Log::info('New Image Stored', ['path' => $imagePath]);
                 $data['image_url'] = Storage::url($imagePath);
             }
 
             $updated = $this->exerciseRepository->update($id, $data);
-            Log::info('Exercise Repository Update Complete', ['updated' => $updated]);
+           Log::info('Exercise Repository Update Complete', ['updated' => $updated]);
 
             return $updated;
         } catch (\Exception $e) {
-            Log::error('Exercise Service Update Failed', [
+           Log::error('Exercise Service Update Failed', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
                 'id_type' => gettype($id),
@@ -133,62 +203,62 @@ class ExerciseService implements ExerciseServiceInterface
     {
         // Get current authenticated user ID
         $userId = Auth::id();
-
+        
         // Log the search request
         Log::info('Searching exercises', [
             'query' => $query,
             'user_id' => $userId
         ]);
-
+        
         try {
             // First, get standard exercises
             $standardExercises = $this->exerciseRepository->search($query);
             $standardItems = $standardExercises->items();
-
+            
             // Get the user's custom exercises matching the query
             $customExercises = UserCustomExercise::where('user_id', $userId)
-                ->where(function ($q) use ($query) {
+                ->where(function($q) use ($query) {
                     $q->where('name', 'like', "%{$query}%")
-                        ->orWhere('description', 'like', "%{$query}%");
+                      ->orWhere('description', 'like', "%{$query}%");
                 })
                 ->where('is_active', true)
                 ->get();
-
+                
             Log::info('Search results', [
                 'standard_count' => count($standardItems),
                 'custom_count' => $customExercises->count()
             ]);
-
+                
             // No custom exercises found, just return standard results
             if ($customExercises->isEmpty()) {
                 return $standardExercises;
             }
-
+            
             // Prepare custom exercises for merging (with type indicator)
-            $formattedCustomExercises = $customExercises->map(function ($exercise) {
+            $formattedCustomExercises = $customExercises->map(function($exercise) {
                 // Add an indicator that this is a custom exercise
                 $exercise->is_custom = true;
                 return $exercise;
             });
-
+            
             // Prepare standard exercises for merging (with type indicator)
-            $formattedStandardExercises = collect($standardItems)->map(function ($exercise) {
+            $formattedStandardExercises = collect($standardItems)->map(function($exercise) {
                 // Add an indicator that this is a standard exercise
                 $exercise->is_custom = false;
                 return $exercise;
             });
-
+            
             // Merge both collections
             $allExercises = $formattedStandardExercises->concat($formattedCustomExercises);
-
+            
             // Sort combined results
             $sortedExercises = $allExercises->sortByDesc('created_at');
-
+            
             // Create a new paginator with the combined results
             $page = Paginator::resolveCurrentPage() ?: 1;
             $perPage = $standardExercises->perPage();
             $items = $sortedExercises->forPage($page, $perPage);
-
+            
             $paginator = new LengthAwarePaginator(
                 $items,
                 $sortedExercises->count(),
@@ -196,13 +266,14 @@ class ExerciseService implements ExerciseServiceInterface
                 $page,
                 ['path' => Paginator::resolveCurrentPath()]
             );
-
+            
             return $paginator;
+            
         } catch (\Exception $e) {
             Log::error('Error searching exercises: ' . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
-
+            
             // If an error occurs, return the standard result as fallback
             return $this->exerciseRepository->search($query);
         }

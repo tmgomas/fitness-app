@@ -40,131 +40,131 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
             throw $e;
         }
     }
-    public function storeExerciseLog(array $data)
-    {
-        try {
-            // Calculate duration
-            $startTime = Carbon::parse($data['start_time']);
-            $endTime = Carbon::parse($data['end_time']);
-            $data['duration_minutes'] = $endTime->diffInMinutes($startTime);
+public function storeExerciseLog(array $data)
+{
+    try {
+        // Calculate duration
+        $startTime = Carbon::parse($data['start_time']);
+        $endTime = Carbon::parse($data['end_time']);
+        $data['duration_minutes'] = $endTime->diffInMinutes($startTime);
 
-            // Calculate calories burned based on exercise type only if not provided by frontend
-            if (!isset($data['calories_burned']) || !isset($data['real_calories_burned'])) {
-                if (isset($data['exercise_id']) && $data['exercise_id']) {
-                    // Standard exercise
-                    $caloriesData = $this->calculateCaloriesBurned(
-                        $data['exercise_id'],
-                        $data['duration_minutes'],
-                        $data['intensity_level']
-                    );
-                    // Only set if not already set
-                    if (!isset($data['calories_burned'])) {
-                        $data['calories_burned'] = $caloriesData['adjusted_calories'];
-                    }
-                    if (!isset($data['real_calories_burned'])) {
-                        $data['real_calories_burned'] = $caloriesData['real_calories'];
-                    }
-                } elseif (isset($data['custom_exercise_id']) && $data['custom_exercise_id']) {
-                    // Custom exercise
-                    $caloriesData = $this->calculateCustomExerciseCaloriesBurned(
-                        $data['custom_exercise_id'],
-                        $data['duration_minutes'],
-                        $data['intensity_level']
-                    );
-                    // Only set if not already set
-                    if (!isset($data['calories_burned'])) {
-                        $data['calories_burned'] = $caloriesData['adjusted_calories'];
-                    }
-                    if (!isset($data['real_calories_burned'])) {
-                        $data['real_calories_burned'] = $caloriesData['real_calories'];
-                    }
+        // Calculate calories burned based on exercise type only if not provided by frontend
+        if (!isset($data['calories_burned']) || !isset($data['real_calories_burned'])) {
+            if (isset($data['exercise_id']) && $data['exercise_id']) {
+                // Standard exercise
+                $caloriesData = $this->calculateCaloriesBurned(
+                    $data['exercise_id'],
+                    $data['duration_minutes'],
+                    $data['intensity_level']
+                );
+                // Only set if not already set
+                if (!isset($data['calories_burned'])) {
+                    $data['calories_burned'] = $caloriesData['adjusted_calories'];
+                }
+                if (!isset($data['real_calories_burned'])) {
+                    $data['real_calories_burned'] = $caloriesData['real_calories'];
+                }
+            } elseif (isset($data['custom_exercise_id']) && $data['custom_exercise_id']) {
+                // Custom exercise
+                $caloriesData = $this->calculateCustomExerciseCaloriesBurned(
+                    $data['custom_exercise_id'],
+                    $data['duration_minutes'],
+                    $data['intensity_level']
+                );
+                // Only set if not already set
+                if (!isset($data['calories_burned'])) {
+                    $data['calories_burned'] = $caloriesData['adjusted_calories'];
+                }
+                if (!isset($data['real_calories_burned'])) {
+                    $data['real_calories_burned'] = $caloriesData['real_calories'];
                 }
             }
-
-            // Ensure positive values for duration and calories
-            if (isset($data['calories_burned']) && $data['calories_burned'] < 0) {
-                $data['calories_burned'] = abs($data['calories_burned']);
-            }
-
-            if (isset($data['real_calories_burned']) && $data['real_calories_burned'] < 0) {
-                $data['real_calories_burned'] = abs($data['real_calories_burned']);
-            }
-
-            if (isset($data['duration_minutes']) && $data['duration_minutes'] < 0) {
-                $data['duration_minutes'] = abs($data['duration_minutes']);
-            }
-
-            return $this->exerciseLogRepository->createForUser(Auth::id(), $data);
-        } catch (\Exception $e) {
-            Log::error('Error storing exercise log: ' . $e->getMessage());
-            throw $e;
         }
+
+        // Ensure positive values for duration and calories
+        if (isset($data['calories_burned']) && $data['calories_burned'] < 0) {
+            $data['calories_burned'] = abs($data['calories_burned']);
+        }
+
+        if (isset($data['real_calories_burned']) && $data['real_calories_burned'] < 0) {
+            $data['real_calories_burned'] = abs($data['real_calories_burned']);
+        }
+
+        if (isset($data['duration_minutes']) && $data['duration_minutes'] < 0) {
+            $data['duration_minutes'] = abs($data['duration_minutes']);
+        }
+
+        return $this->exerciseLogRepository->createForUser(Auth::id(), $data);
+    } catch (\Exception $e) {
+        Log::error('Error storing exercise log: ' . $e->getMessage());
+        throw $e;
     }
+}
 
-    private function calculateCustomExerciseCaloriesBurned($customExerciseId, $durationMinutes, $intensityLevel)
-    {
-        try {
-            // Get custom exercise
-            $customExercise = app(CustomExerciseServiceInterface::class)->getCustomExercise($customExerciseId);
+private function calculateCustomExerciseCaloriesBurned($customExerciseId, $durationMinutes, $intensityLevel)
+{
+    try {
+        // Get custom exercise
+        $customExercise = app(CustomExerciseServiceInterface::class)->getCustomExercise($customExerciseId);
 
-            if (!$customExercise) {
-                Log::error('Custom exercise not found: ' . $customExerciseId);
-                return ['adjusted_calories' => 0, 'real_calories' => 0];
-            }
-
-            // Get user's recommended calories
-            $userId = Auth::id();
-            $user = User::find($userId);
-
-            // Get daily recommended calories from nutrition service
-            $recommendedData = $this->nutritionService->getRecommendedCalories($user);
-            $baseRecommendedCalories = $recommendedData['total_calories'] ?? 2000;
-
-            // Calculate hourly calorie burn rate (calories per hour at rest)
-            $hourlyBaseRate = $baseRecommendedCalories / 24;
-
-            // Convert to per minute rate
-            $baseCaloriesPerMinute = $hourlyBaseRate / 60;
-
-            // Get base calories per minute from custom exercise
-            $exerciseCaloriesPerMinute = $customExercise->calories_per_minute;
-
-            // For real_calories_burned, use the original exercise calories without subtracting base rate
-            $fullExerciseCaloriesPerMinute = $exerciseCaloriesPerMinute;
-
-            // Final calories per minute is the exercise rate MINUS the base rate
-            // (since we only want the ADDITIONAL calories burned by exercising)
-            $netCaloriesPerMinute = $exerciseCaloriesPerMinute - $baseCaloriesPerMinute;
-
-            // Make sure it's not negative
-            if ($netCaloriesPerMinute < 0) {
-                $netCaloriesPerMinute = 0;
-            }
-
-            // Apply intensity multiplier
-            $intensityMultipliers = [
-                'low' => 0.8,
-                'medium' => 1.0,
-                'high' => 1.3
-            ];
-
-            $intensityMultiplier = $intensityMultipliers[$intensityLevel] ?? 1.0;
-
-            // Calculate adjusted calories (net calories after subtracting base rate)
-            $adjustedCalories = $durationMinutes * $netCaloriesPerMinute * $intensityMultiplier;
-
-            // Calculate real calories (original calories without subtracting base rate)
-            $realCalories = $durationMinutes * $fullExerciseCaloriesPerMinute * $intensityMultiplier;
-
-            return [
-                'adjusted_calories' => round($adjustedCalories),
-                'real_calories' => round($realCalories)
-            ];
-        } catch (\Exception $e) {
-            Log::error('Error calculating custom exercise calories: ' . $e->getMessage());
+        if (!$customExercise) {
+            Log::error('Custom exercise not found: ' . $customExerciseId);
             return ['adjusted_calories' => 0, 'real_calories' => 0];
         }
+
+        // Get user's recommended calories
+        $userId = Auth::id();
+        $user = User::find($userId);
+        
+        // Get daily recommended calories from nutrition service
+        $recommendedData = $this->nutritionService->getRecommendedCalories($user);
+        $baseRecommendedCalories = $recommendedData['total_calories'] ?? 2000;
+        
+        // Calculate hourly calorie burn rate (calories per hour at rest)
+        $hourlyBaseRate = $baseRecommendedCalories / 24;
+        
+        // Convert to per minute rate
+        $baseCaloriesPerMinute = $hourlyBaseRate / 60;
+        
+        // Get base calories per minute from custom exercise
+        $exerciseCaloriesPerMinute = $customExercise->calories_per_minute;
+        
+        // For real_calories_burned, use the original exercise calories without subtracting base rate
+        $fullExerciseCaloriesPerMinute = $exerciseCaloriesPerMinute;
+        
+        // Final calories per minute is the exercise rate MINUS the base rate
+        // (since we only want the ADDITIONAL calories burned by exercising)
+        $netCaloriesPerMinute = $exerciseCaloriesPerMinute - $baseCaloriesPerMinute;
+        
+        // Make sure it's not negative
+        if ($netCaloriesPerMinute < 0) {
+            $netCaloriesPerMinute = 0;
+        }
+
+        // Apply intensity multiplier
+        $intensityMultipliers = [
+            'low' => 0.8,
+            'medium' => 1.0,
+            'high' => 1.3
+        ];
+
+        $intensityMultiplier = $intensityMultipliers[$intensityLevel] ?? 1.0;
+
+        // Calculate adjusted calories (net calories after subtracting base rate)
+        $adjustedCalories = $durationMinutes * $netCaloriesPerMinute * $intensityMultiplier;
+        
+        // Calculate real calories (original calories without subtracting base rate)
+        $realCalories = $durationMinutes * $fullExerciseCaloriesPerMinute * $intensityMultiplier;
+
+        return [
+            'adjusted_calories' => round($adjustedCalories),
+            'real_calories' => round($realCalories)
+        ];
+    } catch (\Exception $e) {
+        Log::error('Error calculating custom exercise calories: ' . $e->getMessage());
+        return ['adjusted_calories' => 0, 'real_calories' => 0];
     }
+}
 
     public function getExerciseLog($logId)
     {
@@ -243,70 +243,70 @@ class UserExerciseLogService implements UserExerciseLogServiceInterface
             throw $e;
         }
     }
-    public function calculateCaloriesBurned($exerciseId, $durationMinutes, $intensityLevel)
-    {
-        try {
-            // ව්‍යායාමය ලබා ගන්න
-            $exercise = $this->exerciseRepository->find($exerciseId);
+public function calculateCaloriesBurned($exerciseId, $durationMinutes, $intensityLevel)
+{
+    try {
+        // ව්‍යායාමය ලබා ගන්න
+        $exercise = $this->exerciseRepository->find($exerciseId);
 
-            if (!$exercise) {
-                Log::error('Exercise not found: ' . $exerciseId);
-                return ['adjusted_calories' => 0, 'real_calories' => 0];
-            }
-
-            // Get user's recommended calories
-            $userId = Auth::id();
-            $user = User::find($userId);
-
-            // Get daily recommended calories from nutrition service
-            $recommendedData = $this->nutritionService->getRecommendedCalories($user);
-            $baseRecommendedCalories = $recommendedData['total_calories'] ?? 2000;
-
-            // Calculate hourly calorie burn rate (calories per hour at rest)
-            $hourlyBaseRate = $baseRecommendedCalories / 24;
-
-            // Convert to per minute rate
-            $baseCaloriesPerMinute = $hourlyBaseRate / 60;
-
-            // ව්‍යායාමයේ විනාඩියකට කැලරි අගය භාවිතා කරන්න
-            $exerciseCaloriesPerMinute = $exercise->calories_per_minute;
-
-            // For real_calories_burned, use the original exercise calories without subtracting base rate
-            $fullExerciseCaloriesPerMinute = $exerciseCaloriesPerMinute;
-
-            // Final calories per minute is the exercise rate MINUS the base rate
-            // (since we only want the ADDITIONAL calories burned by exercising)
-            $netCaloriesPerMinute = $exerciseCaloriesPerMinute - $baseCaloriesPerMinute;
-
-            // Make sure it's not negative
-            if ($netCaloriesPerMinute < 0) {
-                $netCaloriesPerMinute = 0;
-            }
-
-            // තීව්‍රතාවය ගුණකය - මුල් ගුණක භාවිතා කරමු
-            $intensityMultipliers = [
-                'low' => 0.8,
-                'medium' => 1.0,
-                'high' => 1.3
-            ];
-
-            $intensityMultiplier = $intensityMultipliers[$intensityLevel] ?? 1.0;
-
-            // Calculate adjusted calories (net calories after subtracting base rate)
-            $adjustedCalories = $durationMinutes * $netCaloriesPerMinute * $intensityMultiplier;
-
-            // Calculate real calories (original calories without subtracting base rate)
-            $realCalories = $durationMinutes * $fullExerciseCaloriesPerMinute * $intensityMultiplier;
-
-            return [
-                'adjusted_calories' => round($adjustedCalories),
-                'real_calories' => round($realCalories)
-            ];
-        } catch (\Exception $e) {
-            Log::error('Error calculating exercise calories: ' . $e->getMessage());
+        if (!$exercise) {
+            Log::error('Exercise not found: ' . $exerciseId);
             return ['adjusted_calories' => 0, 'real_calories' => 0];
         }
+
+        // Get user's recommended calories
+        $userId = Auth::id();
+        $user = User::find($userId);
+        
+        // Get daily recommended calories from nutrition service
+        $recommendedData = $this->nutritionService->getRecommendedCalories($user);
+        $baseRecommendedCalories = $recommendedData['total_calories'] ?? 2000;
+        
+        // Calculate hourly calorie burn rate (calories per hour at rest)
+        $hourlyBaseRate = $baseRecommendedCalories / 24;
+        
+        // Convert to per minute rate
+        $baseCaloriesPerMinute = $hourlyBaseRate / 60;
+        
+        // ව්‍යායාමයේ විනාඩියකට කැලරි අගය භාවිතා කරන්න
+        $exerciseCaloriesPerMinute = $exercise->calories_per_minute;
+        
+        // For real_calories_burned, use the original exercise calories without subtracting base rate
+        $fullExerciseCaloriesPerMinute = $exerciseCaloriesPerMinute;
+        
+        // Final calories per minute is the exercise rate MINUS the base rate
+        // (since we only want the ADDITIONAL calories burned by exercising)
+        $netCaloriesPerMinute = $exerciseCaloriesPerMinute - $baseCaloriesPerMinute;
+        
+        // Make sure it's not negative
+        if ($netCaloriesPerMinute < 0) {
+            $netCaloriesPerMinute = 0;
+        }
+
+        // තීව්‍රතාවය ගුණකය - මුල් ගුණක භාවිතා කරමු
+        $intensityMultipliers = [
+            'low' => 0.8,
+            'medium' => 1.0,
+            'high' => 1.3
+        ];
+
+        $intensityMultiplier = $intensityMultipliers[$intensityLevel] ?? 1.0;
+
+        // Calculate adjusted calories (net calories after subtracting base rate)
+        $adjustedCalories = $durationMinutes * $netCaloriesPerMinute * $intensityMultiplier;
+        
+        // Calculate real calories (original calories without subtracting base rate)
+        $realCalories = $durationMinutes * $fullExerciseCaloriesPerMinute * $intensityMultiplier;
+
+        return [
+            'adjusted_calories' => round($adjustedCalories),
+            'real_calories' => round($realCalories)
+        ];
+    } catch (\Exception $e) {
+        Log::error('Error calculating exercise calories: ' . $e->getMessage());
+        return ['adjusted_calories' => 0, 'real_calories' => 0];
     }
+}
     public function deleteExerciseLog($logId)
     {
         try {

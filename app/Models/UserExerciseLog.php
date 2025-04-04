@@ -24,7 +24,8 @@ class UserExerciseLog extends Model
         'real_calories_burned',
         'avg_heart_rate',
         'intensity_level',
-        'notes'
+        'notes',
+        'recommended_calories', // New field
     ];
 
     protected $casts = [
@@ -35,7 +36,8 @@ class UserExerciseLog extends Model
         'calories_burned' => 'float',
         'real_calories_burned' => 'float',
         'avg_heart_rate' => 'float',
-        'created_at' => 'datetime'
+        'created_at' => 'datetime',
+        'recommended_calories' => 'float', // New field cast
     ];
 
     public function user()
