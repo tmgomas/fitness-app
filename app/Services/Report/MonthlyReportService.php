@@ -62,8 +62,8 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             // Get user fitness goal
             $fitnessGoal = $this->getUserFitnessGoal($userId);
 
-            // Get daily recommended calories for this specific user using our new method
-            $dailyRecommendedCalories = $this->getRecommendedCalories($userId);
+            // Get daily recommended calories from logs for this specific user
+            $dailyRecommendedCalories = $this->getAverageRecommendedCaloriesFromLogs($userId, $startDate, $endDate);
 
             // Calculate monthly recommended calories
             $daysInMonth = $startDate->daysInMonth;
@@ -171,9 +171,9 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 'total_calories_burned' => 0,
                 'net_calories' => 0,
                 'estimated_weight_change_kg' => 0,
-                'daily_recommended_calories' => 2000, // Changed from 3390 to 2000
-                'monthly_recommended_calories' => 2000 * $startDate->daysInMonth, // Updated default
-                'adjusted_recommended_calories' => 2000 * $startDate->daysInMonth, // Updated default
+                'daily_recommended_calories' => 2000,
+                'monthly_recommended_calories' => 2000 * $startDate->daysInMonth,
+                'adjusted_recommended_calories' => 2000 * $startDate->daysInMonth,
                 'fitness_goal' => 'Unknown',
                 'goal_progress' => null,
                 'food_log_count' => 0,
@@ -213,8 +213,8 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             // Get user fitness goal
             $fitnessGoal = $this->getUserFitnessGoal($userId);
 
-            // Get daily recommended calories for this specific user using our new method
-            $dailyRecommendedCalories = $this->getRecommendedCalories($userId);
+            // Get daily recommended calories from logs for this specific user
+            $dailyRecommendedCalories = $this->getAverageRecommendedCaloriesFromLogs($userId, $startDate, $endDate);
 
             // Calculate monthly recommended calories
             $daysInMonth = $startDate->daysInMonth;
@@ -233,7 +233,7 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                     'calories_consumed' => 0,
                     'calories_burned' => 0,
                     'net_calories' => 0,
-                    'recommended_calories' => (float) $dailyRecommendedCalories,
+                    'recommended_calories' => (float) $dailyRecommendedCalories, // Default value
                     'adjusted_recommended_calories' => (float) $dailyRecommendedCalories,
                     'calories_deficit' => (float) $dailyRecommendedCalories,
                     'estimated_weight_change_kg' => 0,
@@ -245,26 +245,47 @@ class MonthlyReportService implements MonthlyReportServiceInterface
             // Get and process food logs
             $foodLogs = $this->getFoodLogsWithCalories($userId, $startDate, $endDate);
 
+            // Get and process exercise logs
+            $exerciseLogs = UserExerciseLog::where('user_id', $userId)
+                ->whereBetween('start_time', [$startDate, $endDate])
+                ->get();
+
+            // First process daily recommended calories from logs
+            $dayRecommendedCalories = $this->getDailyRecommendedCaloriesFromLogs($userId, $startDate, $endDate);
+            
+            foreach ($dayRecommendedCalories as $date => $recommendedCalories) {
+                if (isset($dailyData[$date])) {
+                    $dailyData[$date]['recommended_calories'] = $recommendedCalories;
+                }
+            }
+
+            // Process food logs
             foreach ($foodLogs as $log) {
                 $dateStr = Carbon::parse($log->date)->format('Y-m-d');
 
                 if (isset($dailyData[$dateStr])) {
                     $dailyData[$dateStr]['calories_consumed'] += $log->calculated_calories;
                     $dailyData[$dateStr]['food_logs']++;
+                    
+                    // Update recommended calories from the log if available
+                    if ($log->recommended_calories) {
+                        $dailyData[$dateStr]['recommended_calories'] = $log->recommended_calories;
+                    }
                 }
             }
 
-            // Get and process exercise logs
-            $exerciseLogs = UserExerciseLog::where('user_id', $userId)
-                ->whereBetween('start_time', [$startDate, $endDate])
-                ->get();
-
+            // Process exercise logs
             foreach ($exerciseLogs as $log) {
                 $dateStr = Carbon::parse($log->start_time)->format('Y-m-d');
 
                 if (isset($dailyData[$dateStr])) {
                     $dailyData[$dateStr]['calories_burned'] += $log->calories_burned;
                     $dailyData[$dateStr]['exercise_logs']++;
+                    
+                    // Update recommended calories from the log if available
+                    if ($log->recommended_calories) {
+                        $dailyData[$dateStr]['recommended_calories'] = $log->recommended_calories;
+                    }
                 }
             }
 
@@ -389,9 +410,9 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                     'total_calories_consumed' => 0,
                     'total_calories_burned' => 0,
                     'total_net_calories' => 0,
-                    'daily_recommended_calories' => 2000, // Changed from 3390 to 2000
-                    'monthly_recommended_calories' => 2000 * $startDate->daysInMonth, // Updated default
-                    'adjusted_monthly_recommended_calories' => 2000 * $startDate->daysInMonth, // Updated default
+                    'daily_recommended_calories' => 2000,
+                    'monthly_recommended_calories' => 2000 * $startDate->daysInMonth,
+                    'adjusted_monthly_recommended_calories' => 2000 * $startDate->daysInMonth,
                     'calories_deficit' => 0,
                     'estimated_weight_change_kg' => 0,
                     'fitness_goal' => 'Unknown',
@@ -447,7 +468,157 @@ class MonthlyReportService implements MonthlyReportServiceInterface
     }
 
     /**
+     * Get average recommended calories from user's logs
+     * 
+     * @param int $userId
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return float
+     */
+    private function getAverageRecommendedCaloriesFromLogs(int $userId, Carbon $startDate, Carbon $endDate): float
+    {
+        try {
+            // Default calories value if no logs with recommended_calories exist
+            $defaultCalories = 2000;
+            $recommendedValues = [];
+            
+            // Get recommended calories from food logs
+            $foodLogs = UserFoodLog::where('user_id', $userId)
+                ->whereBetween('date', [$startDate, $endDate])
+                ->whereNotNull('recommended_calories')
+                ->get(['recommended_calories']);
+            
+            foreach ($foodLogs as $log) {
+                if ($log->recommended_calories > 0) {
+                    $recommendedValues[] = $log->recommended_calories;
+                }
+            }
+            
+            // Get recommended calories from exercise logs
+            $exerciseLogs = UserExerciseLog::where('user_id', $userId)
+                ->whereBetween('start_time', [$startDate, $endDate])
+                ->whereNotNull('recommended_calories')
+                ->get(['recommended_calories']);
+                
+            foreach ($exerciseLogs as $log) {
+                if ($log->recommended_calories > 0) {
+                    $recommendedValues[] = $log->recommended_calories;
+                }
+            }
+            
+            // Calculate average if we have values
+            if (count($recommendedValues) > 0) {
+                $avgRecommended = array_sum($recommendedValues) / count($recommendedValues);
+                Log::info('Using average recommended calories from logs', [
+                    'user_id' => $userId,
+                    'avg_value' => $avgRecommended,
+                    'logs_count' => count($recommendedValues)
+                ]);
+                return $avgRecommended;
+            }
+            
+            // If no logs with recommended_calories, use current settings
+            if ($this->dailyNutritionService) {
+                $user = User::find($userId);
+                if ($user) {
+                    $recommendedData = $this->dailyNutritionService->getRecommendedCalories($user);
+                    if (isset($recommendedData['total_calories'])) {
+                        Log::info('Using current recommended calories settings', [
+                            'user_id' => $userId,
+                            'value' => $recommendedData['total_calories'] 
+                        ]);
+                        return (float) $recommendedData['total_calories'];
+                    }
+                }
+            }
+            
+            // Fallback to default
+            Log::info('Using default recommended calories', [
+                'user_id' => $userId,
+                'value' => $defaultCalories
+            ]);
+            return $defaultCalories;
+        } catch (\Exception $e) {
+            Log::error('Error getting average recommended calories from logs: ' . $e->getMessage(), [
+                'user_id' => $userId,
+                'trace' => $e->getTraceAsString()
+            ]);
+            return 2000; // Default in case of error
+        }
+    }
+    
+    /**
+     * Get recommended calories for each day with logs
+     * 
+     * @param int $userId
+     * @param Carbon $startDate
+     * @param Carbon $endDate
+     * @return array
+     */
+    private function getDailyRecommendedCaloriesFromLogs(int $userId, Carbon $startDate, Carbon $endDate): array
+    {
+        $dailyRecommended = [];
+        
+        // Get default value as fallback
+        $defaultRecommended = $this->getRecommendedCalories($userId);
+        
+        // Get all days in range
+        $period = CarbonPeriod::create($startDate, $endDate);
+        foreach ($period as $day) {
+            $dateStr = $day->format('Y-m-d');
+            $dailyRecommended[$dateStr] = $defaultRecommended;
+        }
+        
+        // Get recommended calories from food logs, grouping by date
+        $foodLogs = UserFoodLog::where('user_id', $userId)
+            ->whereBetween('date', [$startDate, $endDate])
+            ->whereNotNull('recommended_calories')
+            ->get(['date', 'recommended_calories']);
+        
+        $dailyFoodValues = [];
+        foreach ($foodLogs as $log) {
+            $dateStr = Carbon::parse($log->date)->format('Y-m-d');
+            if (!isset($dailyFoodValues[$dateStr])) {
+                $dailyFoodValues[$dateStr] = [];
+            }
+            $dailyFoodValues[$dateStr][] = $log->recommended_calories;
+        }
+        
+        // Get recommended calories from exercise logs, grouping by date
+        $exerciseLogs = UserExerciseLog::where('user_id', $userId)
+            ->whereBetween('start_time', [$startDate, $endDate])
+            ->whereNotNull('recommended_calories')
+            ->get(['start_time', 'recommended_calories']);
+            
+        $dailyExerciseValues = [];
+        foreach ($exerciseLogs as $log) {
+            $dateStr = Carbon::parse($log->start_time)->format('Y-m-d');
+            if (!isset($dailyExerciseValues[$dateStr])) {
+                $dailyExerciseValues[$dateStr] = [];
+            }
+            $dailyExerciseValues[$dateStr][] = $log->recommended_calories;
+        }
+        
+        // Calculate average recommended calories for each day
+        foreach ($dailyFoodValues as $date => $values) {
+            if (count($values) > 0) {
+                $dailyRecommended[$date] = array_sum($values) / count($values);
+            }
+        }
+        
+        // Add exercise log values (prioritizing food logs if both exist)
+        foreach ($dailyExerciseValues as $date => $values) {
+            if (count($values) > 0 && !isset($dailyFoodValues[$date])) {
+                $dailyRecommended[$date] = array_sum($values) / count($values);
+            }
+        }
+        
+        return $dailyRecommended;
+    }
+
+    /**
      * Get daily recommended calories for a specific user
+     * This method is kept for backward compatibility but now uses the nutrition service directly
      *
      * @param int $userId
      * @return float

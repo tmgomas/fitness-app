@@ -48,6 +48,14 @@ public function storeExerciseLog(array $data)
         $endTime = Carbon::parse($data['end_time']);
         $data['duration_minutes'] = $endTime->diffInMinutes($startTime);
 
+        // Get current user's recommended calories
+        $user = Auth::user();
+        $recommendedData = $this->nutritionService->getRecommendedCalories($user);
+        $recommendedCalories = $recommendedData['total_calories'] ?? 2000;
+        
+        // Add recommended calories to log data
+        $data['recommended_calories'] = $recommendedCalories;
+
         // Calculate calories burned based on exercise type only if not provided by frontend
         if (!isset($data['calories_burned']) || !isset($data['real_calories_burned'])) {
             if (isset($data['exercise_id']) && $data['exercise_id']) {
@@ -94,13 +102,26 @@ public function storeExerciseLog(array $data)
             $data['duration_minutes'] = abs($data['duration_minutes']);
         }
 
+        // Log details for debugging
+        Log::info('Creating exercise log with recommended calories', [
+            'user_id' => Auth::id(),
+            'exercise_id' => $data['exercise_id'] ?? null,
+            'custom_exercise_id' => $data['custom_exercise_id'] ?? null,
+            'duration_minutes' => $data['duration_minutes'],
+            'calories_burned' => $data['calories_burned'] ?? 0,
+            'real_calories_burned' => $data['real_calories_burned'] ?? 0,
+            'recommended_calories' => $data['recommended_calories']
+        ]);
+
         return $this->exerciseLogRepository->createForUser(Auth::id(), $data);
     } catch (\Exception $e) {
-        Log::error('Error storing exercise log: ' . $e->getMessage());
+        Log::error('Error storing exercise log: ' . $e->getMessage(), [
+            'trace' => $e->getTraceAsString(),
+            'data' => $data
+        ]);
         throw $e;
     }
 }
-
 private function calculateCustomExerciseCaloriesBurned($customExerciseId, $durationMinutes, $intensityLevel)
 {
     try {

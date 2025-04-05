@@ -4,16 +4,21 @@ namespace App\Services\UserFoodLog;
 
 use App\Services\UserFoodLog\Interfaces\UserFoodLogServiceInterface;
 use App\Repositories\UserFoodLog\Interfaces\UserFoodLogRepositoryInterface;
+use App\Services\Nutrition\Interfaces\DailyNutritionServiceInterface;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class UserFoodLogService implements UserFoodLogServiceInterface
 {
     protected $userFoodLogRepository;
+    protected $nutritionService;
 
-    public function __construct(UserFoodLogRepositoryInterface $userFoodLogRepository)
-    {
+    public function __construct(
+        UserFoodLogRepositoryInterface $userFoodLogRepository,
+        DailyNutritionServiceInterface $nutritionService
+    ) {
         $this->userFoodLogRepository = $userFoodLogRepository;
+        $this->nutritionService = $nutritionService;
     }
 
     public function getAllFoodLogs(array $filters = [])
@@ -29,6 +34,14 @@ class UserFoodLogService implements UserFoodLogServiceInterface
     public function storeFoodLog(array $data)
     {
         try {
+            // Get current user's recommended calories
+            $user = Auth::user();
+            $recommendedData = $this->nutritionService->getRecommendedCalories($user);
+            $recommendedCalories = $recommendedData['total_calories'] ?? 2000;
+            
+            // Add recommended calories to log data
+            $data['recommended_calories'] = $recommendedCalories;
+            
             return $this->userFoodLogRepository->createForUser(Auth::id(), $data);
         } catch (\Exception $e) {
             Log::error('Error storing food log: ' . $e->getMessage());
