@@ -35,7 +35,10 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
         // User related routes
         Route::post('/logout', [UserController::class, 'logout'])->name('logout');
         Route::get('/current-user', [UserController::class, 'getCurrentUser'])->name('user.current');
-
+        Route::put('/update', [UserProfileController::class, 'updateProfile']);
+        Route::put('/update-password', [UserProfileController::class, 'updatePassword']);
+        Route::post('/upload-picture', [UserProfileController::class, 'uploadProfilePicture']);
+        Route::delete('/delete-picture', [UserProfileController::class, 'deleteProfilePicture']);
         // Health & Preferences
         Route::apiResource('health-data', HealthDataController::class);
         Route::apiResource('preferences', UserPreferenceController::class);

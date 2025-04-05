@@ -36,7 +36,38 @@ class MonthlyReportService implements MonthlyReportServiceInterface
      */
     public function getMonthlyCaloriesSummary(int $userId, Carbon $startDate, Carbon $endDate): array
     {
+
         try {
+           // For exercise logs - get one recommended calorie value per day
+$exerciseRecommendedByDate = UserExerciseLog::where('user_id', $userId)
+->whereBetween('start_time', [$startDate, $endDate])
+->whereNotNull('recommended_calories')
+->selectRaw('DATE(start_time) as date, MAX(recommended_calories) as daily_recommended')
+->groupBy('date')
+->pluck('daily_recommended', 'date')
+->toArray();
+
+// For food logs - get one recommended calorie value per day
+$foodRecommendedByDate = UserFoodLog::where('user_id', $userId)
+->whereBetween('date', [$startDate, $endDate])
+->whereNotNull('recommended_calories')
+->selectRaw('DATE(date) as date, MAX(recommended_calories) as daily_recommended')
+->groupBy('date')
+->pluck('daily_recommended', 'date')
+->toArray();
+
+// Merge the dates, taking the first non-zero value for each date
+$allDates = array_unique(array_merge(array_keys($exerciseRecommendedByDate), array_keys($foodRecommendedByDate)));
+$totalRecommendedCalories = 0;
+
+foreach ($allDates as $date) {
+// Prefer exercise value if available, otherwise use food value
+if (isset($exerciseRecommendedByDate[$date]) && $exerciseRecommendedByDate[$date] > 0) {
+    $totalRecommendedCalories += $exerciseRecommendedByDate[$date];
+} elseif (isset($foodRecommendedByDate[$date]) && $foodRecommendedByDate[$date] > 0) {
+    $totalRecommendedCalories += $foodRecommendedByDate[$date];
+}
+}
             // Calculate total calories consumed from food logs
             $totalCaloriesConsumed = $this->calculateTotalCaloriesConsumed($userId, $startDate, $endDate);
 
@@ -155,7 +186,10 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 'current_weight_change' => round($currentWeightChange, 3),
                 'projected_deficit' => round($projectedCaloriesDeficit, 2),
                 'projected_weight_change_kg' => round($projectedWeightChange, 3),
-                'calories_deficit' => round($caloriesDeficit, 2)
+                'calories_deficit' => round($caloriesDeficit, 2),
+                'total_recommended_calories' => round($totalRecommendedCalories, 2),
+                'total_recommended_calories_with_burned' => round($totalRecommendedCalories + $totalCaloriesBurned, 2),
+                
             ];
         } catch (\Exception $e) {
             Log::error('Error in getMonthlyCaloriesSummary: ' . $e->getMessage(), [
@@ -207,6 +241,38 @@ class MonthlyReportService implements MonthlyReportServiceInterface
     public function getMonthlyCaloriesDetails(int $userId, Carbon $startDate, Carbon $endDate): array
     {
         try {
+          // For exercise logs - get one recommended calorie value per day
+$exerciseRecommendedByDate = UserExerciseLog::where('user_id', $userId)
+->whereBetween('start_time', [$startDate, $endDate])
+->whereNotNull('recommended_calories')
+->selectRaw('DATE(start_time) as date, MAX(recommended_calories) as daily_recommended')
+->groupBy('date')
+->pluck('daily_recommended', 'date')
+->toArray();
+
+// For food logs - get one recommended calorie value per day
+$foodRecommendedByDate = UserFoodLog::where('user_id', $userId)
+->whereBetween('date', [$startDate, $endDate])
+->whereNotNull('recommended_calories')
+->selectRaw('DATE(date) as date, MAX(recommended_calories) as daily_recommended')
+->groupBy('date')
+->pluck('daily_recommended', 'date')
+->toArray();
+
+// Merge the dates, taking the first non-zero value for each date
+$allDates = array_unique(array_merge(array_keys($exerciseRecommendedByDate), array_keys($foodRecommendedByDate)));
+$totalRecommendedCalories = 0;
+
+foreach ($allDates as $date) {
+// Prefer exercise value if available, otherwise use food value
+if (isset($exerciseRecommendedByDate[$date]) && $exerciseRecommendedByDate[$date] > 0) {
+    $totalRecommendedCalories += $exerciseRecommendedByDate[$date];
+} elseif (isset($foodRecommendedByDate[$date]) && $foodRecommendedByDate[$date] > 0) {
+    $totalRecommendedCalories += $foodRecommendedByDate[$date];
+}
+}
+
+
             // Get all days in the month
             $period = CarbonPeriod::create($startDate, $endDate);
 
@@ -385,7 +451,10 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                 'current_deficit' => round($currentDeficit, 2),
                 'current_weight_change' => round($currentWeightChange, 3),
                 'projected_deficit' => round($projectedCaloriesDeficit, 2),
-                'projected_weight_change_kg' => round($projectedWeightChange, 3)
+                'projected_weight_change_kg' => round($projectedWeightChange, 3),
+                'total_recommended_calories' => round($totalRecommendedCalories, 2),
+                'total_recommended_calories_with_burned' => round($totalRecommendedCalories + $totalCaloriesBurned, 2),
+                
             ];
 
             return [
@@ -428,7 +497,9 @@ class MonthlyReportService implements MonthlyReportServiceInterface
                     'current_deficit' => 0,
                     'current_weight_change' => 0,
                     'projected_deficit' => 0,
-                    'projected_weight_change_kg' => 0
+                    'projected_weight_change_kg' => 0,
+                    'total_recommended_calories' => 0,
+                    'total_recommended_calories_with_burned' => 0,
                 ],
                 'error' => $e->getMessage()
             ];
