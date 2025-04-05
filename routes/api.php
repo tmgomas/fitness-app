@@ -36,7 +36,8 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
         Route::post('/logout', [UserController::class, 'logout'])->name('logout');
         Route::get('/current-user', [UserController::class, 'getCurrentUser'])->name('user.current');
         Route::put('/update', [UserProfileController::class, 'updateProfile']);
-        Route::put('/update-password', [UserProfileController::class, 'updatePassword']);
+        // Route::put('/update-password', [UserProfileController::class, 'updatePassword']);
+        Route::post('/profile/password', [UserProfileController::class, 'updatePassword']);
         Route::post('/upload-picture', [UserProfileController::class, 'uploadProfilePicture']);
         Route::delete('/delete-picture', [UserProfileController::class, 'deleteProfilePicture']);
         // Health & Preferences
@@ -88,7 +89,6 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
 
         Route::get('/profile', [App\Http\Controllers\Api\UserProfileController::class, 'getProfile']);
         Route::put('/profile', [App\Http\Controllers\Api\UserProfileController::class, 'updateProfile']);
-        Route::post('/profile/password', [App\Http\Controllers\Api\UserProfileController::class, 'updatePassword']);
         Route::post('/profile/picture', [App\Http\Controllers\Api\UserProfileController::class, 'uploadProfilePicture']);
         Route::delete('/profile/picture', [App\Http\Controllers\Api\UserProfileController::class, 'deleteProfilePicture']);
     }
