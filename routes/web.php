@@ -61,4 +61,13 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::resource('food-nutrition', FoodNutritionController::class);
 
     Route::resource('meals', MealController::class);
+    
+    Route::resource('agreements', \App\Http\Controllers\Web\AgreementController::class);
+    
+    Route::get('/my-agreements', [\App\Http\Controllers\Web\UserAgreementController::class, 'listUserAgreements'])
+        ->name('user.agreements');
+    Route::get('/agreements/{agreement}/view', [\App\Http\Controllers\Web\UserAgreementController::class, 'showAgreement'])
+        ->name('agreements.show-user');
+    Route::post('/agreements/{agreement}/accept', [\App\Http\Controllers\Web\UserAgreementController::class, 'acceptAgreement'])
+        ->name('agreements.accept-submit');
 });

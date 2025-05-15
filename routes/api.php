@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\UserMealLogController;
 use App\Http\Controllers\Api\UserMeasurementController;
 use App\Http\Controllers\Api\UserPreferenceController;
 use App\Http\Controllers\FoodNutritionController;
+use App\Http\Controllers\Api\UserProfileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +38,7 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
         Route::get('/current-user', [UserController::class, 'getCurrentUser'])->name('user.current');
         Route::put('/update', [UserProfileController::class, 'updateProfile']);
         // Route::put('/update-password', [UserProfileController::class, 'updatePassword']);
+     
         Route::post('/profile/password', [UserProfileController::class, 'updatePassword']);
         Route::post('/upload-picture', [UserProfileController::class, 'uploadProfilePicture']);
         Route::delete('/delete-picture', [UserProfileController::class, 'deleteProfilePicture']);
@@ -89,7 +91,13 @@ Route::middleware('auth:sanctum')->prefix('v1')->name('api.')->group(
 
         Route::get('/profile', [App\Http\Controllers\Api\UserProfileController::class, 'getProfile']);
         Route::put('/profile', [App\Http\Controllers\Api\UserProfileController::class, 'updateProfile']);
-        Route::post('/profile/picture', [App\Http\Controllers\Api\UserProfileController::class, 'uploadProfilePicture']);
+                Route::post('/profile/picture', [App\Http\Controllers\Api\UserProfileController::class, 'uploadProfilePicture']);
         Route::delete('/profile/picture', [App\Http\Controllers\Api\UserProfileController::class, 'deleteProfilePicture']);
+        
+         Route::prefix('agreements')->group(function () {
+            Route::get('/latest', [\App\Http\Controllers\Api\AgreementController::class, 'getLatest']);
+            Route::post('/accept', [\App\Http\Controllers\Api\AgreementController::class, 'accept']);
+            Route::get('/check-status', [\App\Http\Controllers\Api\AgreementController::class, 'checkStatus']);
+        });
     }
 );

@@ -73,6 +73,7 @@
             {{ $slot }}
         </div>
     </main>
+    
     @stack('scripts')
     <script>
         // Sidebar Toggle Functionality

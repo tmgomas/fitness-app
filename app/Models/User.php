@@ -141,4 +141,16 @@ class User extends Authenticatable
     {
         return $this->hasMany(UserExerciseLog::class, 'user_id', 'id');
     }
+    
+    public function userAgreements()
+{
+    return $this->hasMany(UserAgreement::class, 'user_id', 'id');
+}
+
+public function acceptedAgreements()
+{
+    return $this->belongsToMany(Agreement::class, 'user_agreements', 'user_id', 'agreement_id')
+        ->withPivot('accepted_at', 'ip_address', 'user_agent')
+        ->withTimestamps();
+}
 }

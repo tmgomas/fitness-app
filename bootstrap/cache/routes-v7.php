@@ -85,6 +85,82 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
+      '/api/v1/update' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'PUT' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/profile/password' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::lhTwnSpHMHENMaXa',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/upload-picture' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::OHjqDoGWPrNxCXaL',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/delete-picture' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::lNUmgjLjjvo8YG90',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'DELETE' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
       '/api/v1/health-data' => 
       array (
         0 => 
@@ -637,13 +713,49 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
+      '/api/v1/custom-exercises' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.custom-exercises.index',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.custom-exercises.store',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
       '/api/v1/nutrition/summary' => 
       array (
         0 => 
         array (
           0 => 
           array (
-            '_route' => 'api.',
+            '_route' => 'api.generated::fj5bMUC22gmdsLlb',
           ),
           1 => NULL,
           2 => 
@@ -663,7 +775,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'api.generated::iYgBIK0ZIrQ8fBLp',
+            '_route' => 'api.generated::rxbbX0fmqspCbt94',
           ),
           1 => NULL,
           2 => 
@@ -683,7 +795,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'api.generated::rHXpytB1sfyAF4MD',
+            '_route' => 'api.generated::8HaWDvrg0QPgWke6',
           ),
           1 => NULL,
           2 => 
@@ -703,7 +815,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'api.generated::euP4V2NnwBI7gqM3',
+            '_route' => 'api.generated::zewKeMesSZYBNP9H',
           ),
           1 => NULL,
           2 => 
@@ -723,7 +835,177 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'api.generated::Uwg0MlXsfDi6wxMb',
+            '_route' => 'api.generated::6ury6D0X6Y6VfisH',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/reports/monthly/calories/summary' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::eTNsBGROeRBMyww2',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/reports/monthly/calories/details' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::X8CWsCQtFBb87ACW',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/profile' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::gEs95DFhnGbgftYd',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::mfHI16aeJ3Udw0xZ',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'PUT' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/profile/picture' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::l3dFPfSEIV9X5U83',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::y22XX4MXdpqreyZD',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'DELETE' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/agreements/latest' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::0qWViTrUXvimhPuk',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/agreements/accept' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::hxdSbMFUM5Dclz2V',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/api/v1/agreements/check-status' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.generated::6xtxeg4rCTedya32',
           ),
           1 => NULL,
           2 => 
@@ -743,7 +1025,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::6vhBW6poVNpV0rDJ',
+            '_route' => 'generated::GrpTK3qvgbPMWY1E',
           ),
           1 => NULL,
           2 => 
@@ -763,7 +1045,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::rt4eeTYz1DBR0ld7',
+            '_route' => 'generated::jN6WEAlQF7V6D5T7',
           ),
           1 => NULL,
           2 => 
@@ -872,7 +1154,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::jDkF6zqrVus9aoXB',
+            '_route' => 'generated::03QkCFHeCndogrmh',
           ),
           1 => NULL,
           2 => 
@@ -908,7 +1190,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::rfwJAyQ4DBScwnLM',
+            '_route' => 'generated::yYSAVJx06pC9TRxI',
           ),
           1 => NULL,
           2 => 
@@ -1038,7 +1320,7 @@ app('router')->setCompiledRoutes(
         array (
           0 => 
           array (
-            '_route' => 'generated::We5xBC7UFiR9B108',
+            '_route' => 'generated::hLbwEG6mnEyhqVqJ',
           ),
           1 => NULL,
           2 => 
@@ -1537,14 +1819,90 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
+      '/agreements' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'agreements.index',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'agreements.store',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/agreements/create' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'agreements.create',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      '/my-agreements' => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'user.agreements',
+          ),
+          1 => NULL,
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
     ),
     2 => 
     array (
-      0 => '{^(?|/api/v1/(?|health\\-data/([^/]++)(?|(*:42))|preferences/([^/]++)(?|(*:73))|mea(?|surements/([^/]++)(?|(*:108))|l(?|s/([^/]++)(?|(*:134))|_log/([^/]++)(?|(*:159))))|nutrition\\-types/([^/]++)(?|(*:198))|food\\-(?|items/([^/]++)(?|(*:233))|nutrition/([^/]++)(?|(*:263))|logs/([^/]++)(?|(*:288)))|exercise(?|\\-(?|categories/([^/]++)(?|(*:336))|logs/([^/]++)(?|(*:361)))|s/([^/]++)(?|(*:384))))|/reset\\-password/([^/]++)(*:420)|/verify\\-email/([^/]++)/([^/]++)(*:460)|/users/([^/]++)(?|(*:486)|/edit(*:499)|(*:507))|/nutrition\\-types/([^/]++)(?|(*:545)|/edit(*:558)|(*:566))|/food\\-(?|items/([^/]++)(?|(*:602)|/edit(*:615)|(*:623))|nutrition/([^/]++)(?|(*:653)|/edit(*:666)|(*:674)))|/exercise(?|\\-(?|categories/([^/]++)(?|(*:723)|/edit(*:736)|(*:744))|intensities/([^/]++)(?|(*:776)|/edit(*:789)|(*:797)))|s/(?|([^/]++)(?|(*:823)|/(?|edit(*:839)|toggle\\-status(*:861))|(*:870))|search(*:885)|category/([^/]++)(*:910)))|/meals/([^/]++)(?|(*:938)|/edit(*:951)|(*:959))|/storage/(.*)(*:981))/?$}sDu',
+      0 => '{^(?|/a(?|pi/v1/(?|health\\-data/([^/]++)(?|(*:45))|preferences/([^/]++)(?|(*:76))|mea(?|surements/([^/]++)(?|(*:111))|l(?|s/([^/]++)(?|(*:137))|_log/([^/]++)(?|(*:162))))|nutrition\\-types/([^/]++)(?|(*:201))|food\\-(?|items/([^/]++)(?|(*:236))|nutrition/([^/]++)(?|(*:266))|logs/([^/]++)(?|(*:291)))|exercise(?|\\-(?|categories/([^/]++)(?|(*:339))|logs/([^/]++)(?|(*:364)))|s/([^/]++)(?|(*:387)))|custom\\-exercises/([^/]++)(?|(*:426)))|greements/([^/]++)(?|(*:457)|/(?|edit(*:473)|view(*:485)|accept(*:499))|(*:508)))|/reset\\-password/([^/]++)(*:543)|/verify\\-email/([^/]++)/([^/]++)(*:583)|/users/([^/]++)(?|(*:609)|/edit(*:622)|(*:630))|/nutrition\\-types/([^/]++)(?|(*:668)|/edit(*:681)|(*:689))|/food\\-(?|items/([^/]++)(?|(*:725)|/edit(*:738)|(*:746))|nutrition/([^/]++)(?|(*:776)|/edit(*:789)|(*:797)))|/exercise(?|\\-(?|categories/([^/]++)(?|(*:846)|/edit(*:859)|(*:867))|intensities/([^/]++)(?|(*:899)|/edit(*:912)|(*:920)))|s/(?|([^/]++)(?|(*:946)|/(?|edit(*:962)|toggle\\-status(*:984))|(*:993))|search(*:1008)|category/([^/]++)(*:1034)))|/meals/([^/]++)(?|(*:1063)|/edit(*:1077)|(*:1086))|/storage/(.*)(*:1109))/?$}sDu',
     ),
     3 => 
     array (
-      42 => 
+      45 => 
       array (
         0 => 
         array (
@@ -1606,7 +1964,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      73 => 
+      76 => 
       array (
         0 => 
         array (
@@ -1668,7 +2026,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      108 => 
+      111 => 
       array (
         0 => 
         array (
@@ -1730,7 +2088,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      134 => 
+      137 => 
       array (
         0 => 
         array (
@@ -1792,7 +2150,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      159 => 
+      162 => 
       array (
         0 => 
         array (
@@ -1854,7 +2212,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      198 => 
+      201 => 
       array (
         0 => 
         array (
@@ -1916,7 +2274,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      233 => 
+      236 => 
       array (
         0 => 
         array (
@@ -1978,7 +2336,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      263 => 
+      266 => 
       array (
         0 => 
         array (
@@ -2040,7 +2398,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      288 => 
+      291 => 
       array (
         0 => 
         array (
@@ -2102,7 +2460,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      336 => 
+      339 => 
       array (
         0 => 
         array (
@@ -2164,7 +2522,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      361 => 
+      364 => 
       array (
         0 => 
         array (
@@ -2226,7 +2584,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      384 => 
+      387 => 
       array (
         0 => 
         array (
@@ -2288,7 +2646,202 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      420 => 
+      426 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.custom-exercises.show',
+          ),
+          1 => 
+          array (
+            0 => 'custom_exercise',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.custom-exercises.update',
+          ),
+          1 => 
+          array (
+            0 => 'custom_exercise',
+          ),
+          2 => 
+          array (
+            'PUT' => 0,
+            'PATCH' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+        2 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'api.custom-exercises.destroy',
+          ),
+          1 => 
+          array (
+            0 => 'custom_exercise',
+          ),
+          2 => 
+          array (
+            'DELETE' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      457 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'agreements.show',
+          ),
+          1 => 
+          array (
+            0 => 'agreement',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      473 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'agreements.edit',
+          ),
+          1 => 
+          array (
+            0 => 'agreement',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      485 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'agreements.show-user',
+          ),
+          1 => 
+          array (
+            0 => 'agreement',
+          ),
+          2 => 
+          array (
+            'GET' => 0,
+            'HEAD' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      499 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'agreements.accept-submit',
+          ),
+          1 => 
+          array (
+            0 => 'agreement',
+          ),
+          2 => 
+          array (
+            'POST' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => false,
+          6 => NULL,
+        ),
+      ),
+      508 => 
+      array (
+        0 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'agreements.update',
+          ),
+          1 => 
+          array (
+            0 => 'agreement',
+          ),
+          2 => 
+          array (
+            'PUT' => 0,
+            'PATCH' => 1,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+        1 => 
+        array (
+          0 => 
+          array (
+            '_route' => 'agreements.destroy',
+          ),
+          1 => 
+          array (
+            0 => 'agreement',
+          ),
+          2 => 
+          array (
+            'DELETE' => 0,
+          ),
+          3 => NULL,
+          4 => false,
+          5 => true,
+          6 => NULL,
+        ),
+      ),
+      543 => 
       array (
         0 => 
         array (
@@ -2311,7 +2864,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      460 => 
+      583 => 
       array (
         0 => 
         array (
@@ -2335,7 +2888,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      486 => 
+      609 => 
       array (
         0 => 
         array (
@@ -2358,7 +2911,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      499 => 
+      622 => 
       array (
         0 => 
         array (
@@ -2381,7 +2934,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      507 => 
+      630 => 
       array (
         0 => 
         array (
@@ -2422,7 +2975,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      545 => 
+      668 => 
       array (
         0 => 
         array (
@@ -2445,7 +2998,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      558 => 
+      681 => 
       array (
         0 => 
         array (
@@ -2468,7 +3021,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      566 => 
+      689 => 
       array (
         0 => 
         array (
@@ -2510,7 +3063,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      602 => 
+      725 => 
       array (
         0 => 
         array (
@@ -2533,7 +3086,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      615 => 
+      738 => 
       array (
         0 => 
         array (
@@ -2556,7 +3109,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      623 => 
+      746 => 
       array (
         0 => 
         array (
@@ -2598,7 +3151,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      653 => 
+      776 => 
       array (
         0 => 
         array (
@@ -2621,7 +3174,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      666 => 
+      789 => 
       array (
         0 => 
         array (
@@ -2644,7 +3197,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      674 => 
+      797 => 
       array (
         0 => 
         array (
@@ -2686,7 +3239,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      723 => 
+      846 => 
       array (
         0 => 
         array (
@@ -2709,7 +3262,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      736 => 
+      859 => 
       array (
         0 => 
         array (
@@ -2732,7 +3285,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      744 => 
+      867 => 
       array (
         0 => 
         array (
@@ -2774,7 +3327,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      776 => 
+      899 => 
       array (
         0 => 
         array (
@@ -2797,7 +3350,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      789 => 
+      912 => 
       array (
         0 => 
         array (
@@ -2820,7 +3373,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      797 => 
+      920 => 
       array (
         0 => 
         array (
@@ -2862,7 +3415,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      823 => 
+      946 => 
       array (
         0 => 
         array (
@@ -2885,7 +3438,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      839 => 
+      962 => 
       array (
         0 => 
         array (
@@ -2908,7 +3461,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      861 => 
+      984 => 
       array (
         0 => 
         array (
@@ -2930,7 +3483,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      870 => 
+      993 => 
       array (
         0 => 
         array (
@@ -2972,7 +3525,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      885 => 
+      1008 => 
       array (
         0 => 
         array (
@@ -2994,7 +3547,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      910 => 
+      1034 => 
       array (
         0 => 
         array (
@@ -3017,7 +3570,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      938 => 
+      1063 => 
       array (
         0 => 
         array (
@@ -3040,7 +3593,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      951 => 
+      1077 => 
       array (
         0 => 
         array (
@@ -3063,7 +3616,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      959 => 
+      1086 => 
       array (
         0 => 
         array (
@@ -3105,7 +3658,7 @@ app('router')->setCompiledRoutes(
           6 => NULL,
         ),
       ),
-      981 => 
+      1109 => 
       array (
         0 => 
         array (
@@ -3271,6 +3824,154 @@ app('router')->setCompiledRoutes(
         'uses' => 'App\\Http\\Controllers\\Api\\UserController@getCurrentUser',
         'controller' => 'App\\Http\\Controllers\\Api\\UserController@getCurrentUser',
         'as' => 'api.user.current',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'PUT',
+      ),
+      'uri' => 'api/v1/update',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\UserProfileController@updateProfile',
+        'controller' => 'App\\Http\\Controllers\\Api\\UserProfileController@updateProfile',
+        'as' => 'api.',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::lhTwnSpHMHENMaXa' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'POST',
+      ),
+      'uri' => 'api/v1/profile/password',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\UserProfileController@updatePassword',
+        'controller' => 'App\\Http\\Controllers\\Api\\UserProfileController@updatePassword',
+        'as' => 'api.generated::lhTwnSpHMHENMaXa',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::OHjqDoGWPrNxCXaL' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'POST',
+      ),
+      'uri' => 'api/v1/upload-picture',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\UserProfileController@uploadProfilePicture',
+        'controller' => 'App\\Http\\Controllers\\Api\\UserProfileController@uploadProfilePicture',
+        'as' => 'api.generated::OHjqDoGWPrNxCXaL',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::lNUmgjLjjvo8YG90' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'DELETE',
+      ),
+      'uri' => 'api/v1/delete-picture',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\UserProfileController@deleteProfilePicture',
+        'controller' => 'App\\Http\\Controllers\\Api\\UserProfileController@deleteProfilePicture',
+        'as' => 'api.generated::lNUmgjLjjvo8YG90',
         'namespace' => NULL,
         'prefix' => 'api/v1',
         'where' => 
@@ -5778,7 +6479,195 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'api.' => 
+    'api.custom-exercises.index' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'api/v1/custom-exercises',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'as' => 'api.custom-exercises.index',
+        'uses' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@index',
+        'controller' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@index',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.custom-exercises.store' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'POST',
+      ),
+      'uri' => 'api/v1/custom-exercises',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'as' => 'api.custom-exercises.store',
+        'uses' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@store',
+        'controller' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@store',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.custom-exercises.show' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'api/v1/custom-exercises/{custom_exercise}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'as' => 'api.custom-exercises.show',
+        'uses' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@show',
+        'controller' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@show',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.custom-exercises.update' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'PUT',
+        1 => 'PATCH',
+      ),
+      'uri' => 'api/v1/custom-exercises/{custom_exercise}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'as' => 'api.custom-exercises.update',
+        'uses' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@update',
+        'controller' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@update',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.custom-exercises.destroy' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'DELETE',
+      ),
+      'uri' => 'api/v1/custom-exercises/{custom_exercise}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'as' => 'api.custom-exercises.destroy',
+        'uses' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@destroy',
+        'controller' => 'App\\Http\\Controllers\\Api\\CustomExerciseController@destroy',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::fj5bMUC22gmdsLlb' => 
     array (
       'methods' => 
       array (
@@ -5795,7 +6684,7 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getSummary',
         'controller' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getSummary',
-        'as' => 'api.',
+        'as' => 'api.generated::fj5bMUC22gmdsLlb',
         'namespace' => NULL,
         'prefix' => 'api/v1/nutrition',
         'where' => 
@@ -5816,7 +6705,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'api.generated::iYgBIK0ZIrQ8fBLp' => 
+    'api.generated::rxbbX0fmqspCbt94' => 
     array (
       'methods' => 
       array (
@@ -5833,7 +6722,7 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getRecommendedCalories',
         'controller' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getRecommendedCalories',
-        'as' => 'api.generated::iYgBIK0ZIrQ8fBLp',
+        'as' => 'api.generated::rxbbX0fmqspCbt94',
         'namespace' => NULL,
         'prefix' => 'api/v1/nutrition',
         'where' => 
@@ -5854,7 +6743,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'api.generated::rHXpytB1sfyAF4MD' => 
+    'api.generated::8HaWDvrg0QPgWke6' => 
     array (
       'methods' => 
       array (
@@ -5871,7 +6760,7 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getConsumedCalories',
         'controller' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getConsumedCalories',
-        'as' => 'api.generated::rHXpytB1sfyAF4MD',
+        'as' => 'api.generated::8HaWDvrg0QPgWke6',
         'namespace' => NULL,
         'prefix' => 'api/v1/nutrition',
         'where' => 
@@ -5892,7 +6781,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'api.generated::euP4V2NnwBI7gqM3' => 
+    'api.generated::zewKeMesSZYBNP9H' => 
     array (
       'methods' => 
       array (
@@ -5909,7 +6798,7 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getBurnedCalories',
         'controller' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getBurnedCalories',
-        'as' => 'api.generated::euP4V2NnwBI7gqM3',
+        'as' => 'api.generated::zewKeMesSZYBNP9H',
         'namespace' => NULL,
         'prefix' => 'api/v1/nutrition',
         'where' => 
@@ -5930,7 +6819,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'api.generated::Uwg0MlXsfDi6wxMb' => 
+    'api.generated::6ury6D0X6Y6VfisH' => 
     array (
       'methods' => 
       array (
@@ -5947,7 +6836,7 @@ app('router')->setCompiledRoutes(
         ),
         'uses' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getWeeklySummary',
         'controller' => 'App\\Http\\Controllers\\Api\\NutritionSummaryController@getWeeklySummary',
-        'as' => 'api.generated::Uwg0MlXsfDi6wxMb',
+        'as' => 'api.generated::6ury6D0X6Y6VfisH',
         'namespace' => NULL,
         'prefix' => 'api/v1/nutrition',
         'where' => 
@@ -5968,36 +6857,29 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::6vhBW6poVNpV0rDJ' => 
+    'api.generated::eTNsBGROeRBMyww2' => 
     array (
       'methods' => 
       array (
         0 => 'GET',
         1 => 'HEAD',
       ),
-      'uri' => 'up',
+      'uri' => 'api/v1/reports/monthly/calories/summary',
       'action' => 
       array (
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:821:"function () {
-                    $exception = null;
-
-                    try {
-                        \\Illuminate\\Support\\Facades\\Event::dispatch(new \\Illuminate\\Foundation\\Events\\DiagnosingHealth);
-                    } catch (\\Throwable $e) {
-                        if (app()->hasDebugModeEnabled()) {
-                            throw $e;
-                        }
-
-                        report($e);
-
-                        $exception = $e->getMessage();
-                    }
-
-                    return response(\\Illuminate\\Support\\Facades\\View::file(\'D:\\\\App\\\\fitness-app\\\\vendor\\\\laravel\\\\framework\\\\src\\\\Illuminate\\\\Foundation\\\\Configuration\'.\'/../resources/health-up.blade.php\', [
-                        \'exception\' => $exception,
-                    ]), status: $exception ? 500 : 200);
-                }";s:5:"scope";s:54:"Illuminate\\Foundation\\Configuration\\ApplicationBuilder";s:4:"this";N;s:4:"self";s:32:"00000000000004ec0000000000000000";}}',
-        'as' => 'generated::6vhBW6poVNpV0rDJ',
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\MonthlyReportController@getMonthlyCaloriesSummary',
+        'controller' => 'App\\Http\\Controllers\\Api\\MonthlyReportController@getMonthlyCaloriesSummary',
+        'as' => 'api.generated::eTNsBGROeRBMyww2',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
       ),
       'fallback' => false,
       'defaults' => 
@@ -6013,7 +6895,352 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::rt4eeTYz1DBR0ld7' => 
+    'api.generated::X8CWsCQtFBb87ACW' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'api/v1/reports/monthly/calories/details',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\MonthlyReportController@getMonthlyCaloriesDetails',
+        'controller' => 'App\\Http\\Controllers\\Api\\MonthlyReportController@getMonthlyCaloriesDetails',
+        'as' => 'api.generated::X8CWsCQtFBb87ACW',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::gEs95DFhnGbgftYd' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'api/v1/profile',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\UserProfileController@getProfile',
+        'controller' => 'App\\Http\\Controllers\\Api\\UserProfileController@getProfile',
+        'as' => 'api.generated::gEs95DFhnGbgftYd',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::mfHI16aeJ3Udw0xZ' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'PUT',
+      ),
+      'uri' => 'api/v1/profile',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\UserProfileController@updateProfile',
+        'controller' => 'App\\Http\\Controllers\\Api\\UserProfileController@updateProfile',
+        'as' => 'api.generated::mfHI16aeJ3Udw0xZ',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::l3dFPfSEIV9X5U83' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'POST',
+      ),
+      'uri' => 'api/v1/profile/picture',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\UserProfileController@uploadProfilePicture',
+        'controller' => 'App\\Http\\Controllers\\Api\\UserProfileController@uploadProfilePicture',
+        'as' => 'api.generated::l3dFPfSEIV9X5U83',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::y22XX4MXdpqreyZD' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'DELETE',
+      ),
+      'uri' => 'api/v1/profile/picture',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\UserProfileController@deleteProfilePicture',
+        'controller' => 'App\\Http\\Controllers\\Api\\UserProfileController@deleteProfilePicture',
+        'as' => 'api.generated::y22XX4MXdpqreyZD',
+        'namespace' => NULL,
+        'prefix' => 'api/v1',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::0qWViTrUXvimhPuk' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'api/v1/agreements/latest',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\AgreementController@getLatest',
+        'controller' => 'App\\Http\\Controllers\\Api\\AgreementController@getLatest',
+        'as' => 'api.generated::0qWViTrUXvimhPuk',
+        'namespace' => NULL,
+        'prefix' => 'api/v1/agreements',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::hxdSbMFUM5Dclz2V' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'POST',
+      ),
+      'uri' => 'api/v1/agreements/accept',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\AgreementController@accept',
+        'controller' => 'App\\Http\\Controllers\\Api\\AgreementController@accept',
+        'as' => 'api.generated::hxdSbMFUM5Dclz2V',
+        'namespace' => NULL,
+        'prefix' => 'api/v1/agreements',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'api.generated::6xtxeg4rCTedya32' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'api/v1/agreements/check-status',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'api',
+          1 => 'auth:sanctum',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Api\\AgreementController@checkStatus',
+        'controller' => 'App\\Http\\Controllers\\Api\\AgreementController@checkStatus',
+        'as' => 'api.generated::6xtxeg4rCTedya32',
+        'namespace' => NULL,
+        'prefix' => 'api/v1/agreements',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'generated::GrpTK3qvgbPMWY1E' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'up',
+      'action' => 
+      array (
+        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:850:"function () {
+                    $exception = null;
+
+                    try {
+                        \\Illuminate\\Support\\Facades\\Event::dispatch(new \\Illuminate\\Foundation\\Events\\DiagnosingHealth);
+                    } catch (\\Throwable $e) {
+                        if (app()->hasDebugModeEnabled()) {
+                            throw $e;
+                        }
+
+                        report($e);
+
+                        $exception = $e->getMessage();
+                    }
+
+                    return response(\\Illuminate\\Support\\Facades\\View::file(\'/home/u991634625/domains/buildyourfitself.lk/public_html/vendor/laravel/framework/src/Illuminate/Foundation/Configuration\'.\'/../resources/health-up.blade.php\', [
+                        \'exception\' => $exception,
+                    ]), status: $exception ? 500 : 200);
+                }";s:5:"scope";s:54:"Illuminate\\Foundation\\Configuration\\ApplicationBuilder";s:4:"this";N;s:4:"self";s:32:"00000000000005110000000000000000";}}',
+        'as' => 'generated::GrpTK3qvgbPMWY1E',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'generated::jN6WEAlQF7V6D5T7' => 
     array (
       'methods' => 
       array (
@@ -6029,15 +7256,15 @@ app('router')->setCompiledRoutes(
           1 => 'auth',
           2 => 'verified',
         ),
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:58:"function () {
-    return redirect()->route(\'dashboard\');
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008eb0000000000000000";}}',
+        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:59:"function () {
+    return \\redirect()->route(\'dashboard\');
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"000000000000092d0000000000000000";}}',
         'namespace' => NULL,
         'prefix' => '',
         'where' => 
         array (
         ),
-        'as' => 'generated::rt4eeTYz1DBR0ld7',
+        'as' => 'generated::jN6WEAlQF7V6D5T7',
       ),
       'fallback' => false,
       'defaults' => 
@@ -6069,9 +7296,9 @@ app('router')->setCompiledRoutes(
           1 => 'auth',
           2 => 'verified',
         ),
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:45:"function () {
-    return view(\'dashboard\');
-}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000008fb0000000000000000";}}',
+        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:0:{}s:8:"function";s:46:"function () {
+    return \\view(\'dashboard\');
+}";s:5:"scope";s:37:"Illuminate\\Routing\\RouteFileRegistrar";s:4:"this";N;s:4:"self";s:32:"00000000000009320000000000000000";}}',
         'namespace' => NULL,
         'prefix' => '',
         'where' => 
@@ -6243,7 +7470,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::jDkF6zqrVus9aoXB' => 
+    'generated::03QkCFHeCndogrmh' => 
     array (
       'methods' => 
       array (
@@ -6264,7 +7491,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::jDkF6zqrVus9aoXB',
+        'as' => 'generated::03QkCFHeCndogrmh',
       ),
       'fallback' => false,
       'defaults' => 
@@ -6318,7 +7545,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::rfwJAyQ4DBScwnLM' => 
+    'generated::yYSAVJx06pC9TRxI' => 
     array (
       'methods' => 
       array (
@@ -6339,7 +7566,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::rfwJAyQ4DBScwnLM',
+        'as' => 'generated::yYSAVJx06pC9TRxI',
       ),
       'fallback' => false,
       'defaults' => 
@@ -6659,7 +7886,7 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
-    'generated::We5xBC7UFiR9B108' => 
+    'generated::hLbwEG6mnEyhqVqJ' => 
     array (
       'methods' => 
       array (
@@ -6680,7 +7907,7 @@ app('router')->setCompiledRoutes(
         'where' => 
         array (
         ),
-        'as' => 'generated::We5xBC7UFiR9B108',
+        'as' => 'generated::hLbwEG6mnEyhqVqJ',
       ),
       'fallback' => false,
       'defaults' => 
@@ -9057,6 +10284,393 @@ app('router')->setCompiledRoutes(
       'waitSeconds' => NULL,
       'withTrashed' => false,
     ),
+    'agreements.index' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'agreements',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'as' => 'agreements.index',
+        'uses' => 'App\\Http\\Controllers\\Web\\AgreementController@index',
+        'controller' => 'App\\Http\\Controllers\\Web\\AgreementController@index',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'agreements.create' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'agreements/create',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'as' => 'agreements.create',
+        'uses' => 'App\\Http\\Controllers\\Web\\AgreementController@create',
+        'controller' => 'App\\Http\\Controllers\\Web\\AgreementController@create',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'agreements.store' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'POST',
+      ),
+      'uri' => 'agreements',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'as' => 'agreements.store',
+        'uses' => 'App\\Http\\Controllers\\Web\\AgreementController@store',
+        'controller' => 'App\\Http\\Controllers\\Web\\AgreementController@store',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'agreements.show' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'agreements/{agreement}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'as' => 'agreements.show',
+        'uses' => 'App\\Http\\Controllers\\Web\\AgreementController@show',
+        'controller' => 'App\\Http\\Controllers\\Web\\AgreementController@show',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'agreements.edit' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'agreements/{agreement}/edit',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'as' => 'agreements.edit',
+        'uses' => 'App\\Http\\Controllers\\Web\\AgreementController@edit',
+        'controller' => 'App\\Http\\Controllers\\Web\\AgreementController@edit',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'agreements.update' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'PUT',
+        1 => 'PATCH',
+      ),
+      'uri' => 'agreements/{agreement}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'as' => 'agreements.update',
+        'uses' => 'App\\Http\\Controllers\\Web\\AgreementController@update',
+        'controller' => 'App\\Http\\Controllers\\Web\\AgreementController@update',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'agreements.destroy' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'DELETE',
+      ),
+      'uri' => 'agreements/{agreement}',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'as' => 'agreements.destroy',
+        'uses' => 'App\\Http\\Controllers\\Web\\AgreementController@destroy',
+        'controller' => 'App\\Http\\Controllers\\Web\\AgreementController@destroy',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'user.agreements' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'my-agreements',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Web\\UserAgreementController@listUserAgreements',
+        'controller' => 'App\\Http\\Controllers\\Web\\UserAgreementController@listUserAgreements',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'user.agreements',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'agreements.show-user' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'GET',
+        1 => 'HEAD',
+      ),
+      'uri' => 'agreements/{agreement}/view',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Web\\UserAgreementController@showAgreement',
+        'controller' => 'App\\Http\\Controllers\\Web\\UserAgreementController@showAgreement',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'agreements.show-user',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
+    'agreements.accept-submit' => 
+    array (
+      'methods' => 
+      array (
+        0 => 'POST',
+      ),
+      'uri' => 'agreements/{agreement}/accept',
+      'action' => 
+      array (
+        'middleware' => 
+        array (
+          0 => 'web',
+          1 => 'auth',
+          2 => 'admin',
+        ),
+        'uses' => 'App\\Http\\Controllers\\Web\\UserAgreementController@acceptAgreement',
+        'controller' => 'App\\Http\\Controllers\\Web\\UserAgreementController@acceptAgreement',
+        'namespace' => NULL,
+        'prefix' => '',
+        'where' => 
+        array (
+        ),
+        'as' => 'agreements.accept-submit',
+      ),
+      'fallback' => false,
+      'defaults' => 
+      array (
+      ),
+      'wheres' => 
+      array (
+      ),
+      'bindingFields' => 
+      array (
+      ),
+      'lockSeconds' => NULL,
+      'waitSeconds' => NULL,
+      'withTrashed' => false,
+    ),
     'storage.local' => 
     array (
       'methods' => 
@@ -9067,13 +10681,13 @@ app('router')->setCompiledRoutes(
       'uri' => 'storage/{path}',
       'action' => 
       array (
-        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:3:{s:4:"disk";s:5:"local";s:6:"config";a:5:{s:6:"driver";s:5:"local";s:4:"root";s:38:"D:\\App\\fitness-app\\storage\\app/private";s:5:"serve";b:1;s:5:"throw";b:0;s:6:"report";b:0;}s:12:"isProduction";b:1;}s:8:"function";s:323:"function (\\Illuminate\\Http\\Request $request, string $path) use ($disk, $config, $isProduction) {
+        'uses' => 'O:55:"Laravel\\SerializableClosure\\UnsignedSerializableClosure":1:{s:12:"serializable";O:46:"Laravel\\SerializableClosure\\Serializers\\Native":5:{s:3:"use";a:3:{s:4:"disk";s:5:"local";s:6:"config";a:5:{s:6:"driver";s:5:"local";s:4:"root";s:76:"/home/u991634625/domains/buildyourfitself.lk/public_html/storage/app/private";s:5:"serve";b:1;s:5:"throw";b:0;s:6:"report";b:0;}s:12:"isProduction";b:0;}s:8:"function";s:323:"function (\\Illuminate\\Http\\Request $request, string $path) use ($disk, $config, $isProduction) {
                     return (new \\Illuminate\\Filesystem\\ServeFile(
                         $disk,
                         $config,
                         $isProduction
                     ))($request, $path);
-                }";s:5:"scope";s:47:"Illuminate\\Filesystem\\FilesystemServiceProvider";s:4:"this";N;s:4:"self";s:32:"00000000000008fd0000000000000000";}}',
+                }";s:5:"scope";s:47:"Illuminate\\Filesystem\\FilesystemServiceProvider";s:4:"this";N;s:4:"self";s:32:"00000000000009340000000000000000";}}',
         'as' => 'storage.local',
       ),
       'fallback' => false,

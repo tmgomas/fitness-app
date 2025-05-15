@@ -216,5 +216,20 @@ class RepositoryServiceProvider extends ServiceProvider
             \App\Services\CustomExercise\Interfaces\CustomExerciseServiceInterface::class,
             \App\Services\CustomExercise\CustomExerciseService::class
         );
+        
+        $this->app->bind(
+    \App\Repositories\Agreement\Interfaces\AgreementRepositoryInterface::class,
+    \App\Repositories\Agreement\AgreementRepository::class
+);
+
+$this->app->bind(
+    \App\Repositories\UserAgreement\Interfaces\UserAgreementRepositoryInterface::class,
+    \App\Repositories\UserAgreement\UserAgreementRepository::class
+);
+
+$this->app->bind(
+    \App\Services\Agreement\Interfaces\AgreementServiceInterface::class,
+    \App\Services\Agreement\AgreementService::class
+);
     }
 }

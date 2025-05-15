@@ -124,11 +124,22 @@ class UserController extends Controller
 
     public function update(UpdateUserRequest $request, User $user)
     {
+      
         try {
-
+            // Remove the dd($request->all()); line
+            
             DB::beginTransaction();
-            $user = $this->userService->updateUser($user, $request->validated());
+            
+            // Get validated data
+            $validatedData = $request->validated();
+            
+            // Explicitly set checkbox values based on their presence in the request
+            $validatedData['is_admin'] = $request->has('is_admin') ? true : false;
+            $validatedData['is_active'] = $request->has('is_active') ? true : false;
+            
+            $user = $this->userService->updateUser($user, $validatedData);
             DB::commit();
+            
             return redirect()->route('users.index')->with('success', 'User updated successfully.');
         } catch (\Exception $e) {
             DB::rollBack();

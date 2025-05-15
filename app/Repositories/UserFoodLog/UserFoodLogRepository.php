@@ -53,18 +53,37 @@ class UserFoodLogRepository implements UserFoodLogRepositoryInterface
         return $foodLog->delete();
     }
 
-    public function getFoodLogsWithFilters($userId, array $filters)
-    {
-        $query = $this->model->where('user_id', $userId);
+public function getFoodLogsWithFilters($userId, array $filters)
+{
+    $query = $this->model->where('user_id', $userId);
 
-        if (isset($filters['start_date']) && isset($filters['end_date'])) {
-            $startDate = Carbon::parse($filters['start_date'])->startOfDay();
-            $endDate = Carbon::parse($filters['end_date'])->endOfDay();
-            $query->whereBetween('date', [$startDate, $endDate]);
-        }
-
-        $query->with(['foodItem.foodNutrition.nutritionType']);
-
-        return $query->get();
+    if (isset($filters['start_date']) && isset($filters['end_date'])) {
+        $startDate = Carbon::parse($filters['start_date'])->startOfDay();
+        $endDate = Carbon::parse($filters['end_date'])->endOfDay();
+        
+        // Use strict date comparison
+        $query->whereDate('date', '>=', $startDate->toDateString())
+              ->whereDate('date', '<=', $endDate->toDateString());
+              
+        // Add debug log
+        \Illuminate\Support\Facades\Log::info('Date filter applied', [
+            'start_date' => $startDate->toDateString(),
+            'end_date' => $endDate->toDateString(),
+            'start_datetime' => $startDate->toDateTimeString(),
+            'end_datetime' => $endDate->toDateTimeString()
+        ]);
     }
+
+    $query->with(['foodItem.foodNutrition.nutritionType']);
+    
+    $results = $query->get();
+    
+    // Add debug log
+    \Illuminate\Support\Facades\Log::info('Food logs retrieved', [
+        'count' => $results->count(),
+        'dates' => $results->pluck('date')->toArray()
+    ]);
+    
+    return $results;
+}
 }

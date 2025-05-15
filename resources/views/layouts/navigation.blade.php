@@ -64,7 +64,29 @@
                 </li>
             </ul>
         </li>
-
+<!-- Agreement Management -->
+<li class="mb-1 group {{ request()->routeIs('agreements.*') ? 'selected' : '' }}">
+    <a href="{{ route('agreements.index') }}"
+        class="flex font-semibold items-center py-2 px-4 text-gray-900 hover:bg-gray-950 hover:text-gray-100 rounded-md group-[.active]:bg-gray-800 group-[.active]:text-white sidebar-dropdown-toggle">
+        <i class='bx bx-file mr-3 text-lg'></i>
+        <span class="text-sm">Agreements</span>
+        <i class="ri-arrow-right-s-line ml-auto group-[.selected]:rotate-90"></i>
+    </a>
+    <ul class="pl-7 mt-2 hidden group-[.selected]:block">
+        <li class="mb-4">
+            <a href="{{ route('agreements.index') }}"
+                class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
+                All Agreements
+            </a>
+        </li>
+        <li class="mb-4">
+            <a href="{{ route('agreements.create') }}"
+                class="text-gray-900 text-sm flex items-center hover:text-[#f84525] before:contents-[''] before:w-1 before:h-1 before:rounded-full before:bg-gray-300 before:mr-3">
+                Add Agreement
+            </a>
+        </li>
+    </ul>
+</li>
         <!-- Food Items -->
         <li class="mb-1 group {{ request()->routeIs('food-items.*') ? 'selected' : '' }}">
             <a href="{{ route('food-items.index') }}"

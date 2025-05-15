@@ -12,8 +12,8 @@ return new class extends Migration
             $table->id('id')->primary();
             $table->unsignedBigInteger('user_id');  // Changed this line
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->uuid('exercise_id')->nullable();
-            $table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('set null');
+            $table->uuid('exercise_id');
+            $table->foreign('exercise_id')->references('id')->on('exercises')->onDelete('cascade');
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->float('duration_minutes');
