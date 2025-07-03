@@ -92,9 +92,27 @@
     </div>
 
     @push('scripts')
-    <script>
-        // If you want to use a rich text editor like TinyMCE or CKEditor for the content field
-        // Add the initialization code here
-    </script>
-    @endpush
+<script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script>
+    tinymce.init({
+        selector: '#content',
+        plugins: 'anchor autolink charmap codesample emoticons image link lists media searchreplace table visualblocks wordcount',
+        toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table | align lineheight | numlist bullist indent outdent | emoticons charmap | removeformat',
+        height: 500,
+        menubar: true,
+        branding: false,
+        promotion: false
+    });
+    
+    // Initialize a simpler editor for the summary field
+    tinymce.init({
+        selector: '#summary',
+        plugins: 'autolink link wordcount',
+        toolbar: 'undo redo | bold italic | link',
+        menubar: false,
+        branding: false,
+        promotion: false
+    });
+</script>
+@endpush
 </x-app-layout>
